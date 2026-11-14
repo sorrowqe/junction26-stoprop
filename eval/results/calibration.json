@@ -3,101 +3,121 @@
   "split": "dev",
   "language": "en",
   "default_level": "strict",
-  "timestamp": "2026-11-14T14:56:58+00:00",
-  "git_commit": "8fa21391",
+  "timestamp": "2026-11-14T21:36:16+00:00",
+  "git_commit": "d39f5819",
   "rule": "lowest min_confidence meeting the SemEval-none technique FPR target that also removes at least one scored prediction versus the next looser level; one threshold for all labels",
   "caveat": "calibrated and measured on the same dev split, so optimistic; the locked test split is the check",
   "analyses": 111,
-  "model_failures": 1,
+  "model_failures": 0,
   "curve": [
     {
       "t": 0.0,
-      "fpr": 0.048,
-      "predicted": 86
-    },
-    {
-      "t": 0.75,
-      "fpr": 0.048,
-      "predicted": 86
-    },
-    {
-      "t": 0.8,
-      "fpr": 0.048,
-      "predicted": 86
+      "fpr": 0.143,
+      "predicted": 80
     },
     {
       "t": 0.85,
+      "fpr": 0.143,
+      "predicted": 80
+    },
+    {
+      "t": 0.86,
+      "fpr": 0.143,
+      "predicted": 76
+    },
+    {
+      "t": 0.88,
+      "fpr": 0.143,
+      "predicted": 75
+    },
+    {
+      "t": 0.89,
       "fpr": 0.048,
-      "predicted": 59
+      "predicted": 52
     },
     {
       "t": 0.9,
+      "fpr": 0.048,
+      "predicted": 52
+    },
+    {
+      "t": 0.91,
+      "fpr": 0.048,
+      "predicted": 30
+    },
+    {
+      "t": 0.92,
+      "fpr": 0.048,
+      "predicted": 30
+    },
+    {
+      "t": 0.94,
       "fpr": 0.0,
-      "predicted": 23
+      "predicted": 13
     },
     {
       "t": 0.95,
       "fpr": 0.0,
-      "predicted": 2
+      "predicted": 13
     }
   ],
   "levels": {
     "strict": {
-      "min_confidence": 0.9,
+      "min_confidence": 0.89,
       "scores": {
         "all": {
-          "precision": 0.609,
+          "precision": 0.654,
           "precision_ci": [
-            0.408,
-            0.778
+            0.518,
+            0.768
           ],
-          "recall": 0.129,
+          "recall": 0.302,
           "recall_ci": [
-            0.08,
-            0.202
+            0.226,
+            0.391
           ],
-          "f1": 0.213,
-          "predicted": 23,
+          "f1": 0.413,
+          "predicted": 52,
           "gold": 116
         },
         "semeval": {
-          "precision": 0.462,
+          "precision": 0.485,
           "precision_ci": [
-            0.232,
-            0.709
+            0.325,
+            0.648
           ],
-          "recall": 0.086,
+          "recall": 0.21,
           "recall_ci": [
-            0.042,
-            0.168
+            0.135,
+            0.311
           ],
-          "f1": 0.146,
-          "predicted": 13,
+          "f1": 0.293,
+          "predicted": 33,
           "gold": 81
         },
         "synthetic": {
-          "precision": 0.8,
+          "precision": 0.947,
           "precision_ci": [
-            0.49,
-            0.943
+            0.754,
+            0.991
           ],
-          "recall": 0.229,
+          "recall": 0.514,
           "recall_ci": [
-            0.121,
-            0.39
+            0.356,
+            0.67
           ],
-          "f1": 0.356,
-          "predicted": 10,
+          "f1": 0.667,
+          "predicted": 19,
           "gold": 35
         }
       },
       "fpr_semeval_none": {
-        "flagged": 0,
+        "flagged": 1,
         "paragraphs": 21,
-        "rate": 0.0,
+        "rate": 0.048,
         "ci": [
-          0.0,
-          0.155
+          0.008,
+          0.227
         ],
         "counts": "techniques only (SemEval does not annotate claims)"
       },
@@ -120,74 +140,65 @@
           0.566
         ]
       },
-      "self_flip": {
-        "texts": 11,
-        "flipped": 1,
-        "rate": 0.091,
-        "ci": [
-          0.016,
-          0.377
-        ]
-      },
       "target_fpr_semeval_none": 0.05,
       "target_met": true
     },
     "balanced": {
-      "min_confidence": 0.85,
+      "min_confidence": 0.86,
       "scores": {
         "all": {
-          "precision": 0.559,
+          "precision": 0.605,
           "precision_ci": [
-            0.433,
-            0.678
+            0.493,
+            0.708
           ],
-          "recall": 0.302,
+          "recall": 0.405,
           "recall_ci": [
-            0.226,
-            0.391
+            0.32,
+            0.496
           ],
-          "f1": 0.392,
-          "predicted": 59,
+          "f1": 0.485,
+          "predicted": 76,
           "gold": 116
         },
         "semeval": {
-          "precision": 0.355,
+          "precision": 0.489,
           "precision_ci": [
-            0.211,
-            0.531
+            0.353,
+            0.628
           ],
-          "recall": 0.16,
+          "recall": 0.296,
           "recall_ci": [
-            0.096,
-            0.255
+            0.208,
+            0.403
           ],
-          "f1": 0.221,
-          "predicted": 31,
+          "f1": 0.369,
+          "predicted": 47,
           "gold": 81
         },
         "synthetic": {
-          "precision": 0.786,
+          "precision": 0.793,
           "precision_ci": [
-            0.605,
-            0.898
+            0.616,
+            0.902
           ],
-          "recall": 0.629,
+          "recall": 0.657,
           "recall_ci": [
-            0.463,
-            0.768
+            0.492,
+            0.792
           ],
-          "f1": 0.698,
-          "predicted": 28,
+          "f1": 0.719,
+          "predicted": 29,
           "gold": 35
         }
       },
       "fpr_semeval_none": {
-        "flagged": 1,
+        "flagged": 3,
         "paragraphs": 21,
-        "rate": 0.048,
+        "rate": 0.143,
         "ci": [
-          0.008,
-          0.227
+          0.05,
+          0.346
         ],
         "counts": "techniques only (SemEval does not annotate claims)"
       },
@@ -203,20 +214,11 @@
       },
       "symmetry": {
         "pairs": 11,
-        "flipped": 1,
-        "rate": 0.091,
+        "flipped": 2,
+        "rate": 0.182,
         "ci": [
-          0.016,
-          0.377
-        ]
-      },
-      "self_flip": {
-        "texts": 11,
-        "flipped": 1,
-        "rate": 0.091,
-        "ci": [
-          0.016,
-          0.377
+          0.051,
+          0.477
         ]
       },
       "target_fpr_semeval_none": 0.15,
@@ -226,58 +228,58 @@
       "min_confidence": 0.0,
       "scores": {
         "all": {
-          "precision": 0.535,
+          "precision": 0.588,
           "precision_ci": [
-            0.43,
-            0.637
+            0.478,
+            0.689
           ],
-          "recall": 0.405,
+          "recall": 0.414,
           "recall_ci": [
-            0.32,
-            0.496
+            0.328,
+            0.505
           ],
-          "f1": 0.461,
-          "predicted": 86,
+          "f1": 0.486,
+          "predicted": 80,
           "gold": 116
         },
         "semeval": {
-          "precision": 0.367,
+          "precision": 0.49,
           "precision_ci": [
-            0.247,
-            0.507
+            0.356,
+            0.625
           ],
-          "recall": 0.235,
+          "recall": 0.309,
           "recall_ci": [
-            0.156,
-            0.338
+            0.219,
+            0.416
           ],
-          "f1": 0.286,
+          "f1": 0.379,
           "predicted": 49,
           "gold": 81
         },
         "synthetic": {
-          "precision": 0.757,
+          "precision": 0.742,
           "precision_ci": [
-            0.599,
-            0.866
+            0.568,
+            0.863
           ],
-          "recall": 0.8,
+          "recall": 0.657,
           "recall_ci": [
-            0.641,
-            0.9
+            0.492,
+            0.792
           ],
-          "f1": 0.778,
-          "predicted": 37,
+          "f1": 0.697,
+          "predicted": 31,
           "gold": 35
         }
       },
       "fpr_semeval_none": {
-        "flagged": 1,
+        "flagged": 3,
         "paragraphs": 21,
-        "rate": 0.048,
+        "rate": 0.143,
         "ci": [
-          0.008,
-          0.227
+          0.05,
+          0.346
         ],
         "counts": "techniques only (SemEval does not annotate claims)"
       },
@@ -293,20 +295,11 @@
       },
       "symmetry": {
         "pairs": 11,
-        "flipped": 1,
-        "rate": 0.091,
+        "flipped": 5,
+        "rate": 0.455,
         "ci": [
-          0.016,
-          0.377
-        ]
-      },
-      "self_flip": {
-        "texts": 11,
-        "flipped": 0,
-        "rate": 0.0,
-        "ci": [
-          0.0,
-          0.259
+          0.213,
+          0.72
         ]
       },
       "target_fpr_semeval_none": null,
@@ -315,10 +308,9 @@
   },
   "dev_precision_basis": "broad (no confidence filter), labels with >= 5 predictions",
   "dev_precision": {
-    "doubt_casting": 0.6,
-    "exaggeration_minimisation": 0.857,
-    "loaded_language": 0.615,
-    "supported_claim": 0.25,
-    "unsupported_claim": 0.077
+    "doubt_casting": 0.333,
+    "fear_appeal": 0.4,
+    "loaded_language": 0.594,
+    "name_calling": 0.75
   }
 }

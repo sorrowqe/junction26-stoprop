@@ -18,9 +18,9 @@ techniques:
     definition: Emotionally charged verbs, adjectives or phrasing used to provoke outrage, disgust or excitement rather than inform.
     example: "The council's reckless scheme will gut our neighbourhood."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
-    dev_precision: 0.615
-    dev_predictions: 26
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
+    dev_precision: 0.594
+    dev_predictions: 32
     experimental: true
 
   - label: name_calling
@@ -31,8 +31,9 @@ techniques:
     definition: Attaching a derogatory, ideological or loaded noun-phrase label or epithet to a person, group, institution or policy so the reader reacts to the label instead of arguments.
     example: "Only clueless bureaucrats and corrupt elites could back this puppet regime."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
-    dev_precision: null
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
+    dev_precision: 0.75
+    dev_predictions: 8
     experimental: true
 
   - label: fear_appeal
@@ -43,8 +44,9 @@ techniques:
     definition: Invoking danger, violence, panic, collapse or loss of safety to push a conclusion - whether conditional ("if X, then Y") or catastrophic threat framing.
     example: "Leaving families freezing in the dark while streets become unsafe to walk."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
-    dev_precision: null
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
+    dev_precision: 0.4
+    dev_predictions: 5
     experimental: true
 
   - label: exaggeration_minimisation
@@ -54,9 +56,8 @@ techniques:
     definition: Overstating scale or harm beyond what evidence supports, or trivialising serious facts as nothing.
     example: "A few delayed trains have brought the entire country to a complete standstill."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
-    dev_precision: 0.857
-    dev_predictions: 7
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
+    dev_precision: null
     experimental: true
 
   - label: whataboutism
@@ -67,7 +68,7 @@ techniques:
     definition: Deflecting criticism or shifting blame by pointing to someone else's wrongdoing instead of answering the point.
     example: "Why complain about our budget overrun when the previous government wasted even more?"
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -78,7 +79,7 @@ techniques:
     definition: Presenting complex choices as only two extreme outcomes ("either A or B", "the only option left") when other paths exist.
     example: "Either we close the border completely or we surrender our country."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -90,7 +91,7 @@ techniques:
     definition: Appealing to unnamed, vague, irrelevant or fabricated authorities ("experts say", "senior insiders claim", invented studies) instead of verifiable sources.
     example: "Top independent insiders confirm the new meters secretly record conversations."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -102,7 +103,7 @@ techniques:
     definition: Blaming a single cause or scapegoat for a complex outcome with multiple factors.
     example: "Prices went up for one reason only: the new mayor."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -113,7 +114,7 @@ techniques:
     definition: Treating "everyone knows", "every sensible person agrees" or supposed majority belief as proof in itself.
     example: "Everybody knows this policy has failed."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -125,9 +126,9 @@ techniques:
     definition: Undermining credibility or motives via unsubstantiated insinuation, scare quotes or leading rhetorical questions ("just asking").
     example: "Can we really trust figures written by these so-called 'independent' scientists?"
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
-    dev_precision: 0.6
-    dev_predictions: 5
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
+    dev_precision: 0.333
+    dev_predictions: 12
     experimental: true
 
   - label: unsupported_claim
@@ -137,9 +138,8 @@ techniques:
     definition: A check-worthy factual claim with no source given in the text. This does not mean it is false.
     example: "Crime in the city has doubled since last year."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
-    dev_precision: 0.077
-    dev_predictions: 13
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
+    dev_precision: null
     experimental: true
 
   - label: supported_claim
@@ -150,9 +150,8 @@ techniques:
     definition: A factual claim that comes with a link, a named source or dated data in the text. This does not mean it is true.
     example: "Unemployment fell to 6.1% in October, Statistics Estonia said."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
-    dev_precision: 0.25
-    dev_predictions: 16
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
+    dev_precision: null
     experimental: true
 
   - label: balance
@@ -162,7 +161,7 @@ techniques:
     definition: A fair counter-argument or an acknowledged uncertainty.
     example: "Critics argue the cost estimate is too optimistic, and the final figure is not yet known."
     enabled: true
-    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -176,6 +175,6 @@ techniques:
     definition: The text says a named outlet reported this, but we found no report from that outlet saying it.
     example: "Russia is attacking Estonia with drones, according to Delfi news (when Delfi published no such report)."
     enabled: true
-    min_confidence: {strict: 0.0, balanced: 0.0, broad: 0.0}
+    min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
     dev_precision: null
     experimental: true

@@ -36,36 +36,42 @@
     none: "Clean (no repeated groups)",
   };
 
-  function wilsonUpper(k, n) {
-    if (!n) return null;
+  function wilsonBounds(k, n) {
+    if (!n) return [0, 1];
     const z = 1.96, p = k / n, z2 = z * z;
     const denom = 1 + z2 / n;
     const center = p + z2 / (2 * n);
     const half = z * Math.sqrt((p * (1 - p) + z2 / (4 * n)) / n);
-    return Math.min(1, (center + half) / denom);
+    return [Math.max(0, (center - half) / denom), Math.min(1, (center + half) / denom)];
   }
 
-  function renderKpis(calib, swarm) {
+  function renderKpis(calib, latest, swarm) {
     const grid = $("kpi-grid");
     grid.replaceChildren();
     const tiles = [];
     const strict = calib && calib.levels && calib.levels.strict;
+    if (strict && strict.scores && strict.scores.all) {
+      const s = strict.scores.all;
+      const broadF1 = latest && latest.scores && latest.scores.strict && latest.scores.strict.all
+        ? latest.scores.strict.all.micro.f1
+        : null;
+      tiles.push([
+        "Text detector precision",
+        pct(s.precision),
+        `Strict F1 ${pct(s.f1)}${broadF1 != null ? ` · Broad F1 ${pct(broadF1)}` : ""} (89 benchmark passages)`,
+      ]);
+    }
     if (strict && strict.fpr_semeval_none) {
       const f = strict.fpr_semeval_none;
-      const hi = f.ci ? pct(f.ci[1]) : pct(wilsonUpper(f.flagged, f.paragraphs));
-      tiles.push([
-        "Clean-news false alarms",
-        `${f.flagged} / ${f.paragraphs} (${pct(f.rate)})`,
-        `Human-labelled clean news · 95% CI 0–${hi}`,
-      ]);
       const h = strict.fpr_synthetic_hard_negative || { flagged: 0, paragraphs: 0 };
       const totFlag = f.flagged + h.flagged;
       const totN = f.paragraphs + h.paragraphs;
-      const totHi = pct(wilsonUpper(totFlag, totN));
+      const totClean = totN - totFlag;
+      const [lo, hi] = wilsonBounds(totClean, totN);
       tiles.push([
-        "All clean + opinion controls",
-        `${totFlag} / ${totN} (${pct(totN ? totFlag / totN : 0)})`,
-        `21 clean news + ${h.paragraphs} emotional/opinion · 95% CI 0–${totHi}`,
+        "Clean text pass rate",
+        `${totClean} / ${totN} clean (${pct(totN ? totClean / totN : 0)})`,
+        `${totFlag} false ${totFlag === 1 ? "alarm" : "alarms"} across ${f.paragraphs} news + ${h.paragraphs} opinion controls · 95% CI ${pct(lo)}–${pct(hi)}`,
       ]);
     }
     if (swarm) {
@@ -74,11 +80,12 @@
         pct(swarm.f1),
         `${swarm.tp} / ${swarm.coordinated_scenarios} coordinated waves caught (P ${pct(swarm.precision)}, R ${pct(swarm.recall)})`,
       ]);
-      const swHi = pct(wilsonUpper(swarm.fp, swarm.innocent_scenarios));
+      const cleanBatches = swarm.innocent_scenarios - swarm.fp;
+      const [swLo, swHi] = wilsonBounds(cleanBatches, swarm.innocent_scenarios);
       tiles.push([
-        "Swarm innocent false alarms",
-        `${swarm.fp} / ${swarm.innocent_scenarios} (${pct(swarm.innocent_fpr)})`,
-        `Headlines, quotes, syndication & events · 95% CI 0–${swHi}`,
+        "Organic crowd pass rate",
+        `${cleanBatches} / ${swarm.innocent_scenarios} clean (${pct(cleanBatches / swarm.innocent_scenarios)})`,
+        `${swarm.fp} false alarms on viral headlines, quotes & events · 95% CI ${pct(swLo)}–${pct(swHi)}`,
       ]);
     }
     if (!tiles.length) return;
@@ -91,16 +98,15 @@
     const note = $("kpi-note");
     if (note) {
       note.hidden = false;
-      note.textContent = "How to read X / N: N is the number of benchmark passages or multi-post batches tested. " +
-        "Because N is finite (21–25 text controls, 40 Swarm batches), we also show the 95% Wilson confidence upper bound — " +
-        "0 false alarms in a sample means a low error rate, never a mathematical guarantee of 0% on every future article.";
+      note.textContent = "Pass-rate cards show how many non-manipulative control passages (25 text controls) and organic " +
+        "multi-post threads (20 Swarm controls) passed without false accusations, alongside their 95% Wilson confidence interval.";
     }
   }
 
   function renderCalibration(c) {
     if (!c || !c.levels) return;
     $("calib-card").hidden = false;
-    const frac = (o) => (o && o.paragraphs !== undefined ? `${num(o.flagged)} / ${num(o.paragraphs)} (${pct(o.rate)})` : "–");
+    const frac = (o) => (o && o.paragraphs !== undefined ? `${num(o.flagged)} / ${num(o.paragraphs)} flagged (${pct(o.rate)})` : "–");
     ["strict", "balanced", "broad"].forEach((lvl) => {
       const v = c.levels[lvl];
       if (!v) return;
@@ -194,7 +200,7 @@
     if ($("no-results")) $("no-results").hidden = hasAny;
     if ($("results")) $("results").hidden = !latest;
 
-    try { renderKpis(data.calibration, data.swarm); } catch { /* isolated */ }
+    try { renderKpis(data.calibration, latest, data.swarm); } catch { /* isolated */ }
     try { if (latest) renderLatest(latest, labelMap); } catch { /* isolated */ }
     try { renderCalibration(data.calibration); } catch { /* isolated */ }
     try { renderSwarm(data.swarm); } catch { /* isolated */ }
