@@ -1,0 +1,183 @@
+{
+  "scenarios": 24,
+  "bad_scenarios": 12,
+  "innocent_scenarios": 12,
+  "tp": 12,
+  "fp": 0,
+  "fn": 0,
+  "tn": 12,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "innocent_fpr": 0.0,
+  "details": [
+    {
+      "id": "atk_01_wp_cred_stuffing",
+      "kind": "bad_actor",
+      "label": "WordPress /wp-login.php credential stuffing burst",
+      "category": "credential_stuffing",
+      "passed": true
+    },
+    {
+      "id": "atk_02_api_login_ua_rotation",
+      "kind": "bad_actor",
+      "label": "API /api/login brute-force rotating User-Agents",
+      "category": "credential_stuffing",
+      "passed": true
+    },
+    {
+      "id": "atk_03_xmlrpc_amplification",
+      "kind": "bad_actor",
+      "label": "XML-RPC multicall credential attack",
+      "category": "credential_stuffing",
+      "passed": true
+    },
+    {
+      "id": "atk_04_dotenv_git_scanner",
+      "kind": "bad_actor",
+      "label": "Vulnerability scanner probing /.env, /.git, /phpmyadmin",
+      "category": "vuln_scanner",
+      "passed": true
+    },
+    {
+      "id": "atk_05_path_traversal_probe",
+      "kind": "bad_actor",
+      "label": "Path traversal & PHPUnit RCE scanner",
+      "category": "vuln_scanner",
+      "passed": true
+    },
+    {
+      "id": "atk_06_spoofed_googlebot_asn",
+      "kind": "bad_actor",
+      "label": "Spoofed Googlebot User-Agent from non-Google VPS ASN",
+      "category": "spoofed_crawler",
+      "passed": true
+    },
+    {
+      "id": "atk_07_spoofed_bingbot_login",
+      "kind": "bad_actor",
+      "label": "Fake Bingbot POSTing to /admin/login",
+      "category": "spoofed_crawler",
+      "passed": true
+    },
+    {
+      "id": "atk_08_python_requests_scraper",
+      "kind": "bad_actor",
+      "label": "Bulk python-requests article scraper",
+      "category": "ai_or_bulk_scraper",
+      "passed": true
+    },
+    {
+      "id": "atk_09_bytespider_unthrottled",
+      "kind": "bad_actor",
+      "label": "Aggressive AI crawler (Bytespider)",
+      "category": "ai_or_bulk_scraper",
+      "passed": true
+    },
+    {
+      "id": "atk_10_headless_chrome_sweep",
+      "kind": "bad_actor",
+      "label": "HeadlessChrome scraping 18 pages with 0 assets",
+      "category": "ai_or_bulk_scraper",
+      "passed": true
+    },
+    {
+      "id": "atk_11_stealth_datacenter_sweep",
+      "kind": "bad_actor",
+      "label": "Stealth browser-UA scraper on datacenter ASN (0 static assets)",
+      "category": "ai_or_bulk_scraper",
+      "passed": true
+    },
+    {
+      "id": "atk_12_vt_flagged_tor_prober",
+      "kind": "bad_actor",
+      "label": "Tor exit node flagged by VirusTotal probing endpoints",
+      "category": "vuln_scanner",
+      "passed": true
+    },
+    {
+      "id": "clean_01_normal_reader",
+      "kind": "innocent",
+      "label": "Normal desktop reader loading article + CSS/JS/images",
+      "category": "human_visitor",
+      "passed": true
+    },
+    {
+      "id": "clean_02_office_nat_24_reqs",
+      "kind": "innocent",
+      "label": "Shared office NAT IP (3 browsers loading pages + assets)",
+      "category": "human_visitor",
+      "passed": true
+    },
+    {
+      "id": "clean_03_verified_googlebot",
+      "kind": "innocent",
+      "label": "Real Googlebot verified via AS15169 GOOGLE",
+      "category": "verified_crawler",
+      "passed": true
+    },
+    {
+      "id": "clean_04_verified_bingbot",
+      "kind": "innocent",
+      "label": "Real Bingbot verified via AS8075 MICROSOFT",
+      "category": "verified_crawler",
+      "passed": true
+    },
+    {
+      "id": "clean_05_mobile_favicon_404",
+      "kind": "innocent",
+      "label": "Mobile Safari user hitting missing /apple-touch-icon.png 404s",
+      "category": "human_visitor",
+      "passed": true
+    },
+    {
+      "id": "clean_06_single_password_typo",
+      "kind": "innocent",
+      "label": "Human user mistyping password once then succeeding",
+      "category": "human_visitor",
+      "passed": true
+    },
+    {
+      "id": "clean_07_rss_feedly_reader",
+      "kind": "innocent",
+      "label": "Feedly RSS reader polling /feed.xml politely",
+      "category": "verified_crawler",
+      "passed": true
+    },
+    {
+      "id": "clean_08_uptime_monitor",
+      "kind": "innocent",
+      "label": "UptimeRobot health check hitting /api/health",
+      "category": "verified_crawler",
+      "passed": true
+    },
+    {
+      "id": "clean_09_social_link_previews",
+      "kind": "innocent",
+      "label": "Telegram & Slack link-preview unfurlers",
+      "category": "verified_crawler",
+      "passed": true
+    },
+    {
+      "id": "clean_10_deep_reader_12_pages",
+      "kind": "innocent",
+      "label": "Engaged reader browsing 12 articles over 9 min with CSS",
+      "category": "human_visitor",
+      "passed": true
+    },
+    {
+      "id": "clean_11_broken_old_bookmark",
+      "kind": "innocent",
+      "label": "Visitor hitting 2 old moved article URLs (404) + homepage",
+      "category": "human_visitor",
+      "passed": true
+    },
+    {
+      "id": "clean_12_applebot_verified",
+      "kind": "innocent",
+      "label": "Real Applebot verified via AS714 APPLE",
+      "category": "verified_crawler",
+      "passed": true
+    }
+  ]
+}

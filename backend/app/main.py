@@ -94,6 +94,7 @@ def metrics() -> dict:
             "bakeoff": _read_result("bakeoff.json"), "calibration": _read_result("calibration.json"),
             "self_consistency": _read_result("self_consistency.json"),
             "ai_review": _read_result("ai_review.json"), "swarm": _read_result("swarm_latest.json"),
+            "traffic": _read_result("traffic_latest.json"),
             "gold_report": _read_result("gold_report.json"), "languages": languages.coverage()}
 
 
@@ -416,11 +417,43 @@ async def trace_post(req: TraceRequest, request: Request):
     return await _respond(run, error, req.stream)
 
 
+@app.post("/api/traffic")
+async def traffic_post(request: Request) -> dict:
+    """Clean the traffic: inspect Nginx/Apache/Caddy/CSV server logs for malicious bots, credential stuffing,
+    spoofed crawlers, and AI scrapers, enriched with Shodan InternetDB + RIPE ASN + optional VirusTotal."""
+    from app.traffic.detector import analyze_logs
+    from app.traffic.parser import LogParseError, MAX_BYTES
+
+    body_bytes = await request.body()
+    if len(body_bytes) > MAX_BYTES + 4096:
+        raise HTTPException(413, "Log upload exceeds the 2 MB limit.")
+    ctype = (request.headers.get("content-type") or "").lower()
+    enrich = True
+    if "application/json" in ctype:
+        try:
+            payload = json.loads(body_bytes.decode("utf-8", errors="replace"))
+        except ValueError:
+            raise HTTPException(400, "Invalid JSON body.") from None
+        raw = payload.get("data") if isinstance(payload, dict) else ""
+        if isinstance(payload, dict) and isinstance(payload.get("enrich"), bool):
+            enrich = payload["enrich"]
+    else:
+        raw = body_bytes.decode("utf-8", errors="replace")
+
+    if not isinstance(raw, str) or not raw.strip():
+        raise HTTPException(400, "Please paste server log lines or upload an access.log / JSON / CSV file.")
+    ratelimit.enforce("traffic", request)
+    try:
+        return await analyze_logs(raw, enrich=enrich)
+    except LogParseError as exc:
+        raise HTTPException(exc.status, exc.message) from None
+
+
 @app.middleware("http")
 async def _no_stale_static(request: Request, call_next):
     resp = await call_next(request)
     if request.url.path == "/" or request.url.path.startswith("/static/") or request.url.path in {
-        "/source", "/swarm", "/metrics", "/methodology", "/api",
+        "/source", "/swarm", "/traffic", "/metrics", "/methodology", "/api",
     }:
         resp.headers.setdefault("Cache-Control", "no-cache")
     return resp
@@ -440,5 +473,5 @@ def trace_redirect() -> RedirectResponse:
     return RedirectResponse("/swarm", status_code=302)
 
 
-for _name in ("source", "swarm", "metrics", "methodology", "api"):
+for _name in ("source", "swarm", "traffic", "metrics", "methodology", "api"):
     app.add_api_route(f"/{_name}", (lambda n=_name: _page(n)), methods=["GET"], include_in_schema=False)

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clean traffic · Stoprop</title>
+  <meta name="description" content="Separate malicious bots, credential stuffers, spoofed crawlers and scrapers from real visitors in web-server logs.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/static/style.css?v=7">
+</head>
+<body>
+  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic" aria-current="page">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
+  <main class="wrap page wide">
+    <h1>Clean the traffic</h1>
+    <p class="lede">Inspect Nginx, Apache, Caddy, or Traefik web-server logs to separate credential-stuffing attacks,
+      vulnerability scanners, spoofed search bots, and bulk AI scrapers from verified crawlers and real visitors —
+      enriched live with <strong>Shodan InternetDB</strong>, <strong>RIPE NCC ASN</strong>, and <strong>VirusTotal</strong>.</p>
+    <p class="banner principle"><strong>Innocent-visitor protection built in.</strong> Shared office/campus NAT IPs,
+      real browsers loading CSS/JS/images, minor 404s, and ASN-verified Googlebot/Bingbot crawlers are protected from false blocks.</p>
+
+    <section class="card" aria-labelledby="h-log">
+      <h2 id="h-log">Inspect server access logs</h2>
+      <div class="samples" role="group" aria-label="One-click log demos">
+        <span class="muted small">Try an example:</span>
+        <button type="button" id="ex-live-attack">Hostinger VPS attack + visitor mix (live Shodan + RIPE)</button>
+        <button type="button" id="ex-caddy">Caddy / Traefik JSON log</button>
+        <button type="button" id="ex-office">Clean office NAT + Googlebot control</button>
+      </div>
+
+      <form id="traffic-form" novalidate>
+        <label for="log-input" class="field-label">Paste access.log lines (Nginx / Apache Combined, Caddy JSON, or CSV)</label>
+        <textarea id="log-input" rows="7" spellcheck="false" style="font-family:ui-monospace,Consolas,monospace;font-size:.84rem"
+          placeholder='185.220.101.1 - - [14/Nov/2026:18:22:01 +0000] "POST /wp-login.php HTTP/1.1" 401 512 "-" "Mozilla/5.0"&#10;66.249.66.1 - - [14/Nov/2026:18:22:05 +0000] "GET /robots.txt HTTP/1.1" 200 124 "-" "Mozilla/5.0 (compatible; Googlebot/2.1)"'></textarea>
+
+        <div class="controls">
+          <label class="file-pick small">Upload .log / .json / .csv<input type="file" id="log-file" accept=".log,.txt,.json,.csv,text/plain"></label>
+          <span id="file-info" class="muted small" aria-live="polite"></span>
+          <label class="inline check"><input type="checkbox" id="enrich" checked> Enrich public IPs via Shodan &amp; RIPE ASN</label>
+          <button type="submit" id="go">Analyze logs</button>
+        </div>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="result" hidden aria-labelledby="h-res">
+      <div id="traffic-kpis" class="kpi-grid"></div>
+
+      <div class="card">
+        <div class="source-summary-head">
+          <h2 id="h-res" style="margin:0">Traffic overview</h2>
+          <div class="row-actions" style="margin:0">
+            <button type="button" id="copy-traffic-brief" class="secondary small">Copy brief</button>
+          </div>
+        </div>
+        <p id="summary" style="margin:.45rem 0 .6rem"></p>
+        <div id="traffic-chart" class="chart-box" hidden></div>
+        <ul id="notes" class="notes small"></ul>
+      </div>
+
+      <section class="card" id="mitig-card" aria-labelledby="h-mit">
+        <h2 id="h-mit">Actionable server mitigations (Hostinger `.htaccess`, Nginx &amp; Firewall)</h2>
+        <p class="muted small">Ready-to-paste rules targeting only confirmed malicious actors (`block`), leaving real visitors and verified crawlers untouched.</p>
+        <div class="samples" role="tablist" aria-label="Server config format" style="margin-bottom:.5rem">
+          <button type="button" data-fmt="htaccess" class="fmt-btn">Apache / Hostinger .htaccess</button>
+          <button type="button" data-fmt="nginx" class="fmt-btn">Nginx</button>
+          <button type="button" data-fmt="ufw" class="fmt-btn">Linux UFW Firewall</button>
+          <button type="button" id="copy-rules" class="secondary small" style="margin-left:auto">Copy rules</button>
+        </div>
+        <pre><code id="mitig-code"></code></pre>
+      </section>
+
+      <section class="card" aria-labelledby="h-actors">
+        <h2 id="h-actors">Actors by IP &amp; threat intelligence</h2>
+        <div id="actors-list"></div>
+      </section>
+    </section>
+  </main>
+  <footer class="wrap muted small">Stoprop separates malicious automation from real visitors using multi-signal behaviour + public IP registries. Logs are processed in memory and never stored.</footer>
+  <script src="/static/traffic.js?v=1" defer></script>
+</body>
+</html>

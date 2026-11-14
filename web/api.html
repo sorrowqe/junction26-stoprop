@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/static/style.css?v=6">
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api" aria-current="page">API</a></div></nav>
+  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api" aria-current="page">API</a></div></nav>
   <main class="wrap page">
     <h1>API</h1>
     <p class="lede">Everything the web app does is available as a JSON API. Interactive reference: <a href="/docs">/docs</a>.</p>
@@ -70,6 +70,14 @@ curl -s -N -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/
       <code>spread</code> (first seen, timeline, websites with domain checks, accounts), the <code>verdict</code> and
       <code>cluster</code> evidence, and every kept result in <code>copies</code>. Public data only, nothing stored,
       5 traces per hour.</p>
+    <h2>Clean the traffic (server-log bot &amp; scraper inspector)</h2>
+    <pre><code>curl -s -X POST https://stoprop.tech/api/traffic \
+  -H 'Content-Type: text/plain' --data-binary @/var/log/nginx/access.log</code></pre>
+    <p>Parses Nginx/Apache Combined logs, Caddy/Traefik JSON logs, or CSV in memory (never stored), enriches public IPs
+      with <strong>Shodan InternetDB</strong> (open ports, tags, CVEs, rDNS), <strong>RIPE NCC ASN</strong>, and optional
+      <strong>VirusTotal</strong>, separates credential stuffers, vulnerability scanners, spoofed search crawlers and bulk
+      AI scrapers from real visitors (including shared office NAT), and outputs ready-to-paste Hostinger
+      <code>.htaccess</code>, Nginx, and <code>ufw</code> rules.</p>
     <h2>Taxonomy</h2>
     <pre><code>curl -s https://stoprop.tech/api/techniques</code></pre>
     <h2>Health and AI budget</h2>

@@ -7,13 +7,14 @@ Stoprop is an open-web anti-propaganda & coordinated-amplification intelligence 
 
 ---
 
-## Three Integrated Tools (Web App + Public JSON API)
+## Four Integrated Tools (Covering All 4 Hostinger Challenge Tracks)
 
 | Tool | Challenge Track | Capabilities | False-Positive Guardrail |
 | :--- | :--- | :--- | :--- |
 | **1. Analyze & Verify** (`/`) | *Name the technique* | Highlights **14 persuasion techniques** + claim/balance markers span-by-span in plain English, and cross-checks factual claims against live news reporting (`/api/verify`). | Every quote is verified **character-for-character** by deterministic code (`0%` hallucinated spans); attributed quotes (*reported speech*) are never blamed on the journalist; calibrated `Strict` mode keeps clean-news false alarms $\le 5\%$. |
 | **2. Check a Source** (`/source`) | *Trust the source* | Generates verifiable provenance "receipts" (`0` AI cost): RDAP + ccTLD port-43 WHOIS domain age, Wayback first capture, Certificate Transparency (`crt.sh` + CertSpotter), homoglyph/TLD-swap clone check, live HTML newsroom transparency & **outbound link-network audit**, 8-watchdog fact-check search, and verbatim copy search. | Never calls a site "fake" solely for being young — separates reassuring records, neutral facts, satire/state-media disclosures, and concrete brand-impersonation warnings. |
 | **3. Swarm Mode** (`/swarm`) | *Spot the swarm* | Single smart input for **Reddit**, **Telegram (`t.me`)**, **Bluesky**, **Mastodon**, **Hacker News**, **YouTube**, CSV/JSON exports, and **5-platform open-web narrative spread tracing** (`/api/trace`), plus AI manipulation tagging on flagged clusters & paraphrase embeddings. | Requires **text reuse ($T$) + at least one independent behavioural signal** (**$S$** Poisson timing burst $p < 0.001$, **$A$** look-alike/cohort accounts, or **$M$** non-mainstream link push) **plus** 5 innocent-crowd filters (headlines, official quotes, wire syndication, live events, short replies). |
+| **4. Clean the Traffic** (`/traffic`) | *Clean the traffic* | Parses Nginx/Apache Combined, Caddy/Traefik JSON, or CSV access logs (`0` AI cost), enriches IPs live via **Shodan InternetDB**, **RIPE NCC ASN**, and optional **VirusTotal**, catches credential-stuffing waves, vulnerability scanners, ASN-spoofed search crawlers & bulk AI scrapers, and outputs ready-to-paste Hostinger `.htaccess`, Nginx, and `ufw` rules. | Protects shared office/campus NAT IPs, real browsers loading CSS/JS/image assets, benign 404s, and ASN/rDNS-verified Googlebot/Bingbot/Applebot crawlers (`12/12` clean controls protected). |
 
 ---
 
@@ -48,6 +49,7 @@ All evaluation harnesses (`eval/`) and result snapshots (`eval/results/`) are co
 | **Text Detector — Dev Split** (`Strict` default) | 89 passages (SemEval-2020 + multi-technique) | **65.4% Precision** · **41.3% F1** *(Broad F1: **48.6%**)* | **24 / 25 clean (96.0%)** — `1/21` (`4.8%`) on SemEval clean news + `0/4` on opinion controls (`95% CI 80.5–99.3%`) |
 | **Text Detector — Locked Held-Out Test Split** (`test_final.json`) | 49 unseen passages (never used in tuning) | **60.0% Precision** (**80.0%** on multi-technique) · **47.2% F1** | **11 / 11 clean (100%)** — `0/9` on unseen SemEval clean news + `0/2` on unseen hard negatives |
 | **Swarm Mode Stress Benchmark** (`0` AI calls, seed `2026`) | 40 multi-post feeds (20 campaigns + 20 organic crowds) | **100% Precision** · **85.0% Recall (17/20)** · **91.9% F1** | **20 / 20 clean (100%)** — `0` false alarms across BBC/ERR/Reuters headlines, quotes, AP/Reuters wire syndication & live events (`95% CI 83.9–100%`) |
+| **Clean-Traffic Log Benchmark** (`0` AI calls, `traffic_latest.json`) | 24 server-log feeds (12 attack/bot + 12 real visitor/crawler) | **100% Precision** · **100% Recall (12/12)** · **100% F1** | **12 / 12 clean (100%)** — `0` false blocks across shared office NAT, ASN-verified Googlebot/Bingbot/Applebot, RSS readers & benign 404s |
 
 ---
 

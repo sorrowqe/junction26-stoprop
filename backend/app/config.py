@@ -87,6 +87,10 @@ def llm_configured() -> bool:
     return bool(router_api_key() and router_base_url() and model_tagger())
 
 
+def virustotal_api_key() -> str:
+    return env("VIRUSTOTAL_API_KEY")
+
+
 def daily_token_cap() -> int:
     try:
         return max(0, int(env("DAILY_TOKEN_CAP", "2000000")))

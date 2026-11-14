@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/static/style.css?v=6">
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics" aria-current="page">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
+  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics" aria-current="page">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
   <main class="wrap page wide">
     <h1>Accuracy &amp; False-Positive Metrics</h1>
     <p class="lede">How accurately Stoprop spots manipulation techniques and coordinated campaigns — and how reliably it
@@ -105,6 +105,17 @@
       </div>
     </section>
 
+    <section class="card" id="traffic-card" aria-labelledby="h-tr" hidden>
+      <h2 id="h-tr">Clean the Traffic: Server-Log Bot &amp; Scraper Benchmark</h2>
+      <p id="traffic-summary" class="muted small"></p>
+      <div class="table-wrap">
+        <table id="traffic-table">
+          <thead><tr><th>Scenario</th><th>Type</th><th>Detected class</th><th>Outcome</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
     <section class="card" aria-labelledby="h-sym">
       <h2 id="h-sym">Viewpoint Neutrality &amp; Language Coverage</h2>
       <p id="sym" class="small">Stoprop tests political and group symmetry on mirrored pairs where only the sides are swapped.</p>
@@ -130,6 +141,6 @@
     </section>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
-  <script src="/static/metrics.js?v=6" defer></script>
+  <script src="/static/metrics.js?v=7" defer></script>
 </body>
 </html>

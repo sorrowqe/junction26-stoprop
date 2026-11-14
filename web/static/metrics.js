@@ -213,6 +213,25 @@
     });
   }
 
+  function renderTraffic(tr) {
+    if (!tr || !Array.isArray(tr.details)) return;
+    const card = $("traffic-card");
+    if (!card) return;
+    card.hidden = false;
+    const cleanOk = tr.innocent_scenarios - tr.fp;
+    $("traffic-summary").textContent = `Evaluated across ${tr.scenarios} server-log scenarios (${tr.bad_scenarios} credential-stuffing, ` +
+      `vulnerability-scanner, spoofed-crawler & bulk-scraper waves and ${tr.innocent_scenarios} real visitor / shared-NAT / verified-crawler controls): ` +
+      `precision ${pct(tr.precision)}, recall ${pct(tr.recall)}, F1 ${pct(tr.f1)}, and ${cleanOk} / ${tr.innocent_scenarios} (${pct(cleanOk / tr.innocent_scenarios)}) clean traffic controls protected.`;
+    tr.details.forEach((d) => {
+      body("traffic-table").append(row([
+        d.label,
+        d.kind === "bad_actor" ? "Attack / bot wave" : "Real visitor / verified crawler",
+        (d.category || "").replace(/_/g, " "),
+        d.passed ? "✓ Correct" : "× Missed",
+      ]));
+    });
+  }
+
   Promise.all([
     fetch("/api/metrics").then((r) => r.json()),
     fetch("/api/techniques").then((r) => r.json()).catch(() => ({ labels: [] })),
@@ -240,6 +259,7 @@
     try { renderCalibration(data.calibration); } catch { /* isolated */ }
     try { renderHoldout(data.test_final); } catch { /* isolated */ }
     try { renderSwarm(data.swarm); } catch { /* isolated */ }
+    try { renderTraffic(data.traffic); } catch { /* isolated */ }
   }).catch(() => {
     if ($("no-results")) $("no-results").hidden = false;
   });
