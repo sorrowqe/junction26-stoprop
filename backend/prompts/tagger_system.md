@@ -34,6 +34,8 @@ You receive a text split into numbered sentences, plus rule-based hints. Check E
      their numbers?"), scare quotes ("these 'independent' auditors"), or motive insinuations -> doubt_casting.
    - causal_oversimplification: attributing a complex problem to a single cause or scapegoat ("for one reason only",
      "all because of X") -> causal_oversimplification.
+   - bandwagon: quote only the majority-appeal phrase itself ("Everyone knows", "every sensible person agrees"), not
+     the rest of the sentence.
 6. Reported speech: words attributed to a specific named person, organisation or official role - direct quotes AND
    attributed indirect speech ("X said that ...", "according to X, ...", "..., the minister said") - may still be
    labelled when they use a technique; our code marks them as reported speech automatically. Do not label the
