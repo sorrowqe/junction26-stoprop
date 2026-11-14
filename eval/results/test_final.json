@@ -1,0 +1,1031 @@
+{
+  "git_commit": "eee1c1a4",
+  "timestamp": "2026-11-14T23:12:29+00:00",
+  "split": "test",
+  "language": "en",
+  "model": "gemini-3.5-flash-lite-eu",
+  "sensitivity": "broad",
+  "prompt_version": "c7db1a7998",
+  "taxonomy_version": 1,
+  "counts": {
+    "items": 49,
+    "by_source": {
+      "semeval": 33,
+      "synthetic": 16
+    },
+    "clean_sets": {
+      "semeval_none": 9,
+      "synthetic_hard_negative": 2
+    },
+    "symmetry_pairs": 11
+  },
+  "scores": {
+    "strict": {
+      "all": {
+        "micro": {
+          "precision": 0.6,
+          "recall": 0.389,
+          "f1": 0.472,
+          "predicted": 35,
+          "gold": 54,
+          "tp_pred": 21,
+          "tp_gold": 21
+        },
+        "per_label": {
+          "balance": {
+            "precision": 0.25,
+            "recall": 0.25,
+            "f1": 0.25,
+            "predicted": 4,
+            "gold": 4,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "bandwagon": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 1,
+            "gold": 1,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "causal_oversimplification": {
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.667,
+            "predicted": 1,
+            "gold": 2,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "doubt_casting": {
+            "precision": 0.4,
+            "recall": 0.667,
+            "f1": 0.5,
+            "predicted": 5,
+            "gold": 3,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "exaggeration_minimisation": {
+            "precision": null,
+            "recall": 0.0,
+            "f1": null,
+            "predicted": 0,
+            "gold": 3,
+            "tp_pred": 0,
+            "tp_gold": 0
+          },
+          "false_dilemma": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 1,
+            "gold": 1,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "fear_appeal": {
+            "precision": 0.2,
+            "recall": 0.333,
+            "f1": 0.25,
+            "predicted": 5,
+            "gold": 3,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "loaded_language": {
+            "precision": 0.818,
+            "recall": 0.6,
+            "f1": 0.692,
+            "predicted": 11,
+            "gold": 15,
+            "tp_pred": 9,
+            "tp_gold": 9
+          },
+          "name_calling": {
+            "precision": 1.0,
+            "recall": 0.222,
+            "f1": 0.364,
+            "predicted": 2,
+            "gold": 9,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "questionable_authority": {
+            "precision": 1.0,
+            "recall": 0.25,
+            "f1": 0.4,
+            "predicted": 1,
+            "gold": 4,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "supported_claim": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "predicted": 1,
+            "gold": 4,
+            "tp_pred": 0,
+            "tp_gold": 0
+          },
+          "unsupported_claim": {
+            "precision": 0.5,
+            "recall": 0.25,
+            "f1": 0.333,
+            "predicted": 2,
+            "gold": 4,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "whataboutism": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 1,
+            "gold": 1,
+            "tp_pred": 1,
+            "tp_gold": 1
+          }
+        }
+      },
+      "by_source": {
+        "semeval": {
+          "micro": {
+            "precision": 0.45,
+            "recall": 0.29,
+            "f1": 0.353,
+            "predicted": 20,
+            "gold": 31,
+            "tp_pred": 9,
+            "tp_gold": 9
+          },
+          "per_label": {
+            "balance": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 2,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "causal_oversimplification": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 1,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "doubt_casting": {
+              "precision": 0.25,
+              "recall": 0.5,
+              "f1": 0.333,
+              "predicted": 4,
+              "gold": 2,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "exaggeration_minimisation": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 2,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "fear_appeal": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "predicted": 3,
+              "gold": 2,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "loaded_language": {
+              "precision": 0.8,
+              "recall": 0.571,
+              "f1": 0.667,
+              "predicted": 10,
+              "gold": 14,
+              "tp_pred": 8,
+              "tp_gold": 8
+            },
+            "name_calling": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 7,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "questionable_authority": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 3,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "unsupported_claim": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            }
+          }
+        },
+        "synthetic": {
+          "micro": {
+            "precision": 0.8,
+            "recall": 0.522,
+            "f1": 0.632,
+            "predicted": 15,
+            "gold": 23,
+            "tp_pred": 12,
+            "tp_gold": 12
+          },
+          "per_label": {
+            "balance": {
+              "precision": 0.5,
+              "recall": 0.25,
+              "f1": 0.333,
+              "predicted": 2,
+              "gold": 4,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "bandwagon": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "causal_oversimplification": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "doubt_casting": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "exaggeration_minimisation": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 1,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "false_dilemma": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "fear_appeal": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667,
+              "predicted": 2,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "loaded_language": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "name_calling": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 2,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "questionable_authority": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "supported_claim": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "predicted": 1,
+              "gold": 4,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "unsupported_claim": {
+              "precision": 1.0,
+              "recall": 0.25,
+              "f1": 0.4,
+              "predicted": 1,
+              "gold": 4,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "whataboutism": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            }
+          }
+        }
+      }
+    },
+    "lenient": {
+      "all": {
+        "micro": {
+          "precision": 0.622,
+          "recall": 0.452,
+          "f1": 0.523,
+          "predicted": 45,
+          "gold": 62,
+          "tp_pred": 28,
+          "tp_gold": 28
+        },
+        "per_label": {
+          "balance": {
+            "precision": 0.25,
+            "recall": 0.167,
+            "f1": 0.2,
+            "predicted": 4,
+            "gold": 6,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "bandwagon": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 2,
+            "gold": 2,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "causal_oversimplification": {
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.667,
+            "predicted": 1,
+            "gold": 2,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "doubt_casting": {
+            "precision": 0.4,
+            "recall": 0.667,
+            "f1": 0.5,
+            "predicted": 5,
+            "gold": 3,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "exaggeration_minimisation": {
+            "precision": null,
+            "recall": 0.0,
+            "f1": null,
+            "predicted": 0,
+            "gold": 3,
+            "tp_pred": 0,
+            "tp_gold": 0
+          },
+          "false_dilemma": {
+            "precision": 1.0,
+            "recall": 0.5,
+            "f1": 0.667,
+            "predicted": 1,
+            "gold": 2,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "fear_appeal": {
+            "precision": 0.167,
+            "recall": 0.333,
+            "f1": 0.222,
+            "predicted": 6,
+            "gold": 3,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "loaded_language": {
+            "precision": 0.733,
+            "recall": 0.688,
+            "f1": 0.71,
+            "predicted": 15,
+            "gold": 16,
+            "tp_pred": 11,
+            "tp_gold": 11
+          },
+          "name_calling": {
+            "precision": 1.0,
+            "recall": 0.3,
+            "f1": 0.462,
+            "predicted": 3,
+            "gold": 10,
+            "tp_pred": 3,
+            "tp_gold": 3
+          },
+          "questionable_authority": {
+            "precision": 1.0,
+            "recall": 0.25,
+            "f1": 0.4,
+            "predicted": 1,
+            "gold": 4,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "supported_claim": {
+            "precision": 0.75,
+            "recall": 0.5,
+            "f1": 0.6,
+            "predicted": 4,
+            "gold": 6,
+            "tp_pred": 3,
+            "tp_gold": 3
+          },
+          "unsupported_claim": {
+            "precision": 0.5,
+            "recall": 0.25,
+            "f1": 0.333,
+            "predicted": 2,
+            "gold": 4,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "whataboutism": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 1,
+            "gold": 1,
+            "tp_pred": 1,
+            "tp_gold": 1
+          }
+        }
+      },
+      "by_source": {
+        "semeval": {
+          "micro": {
+            "precision": 0.435,
+            "recall": 0.323,
+            "f1": 0.37,
+            "predicted": 23,
+            "gold": 31,
+            "tp_pred": 10,
+            "tp_gold": 10
+          },
+          "per_label": {
+            "balance": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 2,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "causal_oversimplification": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 1,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "doubt_casting": {
+              "precision": 0.25,
+              "recall": 0.5,
+              "f1": 0.333,
+              "predicted": 4,
+              "gold": 2,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "exaggeration_minimisation": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 2,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "fear_appeal": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "predicted": 4,
+              "gold": 2,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "loaded_language": {
+              "precision": 0.75,
+              "recall": 0.643,
+              "f1": 0.692,
+              "predicted": 12,
+              "gold": 14,
+              "tp_pred": 9,
+              "tp_gold": 9
+            },
+            "name_calling": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 7,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "questionable_authority": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 3,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "unsupported_claim": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            }
+          }
+        },
+        "synthetic": {
+          "micro": {
+            "precision": 0.818,
+            "recall": 0.581,
+            "f1": 0.679,
+            "predicted": 22,
+            "gold": 31,
+            "tp_pred": 18,
+            "tp_gold": 18
+          },
+          "per_label": {
+            "balance": {
+              "precision": 0.5,
+              "recall": 0.167,
+              "f1": 0.25,
+              "predicted": 2,
+              "gold": 6,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "bandwagon": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 2,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "causal_oversimplification": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "doubt_casting": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "exaggeration_minimisation": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 1,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "false_dilemma": {
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.667,
+              "predicted": 1,
+              "gold": 2,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "fear_appeal": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667,
+              "predicted": 2,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "loaded_language": {
+              "precision": 0.667,
+              "recall": 1.0,
+              "f1": 0.8,
+              "predicted": 3,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "name_calling": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 3,
+              "gold": 3,
+              "tp_pred": 3,
+              "tp_gold": 3
+            },
+            "questionable_authority": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "supported_claim": {
+              "precision": 0.75,
+              "recall": 0.5,
+              "f1": 0.6,
+              "predicted": 4,
+              "gold": 6,
+              "tp_pred": 3,
+              "tp_gold": 3
+            },
+            "unsupported_claim": {
+              "precision": 1.0,
+              "recall": 0.25,
+              "f1": 0.4,
+              "predicted": 1,
+              "gold": 4,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "whataboutism": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "clean_fpr": {
+    "semeval_none": {
+      "paragraphs": 9,
+      "flagged_any": 0,
+      "fpr_any": 0.0,
+      "flagged_techniques": 0,
+      "fpr_techniques": 0.0,
+      "flags_per_1000_words": 0.0
+    },
+    "synthetic_hard_negative": {
+      "paragraphs": 2,
+      "flagged_any": 0,
+      "fpr_any": 0.0,
+      "flagged_techniques": 0,
+      "fpr_techniques": 0.0,
+      "flags_per_1000_words": 0.0
+    }
+  },
+  "symmetry": {
+    "pairs": 11,
+    "flipped": 5,
+    "flip_rate": 0.455,
+    "examples": [
+      {
+        "pair_id": "sym-02",
+        "a": [
+          "doubt_casting",
+          "loaded_language",
+          "unsupported_claim"
+        ],
+        "b": [
+          "doubt_casting",
+          "loaded_language"
+        ]
+      },
+      {
+        "pair_id": "sym-03",
+        "a": [
+          "doubt_casting",
+          "false_dilemma",
+          "fear_appeal",
+          "loaded_language"
+        ],
+        "b": [
+          "doubt_casting",
+          "false_dilemma",
+          "loaded_language"
+        ]
+      },
+      {
+        "pair_id": "sym-05",
+        "a": [
+          "causal_oversimplification",
+          "fear_appeal",
+          "loaded_language"
+        ],
+        "b": [
+          "causal_oversimplification",
+          "doubt_casting",
+          "fear_appeal",
+          "loaded_language"
+        ]
+      },
+      {
+        "pair_id": "sym-06",
+        "a": [
+          "false_dilemma",
+          "fear_appeal",
+          "loaded_language"
+        ],
+        "b": [
+          "fear_appeal",
+          "loaded_language"
+        ]
+      },
+      {
+        "pair_id": "sym-07",
+        "a": [
+          "doubt_casting",
+          "loaded_language"
+        ],
+        "b": [
+          "doubt_casting"
+        ]
+      }
+    ]
+  },
+  "validator_rejection_rate": 0.009,
+  "abstention_rate": 0.394,
+  "cost": {
+    "analyses": 71,
+    "llm_calls": 49,
+    "credits_per_call": 0.1097,
+    "input_tokens": 104799,
+    "output_tokens": 3714,
+    "mean_tokens_per_analysis": 1528.4,
+    "mean_latency_s": 0.74,
+    "credits": 5.376,
+    "mean_credits_per_analysis": 0.0757
+  },
+  "llm_failures": 0,
+  "gold_report": {
+    "language": "en",
+    "items": {
+      "dev": 89,
+      "test": 49
+    },
+    "per_source": {
+      "semeval": {
+        "accepted": 100
+      },
+      "synthetic": {
+        "accepted": 38,
+        "excluded": 12
+      }
+    },
+    "per_label": {
+      "balance": {
+        "excluded": 7,
+        "accepted": 7
+      },
+      "bandwagon": {
+        "accepted": 4
+      },
+      "causal_oversimplification": {
+        "accepted": 11
+      },
+      "doubt_casting": {
+        "accepted": 12
+      },
+      "exaggeration_minimisation": {
+        "accepted": 18
+      },
+      "false_dilemma": {
+        "accepted": 4
+      },
+      "fear_appeal": {
+        "accepted": 9
+      },
+      "loaded_language": {
+        "accepted": 54
+      },
+      "name_calling": {
+        "accepted": 34
+      },
+      "none": {
+        "accepted": 30
+      },
+      "questionable_authority": {
+        "accepted": 8,
+        "excluded": 1
+      },
+      "supported_claim": {
+        "excluded": 13,
+        "accepted": 11
+      },
+      "unsupported_claim": {
+        "accepted": 8
+      },
+      "whataboutism": {
+        "accepted": 5
+      }
+    },
+    "clean_sets": {
+      "semeval_none": 30,
+      "synthetic_hard_negative": 6
+    },
+    "symmetry_pairs": {
+      "accepted": 11,
+      "excluded": 1
+    },
+    "not_evaluated_language_rows": 63,
+    "problems": []
+  },
+  "ai_review": {
+    "per_label": {
+      "balance": {
+        "excluded": 7,
+        "accepted": 7,
+        "kappa": 1.0
+      },
+      "bandwagon": {
+        "accepted": 4,
+        "kappa": 1.0
+      },
+      "causal_oversimplification": {
+        "accepted": 8,
+        "kappa": 1.0
+      },
+      "doubt_casting": {
+        "accepted": 14,
+        "kappa": 1.0
+      },
+      "exaggeration_minimisation": {
+        "accepted": 5,
+        "kappa": 1.0
+      },
+      "false_dilemma": {
+        "accepted": 10,
+        "kappa": 1.0
+      },
+      "fear_appeal": {
+        "accepted": 5,
+        "kappa": 1.0
+      },
+      "loaded_language": {
+        "accepted": 13,
+        "kappa": 1.0
+      },
+      "name_calling": {
+        "accepted": 6,
+        "kappa": 1.0
+      },
+      "none": {
+        "accepted": 6,
+        "kappa": 1.0
+      },
+      "questionable_authority": {
+        "excluded": 3,
+        "accepted": 5,
+        "kappa": 0.0
+      },
+      "supported_claim": {
+        "excluded": 13,
+        "accepted": 11,
+        "kappa": 0.0
+      },
+      "unsupported_claim": {
+        "accepted": 8,
+        "kappa": 1.0
+      },
+      "whataboutism": {
+        "accepted": 5,
+        "kappa": 1.0
+      }
+    },
+    "kappa": 0.0,
+    "rows": 130,
+    "items": {
+      "gold:accepted": 38,
+      "gold:excluded": 12,
+      "sym:accepted": 11,
+      "sym:excluded": 1
+    },
+    "reported_speech_corrections": 25,
+    "unmarked_technique_items": {
+      "one": 29,
+      "both": 1
+    },
+    "reviewers": [
+      "gemini-3.5-flash-eu",
+      "mistral-medium-3.5-eu"
+    ],
+    "language": "en",
+    "method": "two model families, consensus only, not human-verified",
+    "timestamp": "2026-11-14T14:27:04+00:00",
+    "git_commit": "da9ef7b8",
+    "calls": {
+      "gemini-3.5-flash-eu": 12,
+      "mistral-medium-3.5-eu": 11
+    },
+    "tokens": {
+      "gemini-3.5-flash-eu": {
+        "in": 22476,
+        "out": 9293
+      },
+      "mistral-medium-3.5-eu": {
+        "in": 21892,
+        "out": 7515
+      }
+    },
+    "credits": {
+      "gemini-3.5-flash-eu": 15.4903,
+      "mistral-medium-3.5-eu": 11.7745
+    },
+    "raw_agreement": 0.877,
+    "accept_rate": {
+      "gemini-3.5-flash-eu": 1.0,
+      "mistral-medium-3.5-eu": 0.877
+    },
+    "items_with_unmarked_techniques": {
+      "gemini-3.5-flash-eu": 1,
+      "mistral-medium-3.5-eu": 30
+    },
+    "credits_first_batch": {
+      "gemini-3.5-flash-eu": 1.418076,
+      "mistral-medium-3.5-eu": 1.040292,
+      "gemini-3.5-flash-eu (truncated, discarded)": 5.159088
+    },
+    "credits_total": 34.88
+  }
+}

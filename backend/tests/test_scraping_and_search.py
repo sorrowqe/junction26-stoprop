@@ -571,8 +571,11 @@ def test_outbound_link_network_verify_fallback_and_structural_hints(monkeypatch)
     assert {"causal_oversimplification_phrase", "exaggeration_phrase", "false_dilemma_phrase"} <= htypes
     assert heuristics.spans_from_hints([h for h in heuristics.extract_hints(seg) if h["type"] in ("causal_oversimplification_phrase", "exaggeration_phrase")]) == []
 
-    # 4. Landing page cross-tool handoff links & visible Swarm AI tag toggle
+    # 4. Landing page cross-tool handoff links, Copy brief, Bookmarklet & Held-out test split on /api/metrics
     idx_html = client.get("/").text
     assert 'id="to-swarm"' in idx_html and 'id="to-source"' in idx_html
+    assert 'id="copy-brief"' in idx_html and 'id="bookmarklet"' in idx_html
     sw_html = client.get("/swarm").text
-    assert 'id="tag" checked' in sw_html
+    assert 'id="tag" checked' in sw_html and 'id="copy-swarm-brief"' in sw_html
+    m2 = client.get("/api/metrics").json()
+    assert m2["test_final"] is not None and m2["test_final"]["split"] == "test" and m2["test_final"]["counts"]["items"] == 49

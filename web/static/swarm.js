@@ -829,6 +829,30 @@
     $("clear-file").hidden = true;
     updateHint();
   });
+  if ($("copy-swarm-brief")) {
+    $("copy-swarm-brief").addEventListener("click", async () => {
+      if (!last) return;
+      const btn = $("copy-swarm-brief");
+      const lines = ["=== Stoprop Swarm & Spread Brief ===", $("summary").textContent];
+      if (last.spread && last.spread.first_seen) {
+        const f = last.spread.first_seen;
+        lines.push(`Earliest dated copy: ${f.who} (${f.platform}) at ${fmtTime(f.ts)} — ${f.url || ""}`);
+      }
+      const cls = last.clusters || (last.cluster ? [last.cluster] : []);
+      cls.slice(0, 5).forEach((c) => {
+        lines.push("", `[${VERDICT[c.verdict].text}] ${c.headline}`);
+        lines.push(`Sample: “${(c.representative_text || "").slice(0, 180)}”`);
+        (c.evidence_for || []).forEach((e) => lines.push(`  + ${e}`));
+      });
+      lines.push("", "Analyzed via https://stoprop.tech/swarm");
+      try {
+        await navigator.clipboard.writeText(lines.join("\n"));
+        const orig = btn.textContent;
+        btn.textContent = "✓ Copied brief";
+        setTimeout(() => { btn.textContent = orig; }, 1800);
+      } catch { /* ignore */ }
+    });
+  }
   $("download").addEventListener("click", () => {
     if (!last) return;
     const blob = new Blob([JSON.stringify(last, null, 2)], { type: "application/json" });

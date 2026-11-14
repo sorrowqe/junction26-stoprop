@@ -6,10 +6,10 @@
   "updated": "2026-11-14T14:47:32+00:00"
  },
  "gemini-3.5-flash-lite-eu": {
-  "calls_measured": 234,
-  "credits_measured": 25.3639,
-  "credits_per_call": 0.1084,
-  "updated": "2026-11-14T21:36:05+00:00"
+  "calls_measured": 283,
+  "credits_measured": 30.7396,
+  "credits_per_call": 0.1086,
+  "updated": "2026-11-14T23:12:29+00:00"
  },
  "gpt-5.4-mini": {
   "calls_measured": 30,

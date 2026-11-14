@@ -4,6 +4,7 @@
   const $ = (id) => document.getElementById(id);
   const SVGNS = "http://www.w3.org/2000/svg";
   let lastTarget = null;
+  let lastData = null;
 
   const el = (tag, cls, text) => {
     const n = document.createElement(tag);
@@ -169,6 +170,7 @@
       const data = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(typeof data.detail === "string" ? data.detail : `Something went wrong (HTTP ${r.status}).`);
       lastTarget = target;
+      lastData = data;
       $("domain").textContent = data.domain;
       const regNote = $("reg-note");
       if (data.registrable_domain && data.registrable_domain !== data.domain) {
@@ -204,6 +206,27 @@
 
   $("source-form").addEventListener("submit", (e) => { e.preventDefault(); check(false); });
   $("refresh").addEventListener("click", () => check(true));
+  if ($("copy-source-brief")) {
+    $("copy-source-brief").addEventListener("click", async () => {
+      if (!lastData) return;
+      const btn = $("copy-source-brief");
+      const lines = [`=== Stoprop Source Provenance Brief: ${lastData.domain} ===`];
+      if (lastData.page && lastData.page.reachable) {
+        if (lastData.page.title) lines.push(`Page: ${lastData.page.title}`);
+        if (lastData.page.brand_warning) lines.push(`! Brand warning: ${lastData.page.brand_warning.text}`);
+      }
+      (lastData.receipts || []).forEach((r) => {
+        if (r.status !== "not_checked") lines.push(`• ${r.title}: ${r.text}`);
+      });
+      lines.push("", `Report: https://stoprop.tech/source?q=${encodeURIComponent(lastTarget || lastData.domain)}`);
+      try {
+        await navigator.clipboard.writeText(lines.join("\n"));
+        const orig = btn.textContent;
+        btn.textContent = "✓ Copied brief";
+        setTimeout(() => { btn.textContent = orig; }, 1800);
+      } catch { /* ignore */ }
+    });
+  }
   document.querySelectorAll("[data-try]").forEach((b) => b.addEventListener("click", () => {
     $("target").value = b.dataset.try;
     check(false);

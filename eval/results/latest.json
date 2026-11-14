@@ -1,6 +1,6 @@
 {
-  "git_commit": "d39f5819",
-  "timestamp": "2026-11-14T21:36:05+00:00",
+  "git_commit": "eee1c1a4",
+  "timestamp": "2026-11-14T23:12:46+00:00",
   "split": "dev",
   "language": "en",
   "model": "gemini-3.5-flash-lite-eu",
@@ -801,14 +801,14 @@
   "abstention_rate": 0.342,
   "cost": {
     "analyses": 111,
-    "llm_calls": 111,
-    "credits_per_call": 0.1246,
-    "input_tokens": 238421,
-    "output_tokens": 13317,
-    "mean_tokens_per_analysis": 2267.9,
-    "mean_latency_s": 1.33,
-    "credits": 13.836,
-    "mean_credits_per_analysis": 0.1246
+    "llm_calls": 0,
+    "credits_per_call": 0.0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "mean_tokens_per_analysis": 0.0,
+    "mean_latency_s": 0.0,
+    "credits": 0.0,
+    "mean_credits_per_analysis": 0.0
   },
   "llm_failures": 0,
   "gold_report": {

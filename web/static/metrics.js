@@ -161,6 +161,41 @@
     }
   }
 
+  function renderHoldout(tf) {
+    if (!tf || !tf.scores || !tf.scores.strict) return;
+    const card = $("holdout-card");
+    if (!card) return;
+    card.hidden = false;
+    const all = tf.scores.strict.all.micro;
+    const bySrc = tf.scores.strict.by_source || {};
+    const cf = tf.clean_fpr || {};
+    const cSem = cf.semeval_none || { paragraphs: 0, flagged_techniques: 0 };
+    const cHard = cf.synthetic_hard_negative || { paragraphs: 0, flagged_any: 0 };
+    const totN = cSem.paragraphs + cHard.paragraphs;
+    const totFlag = (cSem.flagged_techniques || 0) + (cHard.flagged_any || 0);
+    const totClean = totN - totFlag;
+    $("holdout-summary").textContent = `Evaluated once on ${tf.counts.items} locked held-out test passages never used during ` +
+      `prompt design or confidence calibration: overall precision ${pct(all.precision)}, recall ${pct(all.recall)}, ` +
+      `F1 ${pct(all.f1)}, and ${totClean} / ${totN} (${pct(totN ? totClean / totN : 1)}) clean controls passed with zero false alarms.`;
+    body("holdout-table").append(
+      row(["All unseen test passages (49)", pct(all.precision), pct(all.recall), pct(all.f1), `${totClean} / ${totN} clean (${pct(totN ? totClean / totN : 1)})`]),
+    );
+    if (bySrc.semeval) {
+      const m = bySrc.semeval.micro;
+      body("holdout-table").append(row([
+        SOURCE_NAMES.semeval, pct(m.precision), pct(m.recall), pct(m.f1),
+        `${cSem.paragraphs - cSem.flagged_techniques} / ${cSem.paragraphs} clean (${pct(1 - (cSem.fpr_techniques || 0))})`,
+      ]));
+    }
+    if (bySrc.synthetic) {
+      const m = bySrc.synthetic.micro;
+      body("holdout-table").append(row([
+        SOURCE_NAMES.synthetic, pct(m.precision), pct(m.recall), pct(m.f1),
+        `${cHard.paragraphs - cHard.flagged_any} / ${cHard.paragraphs} clean (${pct(1 - (cHard.fpr_any || 0))})`,
+      ]));
+    }
+  }
+
   function renderSwarm(sw) {
     if (!sw || !Array.isArray(sw.details)) return;
     $("swarm-card").hidden = false;
@@ -203,6 +238,7 @@
     try { renderKpis(data.calibration, latest, data.swarm); } catch { /* isolated */ }
     try { if (latest) renderLatest(latest, labelMap); } catch { /* isolated */ }
     try { renderCalibration(data.calibration); } catch { /* isolated */ }
+    try { renderHoldout(data.test_final); } catch { /* isolated */ }
     try { renderSwarm(data.swarm); } catch { /* isolated */ }
   }).catch(() => {
     if ($("no-results")) $("no-results").hidden = false;

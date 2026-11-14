@@ -85,6 +85,7 @@
     });
     $("refresh-receipts").addEventListener("click", refreshReceipts);
     $("verify-btn").addEventListener("click", verifyClaims);
+    if ($("copy-brief")) $("copy-brief").addEventListener("click", copyBrief);
     wireTooltip();
     const preUrl = new URLSearchParams(location.search).get("url");
     if (preUrl) { $("url").value = preUrl; analyze(); }
@@ -169,6 +170,33 @@
       toSource.hidden = !effUrl;
       if (effUrl) toSource.href = `/source?q=${encodeURIComponent(effUrl)}`;
     }
+  }
+
+  async function copyBrief() {
+    if (!current || !current.result) return;
+    const res = current.result;
+    const btn = $("copy-brief");
+    const techSpans = (res.spans || []).filter((s) => s.color === "red" && !s.reported_speech);
+    const lines = ["=== Stoprop Manipulation Analysis Brief ==="];
+    if (res.source && res.source.final_url) lines.push(`Source: ${res.source.title ? res.source.title + " — " : ""}${res.source.final_url}`);
+    else if (current.url) lines.push(`Source: ${current.url}`);
+    lines.push(`Sensitivity: ${res.sensitivity} | Genre: ${GENRES[res.genre] || res.genre}`);
+    lines.push(`Summary: ${(res.profile && res.profile.summary) || ""}`);
+    if (techSpans.length) {
+      lines.push("", `Flagged persuasion techniques (${techSpans.length}):`);
+      techSpans.slice(0, 8).forEach((s, i) => {
+        lines.push(`${i + 1}. [${labelName(s.label)}] “${s.quote}” — ${s.explanation}`);
+      });
+    } else {
+      lines.push("", "No author manipulation techniques flagged at this sensitivity.");
+    }
+    lines.push("", "Analyzed via https://stoprop.tech");
+    try {
+      await navigator.clipboard.writeText(lines.join("\n"));
+      const orig = btn.textContent;
+      btn.textContent = "✓ Copied brief";
+      setTimeout(() => { btn.textContent = orig; }, 1800);
+    } catch { /* clipboard blocked */ }
   }
 
   function renderSource(res) {

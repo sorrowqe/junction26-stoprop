@@ -77,6 +77,7 @@
             <dl id="profile" class="profile"></dl>
             <ul id="notes" class="notes"></ul>
             <div class="row-actions" id="handoff-actions" style="margin-top:.75rem">
+              <button type="button" id="copy-brief" class="secondary small">Copy brief</button>
               <a id="to-swarm" class="btn-link secondary small" href="/swarm">Trace spread in Swarm mode →</a>
               <a id="to-source" class="btn-link secondary small" href="/source" hidden>Full source provenance →</a>
             </div>
@@ -111,6 +112,17 @@
         </aside>
       </div>
     </section>
+
+    <section class="card" aria-labelledby="h-bm" style="padding:.9rem 1.25rem">
+      <div class="source-summary-head">
+        <div>
+          <h2 id="h-bm" style="margin:0;font-size:.98rem">1-Click Browser Bookmarklet</h2>
+          <p class="muted small" style="margin:.15rem 0 0">Drag this button to your browser's bookmarks bar — click it while reading any news article or blog post to inspect it instantly in Stoprop.</p>
+        </div>
+        <a class="btn-link" id="bookmarklet"
+           href="javascript:void(location.hostname==='stoprop.tech'?(document.getElementById('url')&&document.getElementById('url').focus()):(location.href='https://stoprop.tech/?url='+encodeURIComponent(location.href)))">⚡ Check with Stoprop</a>
+      </div>
+    </section>
   </main>
 
   <div id="tip" class="tip" role="tooltip" hidden></div>
@@ -119,7 +131,7 @@
     Stoprop labels techniques and behaviours, never people, outlets or viewpoints. No accounts, no reading history.
     <a href="/methodology">Methodology</a> · <a href="/api">API</a>
   </footer>
-  <script src="/static/receipts.js?v=4" defer></script>
-  <script src="/static/app.js?v=4" defer></script>
+  <script src="/static/receipts.js?v=5" defer></script>
+  <script src="/static/app.js?v=5" defer></script>
 </body>
 </html>

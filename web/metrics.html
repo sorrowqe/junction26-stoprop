@@ -46,6 +46,19 @@
         </div>
       </section>
 
+      <section class="card" id="holdout-card" aria-labelledby="h-holdout" hidden>
+        <h2 id="h-holdout">Locked Held-Out Test Split (Unseen Generalisation Check)</h2>
+        <p id="holdout-summary" class="muted small"></p>
+        <div class="table-wrap">
+          <table id="holdout-table">
+            <thead>
+              <tr><th>Unseen test subset</th><th>Precision</th><th>Recall</th><th>F1</th><th>Clean pass rate</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="card" aria-labelledby="h-labels">
         <h2 id="h-labels">Per-Technique Detection Breakdown</h2>
         <p class="muted small">Measured across human-annotated news paragraphs (SemEval-2020 Task 11) and multi-technique
@@ -117,6 +130,6 @@
     </section>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
-  <script src="/static/metrics.js?v=5" defer></script>
+  <script src="/static/metrics.js?v=6" defer></script>
 </body>
 </html>
