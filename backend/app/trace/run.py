@@ -359,6 +359,30 @@ async def trace(text: str | None = None, url: str | None = None, progress=None, 
                 d["first"] = c["ts"] if d["first"] is None else min(d["first"], c["ts"])
     main = (analysis or {}).get("clusters", [None])[0] if analysis and analysis.get("clusters") else None
     listed = sorted(copies.values(), key=lambda c: (not c["confirmed"], c["ts"] is None, c["ts"] or 0))[:MAX_LISTED]
+    timeline_pts = sorted(
+        ([{"t": origin["ts"], "platform": origin["platform"] or "source", "who": origin["who"],
+           "url": origin["url"], "snippet": src["text"][:160], "is_source": True}] if origin else [])
+        + [{"t": c["ts"], "platform": c["platform"], "who": c.get("account") or c.get("domain"),
+            "url": c["url"], "snippet": (c.get("title") or c.get("text") or "")[:160], "is_source": False}
+           for c in dated],
+        key=lambda x: x["t"],
+    )[:MAX_LISTED]
+    spread_activity = None
+    if len(timeline_pts) >= 2:
+        t_start, t_end = timeline_pts[0]["t"], timeline_pts[-1]["t"]
+        span = max(t_end - t_start, 60.0)
+        n_bins = 20
+        step = span / n_bins
+        sbins = [{"t0": round(t_start + k * step, 1), "t1": round(t_start + (k + 1) * step, 1),
+                  "total": 0, "by_platform": {}} for k in range(n_bins)]
+        for pt in timeline_pts:
+            bi = min(n_bins - 1, max(0, int((pt["t"] - t_start) / step)))
+            sbins[bi]["total"] += 1
+            pl = pt["platform"]
+            sbins[bi]["by_platform"][pl] = sbins[bi]["by_platform"].get(pl, 0) + 1
+        spread_activity = {"start": t_start, "end": t_start + span, "bin_seconds": round(step, 1),
+                           "peak": max(b["total"] for b in sbins), "bins": sbins}
+
     return {
         "id": "t_" + uuid.uuid4().hex[:10],
         "principle": PRINCIPLE,
@@ -373,10 +397,8 @@ async def trace(text: str | None = None, url: str | None = None, progress=None, 
             "accounts": sorted(({"account": k, **v} for k, v in accounts.items()), key=lambda x: x["first"] or 0),
             "domains": sorted(({"domain": k, **v, "receipts": receipts.get(k)} for k, v in sites.items()),
                               key=lambda x: (x["first"] is None, x["first"] or 0)),
-            "timeline": sorted(([{"t": origin["ts"], "platform": origin["platform"], "who": origin["who"],
-                                  "url": origin["url"], "is_source": True}] if origin else [])
-                               + [{"t": c["ts"], "platform": c["platform"], "who": c.get("account") or c.get("domain"),
-                                   "url": c["url"], "is_source": False} for c in dated], key=lambda x: x["t"])[:MAX_LISTED],
+            "timeline": timeline_pts,
+            "activity": spread_activity,
         },
         "verdict": main["verdict"] if main else None,
         "cluster": main,

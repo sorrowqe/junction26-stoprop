@@ -381,5 +381,22 @@ def test_trace_redirect_short_query_and_multi_platform_spread(monkeypatch):
     body = r.json()
     assert body["fingerprint_method"] == "query" and body["cost"]["llm_calls"] == 0
     assert body["spread"]["copies"] == 4  # web + reddit + telegram + hackernews
+    assert body["spread"]["activity"]["peak"] >= 1 and len(body["spread"]["activity"]["bins"]) == 20
+    assert body["spread"]["timeline"][0]["snippet"]
     cov = {c["source"].split(" ")[0]: c for c in body["coverage"]}
     assert cov["Reddit"]["confirmed"] == 1 and cov["Telegram"]["confirmed"] == 1 and cov["Hacker"]["confirmed"] == 1
+
+
+def test_swarm_activity_histogram_and_burst_timeline_telemetry():
+    csv_path = client.get("/static/swarm_sample.csv")
+    r = client.post("/api/swarm", json={"data": csv_path.text})
+    assert r.status_code == 200
+    body = r.json()
+    act = body["summary"]["activity"]
+    assert act is not None and len(act["bins"]) == 24 and act["peak_posts"] >= 5
+    assert sum(b["total"] for b in act["bins"]) == body["summary"]["posts"]
+    assert any(b["likely"] > 0 for b in act["bins"])
+    likely = next(c for c in body["clusters"] if c["verdict"] == "likely_coordinated")
+    assert likely["burst_windows"] and likely["burst_windows"][0]["posts"] >= 3
+    pt0 = likely["timeline"][0]
+    assert "snippet" in pt0 and "in_burst" in pt0 and "name_pattern" in pt0

@@ -17,8 +17,20 @@
   const FAMILY = { T: "Text reuse", S: "Timing", A: "Accounts", M: "Amplification" };
   const PLATFORM = {
     bluesky: "Bluesky", mastodon: "Mastodon", youtube: "YouTube",
-    reddit: "Reddit", telegram: "Telegram", hackernews: "Hacker News", mixed: "several platforms",
+    reddit: "Reddit", telegram: "Telegram", hackernews: "Hacker News",
+    web: "Open Web", source: "Source post", mixed: "several platforms", demo: "Demo dataset",
   };
+  const PLAT_COLOR = {
+    web: "#1a5fb4",
+    reddit: "#d9480f",
+    telegram: "#0b7285",
+    bluesky: "#3b5bdb",
+    hackernews: "#d97706",
+    mastodon: "#5f3dc4",
+    youtube: "#c92a2a",
+    source: "#1e6b34",
+  };
+  const VARIANT_COLORS = ["var(--red)", "var(--blue)", "var(--amber)", "var(--green)"];
   let last = null;
   let example = null;
   let uploadedData = "";
@@ -97,40 +109,173 @@
     return { kind: "trace_text", text: raw, hint: "Detected text / claim — will search the Open Web, Reddit, Hacker News & Bluesky for matching posts and check for coordinated spread." };
   }
 
-  // --------------------------------------------------------------- results
+  // --------------------------------------------------------------- chart helpers & signal scorecard
+  const svgEl = (tag, attrs = {}, text) => {
+    const n = document.createElementNS(SVGNS, tag);
+    Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, String(v)));
+    if (text !== undefined) n.textContent = text;
+    return n;
+  };
+  const MONTHS_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  function fmtAxisTick(ts, spanS) {
+    const d = new Date(ts * 1000);
+    const hhmm = d.toISOString().slice(11, 16) + " UTC";
+    if (spanS < 30 * 3600) return hhmm;
+    const md = `${MONTHS_SHORT[d.getUTCMonth()]} ${d.getUTCDate()}`;
+    if (spanS < 14 * 86400) return `${md} ${d.toISOString().slice(11, 16)}`;
+    return `${md}, ${d.getUTCFullYear()}`;
+  }
+  function fmtRel(sec) {
+    const s = Math.max(0, Math.round(sec));
+    if (s === 0) return "+0s";
+    if (s < 90) return `+${s}s`;
+    if (s < 5400) return `+${Math.round(s / 60)}m`;
+    if (s < 48 * 3600) return `+${(s / 3600).toFixed(s < 10 * 3600 ? 1 : 0)}h`;
+    return `+${Math.round(s / 86400)}d`;
+  }
+  const truncLabel = (s, n = 20) => (s && s.length > n ? s.slice(0, n - 1) + "…" : (s || ""));
+
+  function signalCards(c) {
+    const sig = c.signals || {};
+    const tPairs = (sig.T && sig.T.pairs) || {};
+    const tVal = tPairs.trace ? `${c.post_count} verbatim matches`
+      : tPairs.exact ? `${c.post_count} posts · exact copy`
+      : tPairs.near ? `${c.post_count} posts · ≥60% overlap`
+      : `${c.post_count} posts · paraphrase`;
+    const sSig = sig.S || {};
+    const sVal = sSig.present
+      ? `⚡ ${sSig.posts_in_window}/${c.post_count} in ${fmtRel(sSig.window_s).slice(1)} (exp ${sSig.expected})`
+      : (sSig.window_s !== undefined ? `Normal pace (${fmtRel(c.time_span.seconds).slice(1)} span)` : "Normal pace");
+    const aSig = sig.A || {};
+    const aBits = [];
+    if (aSig.usernames && aSig.usernames.present) aBits.push(`${aSig.usernames.group.length} similar names`);
+    if (aSig.creation && aSig.creation.present) aBits.push(`${aSig.creation.within_7_days} created ≤7d`);
+    if (aSig.single_purpose && aSig.single_purpose.present) aBits.push(`${aSig.single_purpose.authors.length} single-topic`);
+    const aVal = aBits.length ? aBits.join(" · ") : "No shared pattern";
+    const mSig = sig.M || {};
+    const topPush = (mSig.pushed && mSig.pushed[0]) || null;
+    const mVal = topPush
+      ? `${topPush.authors} pushed ${topPush.kind === "hashtag" ? "#" : topPush.kind === "mention" ? "@" : ""}${truncLabel(topPush.value, 22)}`
+      : "No pushed link/tag";
+
+    const grid = el("div", { class: "sig-grid" });
+    [
+      ["T", "Text reuse", true, tVal],
+      ["S", "Timing burst", c.families.includes("S"), sVal],
+      ["A", "Account pattern", c.families.includes("A"), aVal],
+      ["M", "Shared push", c.families.includes("M"), mVal],
+    ].forEach(([key, title, on, val]) => {
+      const tile = el("div", { class: `sig-tile k-${key.toLowerCase()}${on ? " on" : ""}` });
+      tile.append(el("div", { class: "sig-name" }, `${on ? "✓" : "–"} ${title}`), el("div", { class: "sig-val" }, val));
+      grid.append(tile);
+    });
+    return grid;
+  }
+
   function timeline(c) {
-    const pts = c.timeline;
-    const authors = [...new Set(pts.map((p) => p.author))];
-    const rows = Math.min(authors.length, 24);
-    const W = 640, padL = 8, padR = 8, rowH = 9, H = rows * rowH + 34;
+    const pts = c.timeline || [];
+    const box = el("div", { class: "chart-box" });
+    const head = el("div", { class: "chart-head" });
+    head.append(el("span", { class: "chart-title" }, "Account posting swimlanes & burst window"));
+    const leg = el("div", { class: "chart-legend" });
+    const addLeg = (color, label, square) => {
+      const item = el("span", { class: "leg-item" });
+      item.append(el("span", { class: square ? "leg-swatch" : "leg-dot", style: `background:${color}` }), document.createTextNode(label));
+      leg.append(item);
+    };
+    addLeg("#1e6b34", "★ First poster", false);
+    addLeg("var(--fg)", "Amplifier post", false);
+    if ((c.burst_windows || []).length) addLeg("var(--red)", "⚡ Burst window", true);
+    head.append(leg);
+    box.append(head);
+
+    const orderedAuthors = (c.authors || []).map((a) => a.author);
+    pts.forEach((p) => { if (!orderedAuthors.includes(p.author)) orderedAuthors.push(p.author); });
+    const MAX_LANES = 14;
+    const overflow = orderedAuthors.length > MAX_LANES ? orderedAuthors.length - (MAX_LANES - 1) : 0;
+    const laneNames = overflow
+      ? [...orderedAuthors.slice(0, MAX_LANES - 1), `+${overflow} other accounts`]
+      : orderedAuthors;
+    const patSet = new Set((c.authors || []).filter((a) => a.name_pattern).map((a) => a.author));
+
+    const W = 760, padL = 168, padR = 18, padTop = (c.burst_windows || []).length ? 26 : 12, rowH = 21;
+    const plotW = W - padL - padR;
+    const plotBottom = padTop + laneNames.length * rowH;
+    const H = plotBottom + 38;
     const t0 = c.time_span.start, t1 = c.time_span.end, span = Math.max(t1 - t0, 1);
-    const svg = document.createElementNS(SVGNS, "svg");
-    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-    svg.setAttribute("class", "timeline");
-    svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", `Timeline: ${pts.length} posts by ${authors.length} accounts from ${fmtTime(t0)} to ${fmtTime(t1)}`);
-    const line = document.createElementNS(SVGNS, "line");
-    Object.entries({ x1: padL, x2: W - padR, y1: H - 22, y2: H - 22, class: "axis" }).forEach(([k, v]) => line.setAttribute(k, v));
-    svg.append(line);
-    pts.forEach((p) => {
-      const row = authors.indexOf(p.author) % rows;
-      const dot = document.createElementNS(SVGNS, "circle");
-      dot.setAttribute("cx", padL + ((p.t - t0) / span) * (W - padL - padR));
-      dot.setAttribute("cy", 6 + row * rowH);
-      dot.setAttribute("r", 3.2);
-      dot.setAttribute("class", `dot${p.variant ? ` var-${((p.variant - 1) % 4) + 1}` : ""}`);
-      const title = document.createElementNS(SVGNS, "title");
-      title.textContent = `${p.author} · ${fmtTime(p.t)}${p.variant ? ` · message ${p.variant}` : ""}`;
-      dot.append(title);
+    const xOf = (t) => padL + Math.max(0, Math.min(1, (t - t0) / span)) * plotW;
+
+    const svg = svgEl("svg", {
+      viewBox: `0 0 ${W} ${H}`, class: "chart-svg", role: "img",
+      "aria-label": `Account swimlane chart: ${pts.length} posts across ${orderedAuthors.length} accounts`,
+    });
+
+    [0, 0.25, 0.5, 0.75, 1].forEach((f, idx) => {
+      const x = padL + f * plotW;
+      svg.append(svgEl("line", { x1: x, x2: x, y1: padTop, y2: plotBottom, class: "grid-line" }));
+      const anchor = idx === 0 ? "start" : idx === 4 ? "end" : "middle";
+      svg.append(svgEl("text", { x, y: plotBottom + 14, "text-anchor": anchor, class: "ax-rel" }, fmtRel(f * span)));
+      if (idx === 0 || idx === 2 || idx === 4) {
+        svg.append(svgEl("text", { x, y: plotBottom + 29, "text-anchor": anchor, class: "ax-txt" }, fmtAxisTick(t0 + f * span, span)));
+      }
+    });
+
+    (c.burst_windows || []).forEach((bw) => {
+      const bx1 = xOf(bw.start), bx2 = Math.max(bx1 + 6, xOf(bw.end));
+      svg.append(svgEl("rect", { x: bx1, y: padTop - 2, width: bx2 - bx1, height: plotBottom - padTop + 4, rx: 4, class: "burst-band" }));
+      const lx = Math.min(W - padR - 4, Math.max(padL + 4, (bx1 + bx2) / 2));
+      const anchor = lx > W - 150 ? "end" : lx < padL + 110 ? "start" : "middle";
+      svg.append(svgEl("text", { x: lx, y: padTop - 7, "text-anchor": anchor, class: "burst-txt" },
+        `⚡ Burst: ${bw.posts} posts in ${fmtRel(bw.window_s).slice(1)} (exp ${bw.expected})`));
+    });
+
+    laneNames.forEach((name, idx) => {
+      const y = padTop + idx * rowH + rowH / 2;
+      svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: y, y2: y, class: "lane-line" }));
+      const prefix = idx === 0 ? "★ " : "";
+      const suffix = patSet.has(name) ? " ≈" : "";
+      const lbl = svgEl("text", {
+        x: padL - 8, y: y + 4, "text-anchor": "end",
+        class: `lane-txt${idx === 0 ? " lane-first" : ""}`,
+      }, prefix + truncLabel(name, 19) + suffix);
+      lbl.append(svgEl("title", {}, idx === 0 ? `${name} (first poster)` : `${name}${patSet.has(name) ? " (similar username pattern)" : ""}`));
+      svg.append(lbl);
+    });
+    svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: plotBottom, y2: plotBottom, class: "axis-line" }));
+
+    const inspector = el("div", { class: "chart-inspector" });
+    const showPoint = (p, isFirst) => {
+      inspector.replaceChildren();
+      const role = isFirst ? "★ First poster" : (p.in_burst ? "⚡ Amplifier (in burst window)" : "Amplifier");
+      inspector.append(
+        el("strong", {}, `${p.author}`),
+        document.createTextNode(` · ${role} · ${fmtTime(p.t)} (${fmtRel(p.t - t0)} after first post)`),
+      );
+      if (p.url && /^https?:\/\//.test(p.url)) {
+        inspector.append(document.createTextNode(" · "), safeLink(p.url, "open post ↗"));
+      }
+      if (p.snippet) inspector.append(el("div", { class: "muted small" }, `“${p.snippet}”`));
+    };
+
+    pts.forEach((p, idx) => {
+      const aIdx = orderedAuthors.indexOf(p.author);
+      const laneIdx = overflow && aIdx >= MAX_LANES - 1 ? MAX_LANES - 1 : Math.max(0, aIdx);
+      const cx = xOf(p.t), cy = padTop + laneIdx * rowH + rowH / 2;
+      const isFirst = aIdx === 0 && idx === 0;
+      const fill = isFirst ? "#1e6b34"
+        : p.variant ? VARIANT_COLORS[(p.variant - 1) % VARIANT_COLORS.length]
+        : (p.in_burst ? "var(--red)" : "var(--fg)");
+      const dot = svgEl("circle", { cx, cy, r: isFirst ? 6 : 4.6, fill, class: "pt-dot", tabindex: "0" });
+      dot.append(svgEl("title", {}, `${p.author} · ${fmtTime(p.t)} (${fmtRel(p.t - t0)})`));
+      dot.addEventListener("mouseenter", () => showPoint(p, isFirst));
+      dot.addEventListener("focus", () => showPoint(p, isFirst));
+      dot.addEventListener("click", () => showPoint(p, isFirst));
       svg.append(dot);
     });
-    [[padL, "start", fmtTime(t0)], [W - padR, "end", fmtTime(t1)]].forEach(([x, anchor, label]) => {
-      const t = document.createElementNS(SVGNS, "text");
-      t.setAttribute("x", x); t.setAttribute("y", H - 6); t.setAttribute("text-anchor", anchor); t.setAttribute("class", "tl-label");
-      t.textContent = label;
-      svg.append(t);
-    });
-    return svg;
+
+    if (pts.length) showPoint(pts[0], true);
+    box.append(svg, inspector);
+    return box;
   }
 
   function card(c) {
@@ -144,12 +289,7 @@
     }
     art.append(head);
     art.append(el("h3", { id: `h-${c.id}` }, `${c.id.toUpperCase()}: ${c.headline}`));
-    const fam = el("p", { class: "families small" });
-    Object.entries(FAMILY).forEach(([k, name]) => {
-      const on = c.families.includes(k);
-      fam.append(el("span", { class: `fam ${on ? "on" : "off"}` }, `${on ? "✓" : "✗"} ${name}`));
-    });
-    art.append(fam);
+    art.append(signalCards(c));
     if (c.kind === "campaign") {
       const ol = el("ol", { class: "variants" });
       c.variants.forEach((m, i) => {
@@ -234,12 +374,113 @@
   function resetView() {
     $("verdict-line").hidden = true;
     $("first-seen").hidden = true;
-    $("trace-timeline").hidden = true;
+    const oc = $("overview-chart");
+    oc.hidden = true;
+    oc.replaceChildren();
     $("trace-extra").hidden = true;
     $("failed-wrap").hidden = true;
     $("rejected-wrap").hidden = true;
     $("trace-root-btn").hidden = true;
     $("clusters").replaceChildren();
+  }
+
+  function renderBatchChart(act) {
+    const oc = $("overview-chart");
+    if (!act || !act.bins || !act.bins.length || act.peak_posts === 0) return;
+    oc.hidden = false;
+    const hasLikely = act.bins.some((b) => b.likely > 0);
+    const hasWatch = act.bins.some((b) => b.watch > 0);
+    const head = el("div", { class: "chart-head" });
+    head.append(el("span", { class: "chart-title" }, "Posting volume over time (entire collected batch)"));
+    const leg = el("div", { class: "chart-legend" });
+    const addLeg = (cls, label) => {
+      const i = el("span", { class: "leg-item" });
+      i.append(el("span", { class: `leg-swatch ${cls}`, style: cls.startsWith("#") || cls.startsWith("var(") ? `background:${cls}` : "" }),
+        document.createTextNode(label));
+      leg.append(i);
+    };
+    if (hasLikely) addLeg("var(--red)", "Likely coordinated");
+    if (hasWatch) addLeg("var(--amber)", "Worth watching");
+    addLeg("var(--muted)", "Other / unclustered posts");
+    head.append(leg);
+    oc.append(head);
+
+    const W = 760, H = 168, padL = 38, padR = 36, padT = 12, padB = 28;
+    const plotW = W - padL - padR, plotH = H - padT - padB;
+    const maxY = Math.max(act.peak_posts, 2);
+    const yOf = (v) => padT + plotH - (v / maxY) * plotH;
+    const span = Math.max(act.end - act.start, 1);
+
+    const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, class: "chart-svg", role: "img",
+      "aria-label": `Posting volume histogram: peak ${act.peak_posts} posts per window` });
+
+    [0, Math.round(maxY / 2), maxY].filter((v, i, a) => a.indexOf(v) === i).forEach((v) => {
+      const y = yOf(v);
+      svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: y, y2: y, class: v === 0 ? "axis-line" : "grid-line" }));
+      svg.append(svgEl("text", { x: padL - 6, y: y + 4, "text-anchor": "end", class: "ax-txt" }, v));
+    });
+
+    if (act.mean_per_bin > 0 && act.mean_per_bin < maxY) {
+      const ym = yOf(act.mean_per_bin);
+      svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: ym, y2: ym, class: "avg-line" }));
+      svg.append(svgEl("text", { x: W - padR + 4, y: ym + 4, class: "ax-txt" }, `avg ${act.mean_per_bin}`));
+    }
+
+    const inspector = el("div", { class: "chart-inspector" });
+    const showBin = (b) => {
+      inspector.replaceChildren();
+      const parts = [];
+      if (b.likely) parts.push(`${b.likely} likely coordinated`);
+      if (b.watch) parts.push(`${b.watch} worth watching`);
+      if (b.other) parts.push(`${b.other} unclustered`);
+      inspector.append(
+        el("strong", {}, `${fmtAxisTick(b.t0, span)} → ${fmtAxisTick(b.t1, span)}`),
+        document.createTextNode(` · ${b.total} post${b.total === 1 ? "" : "s"} from ${b.authors} account${b.authors === 1 ? "" : "s"}` +
+          (parts.length ? ` (${parts.join(", ")})` : "")),
+      );
+    };
+
+    const n = act.bins.length, bw = plotW / n, gap = Math.max(1.5, bw * 0.16);
+    let peakBin = act.bins[0];
+    act.bins.forEach((b, i) => {
+      if (b.total > peakBin.total) peakBin = b;
+      const x = padL + i * bw + gap / 2, w = Math.max(2, bw - gap);
+      let curY = padT + plotH;
+      [["other", "bar-other"], ["watch", "bar-watch"], ["likely", "bar-likely"]].forEach(([k, cls]) => {
+        if (!b[k]) return;
+        const h = (b[k] / maxY) * plotH;
+        curY -= h;
+        svg.append(svgEl("rect", { x, y: curY, width: w, height: h, rx: 1.5, class: cls }));
+      });
+      const hit = svgEl("rect", { x: padL + i * bw, y: padT, width: bw, height: plotH, class: "bar-hit", tabindex: "0" });
+      hit.addEventListener("mouseenter", () => showBin(b));
+      hit.addEventListener("focus", () => showBin(b));
+      hit.addEventListener("click", () => showBin(b));
+      svg.append(hit);
+    });
+
+    [0, 0.25, 0.5, 0.75, 1].forEach((f, idx) => {
+      const x = padL + f * plotW;
+      const anchor = idx === 0 ? "start" : idx === 4 ? "end" : "middle";
+      svg.append(svgEl("text", { x, y: H - 6, "text-anchor": anchor, class: "ax-txt" }, fmtAxisTick(act.start + f * span, span)));
+    });
+
+    showBin(peakBin);
+    oc.append(svg, inspector);
+
+    const doms = act.top_domains || [], tags = act.top_hashtags || [];
+    if (doms.length || tags.length) {
+      const meta = el("div", { class: "chart-meta-pills muted" });
+      if (doms.length) {
+        meta.append(el("span", {}, "Top shared domains: "));
+        doms.forEach((d) => meta.append(el("span", { class: "pill" }, `${d.domain} (${d.posts})`)));
+      }
+      if (tags.length) {
+        meta.append(el("span", { style: doms.length ? "margin-left:.4rem" : "" }, "Top hashtags: "));
+        tags.forEach((h) => meta.append(el("span", { class: "pill" }, `#${h.tag} (${h.posts})`)));
+      }
+      oc.append(meta);
+    }
   }
 
   function renderSwarm(r) {
@@ -252,6 +493,7 @@
     $("summary").textContent = `${s.posts} posts from ${s.authors} accounts${s.rejected ? ` (${s.rejected} rows skipped)` : ""}. ` +
       `${s.clusters} groups with repeated text${camp}: ${bv.likely_coordinated} likely coordinated, ${bv.worth_watching} worth watching, ` +
       `${bv.organic_looking} look organic, ${bv.insufficient_data} with too few accounts. Analysis took ${(r.elapsed_ms / 1000).toFixed(1)} s.`;
+    renderBatchChart(s.activity);
     const notes = $("notes");
     notes.replaceChildren(...r.notes.map((n) => el("li", {}, n)));
     if (r.cost && (r.cost.embeddings || r.cost.llm_calls)) {
@@ -283,34 +525,106 @@
     r.clusters.forEach((c) => box.append(card(c)));
   }
 
-  function drawTraceTimeline(points) {
-    const svg = $("trace-timeline");
-    svg.replaceChildren();
-    svg.hidden = points.length < 2;
-    if (points.length < 2) return;
-    const W = 640, H = 70, pad = 10;
-    const t0 = points[0].t, t1 = points[points.length - 1].t, span = Math.max(t1 - t0, 1);
-    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-    const axis = document.createElementNS(SVGNS, "line");
-    Object.entries({ x1: pad, x2: W - pad, y1: 40, y2: 40, class: "axis" }).forEach(([k, v]) => axis.setAttribute(k, v));
-    svg.append(axis);
-    points.forEach((p) => {
-      const dot = document.createElementNS(SVGNS, "circle");
-      dot.setAttribute("cx", pad + ((p.t - t0) / span) * (W - 2 * pad));
-      dot.setAttribute("cy", p.platform === "web" ? 28 : 18);
-      dot.setAttribute("r", p.is_source ? 6 : 4);
-      dot.setAttribute("class", `dot ${p.is_source ? "var-3" : p.platform === "web" ? "var-2" : ""}`);
-      const title = document.createElementNS(SVGNS, "title");
-      title.textContent = `${p.platform}: ${p.who} · ${fmtTime(p.t)}`;
-      dot.append(title);
+  function renderSpreadChart(sp) {
+    const oc = $("overview-chart");
+    const pts = sp.timeline || [];
+    if (pts.length < 2) return;
+    oc.hidden = false;
+
+    const platOrder = ["web", "reddit", "telegram", "bluesky", "hackernews", "mastodon", "youtube", "source"];
+    const countsByPlat = {};
+    pts.forEach((p) => { countsByPlat[p.platform] = (countsByPlat[p.platform] || 0) + 1; });
+    const lanes = platOrder.filter((k) => countsByPlat[k]);
+    pts.forEach((p) => { if (!lanes.includes(p.platform)) lanes.push(p.platform); });
+
+    const head = el("div", { class: "chart-head" });
+    head.append(el("span", { class: "chart-title" }, "Spread volume & platform swimlanes (dated matches)"));
+    const leg = el("div", { class: "chart-legend" });
+    lanes.forEach((pl) => {
+      const item = el("span", { class: "leg-item" });
+      item.append(el("span", { class: "leg-dot", style: `background:${PLAT_COLOR[pl] || "var(--fg)"}` }),
+        document.createTextNode(`${PLATFORM[pl] || pl} (${countsByPlat[pl]})`));
+      leg.append(item);
+    });
+    head.append(leg);
+    oc.append(head);
+
+    const W = 760, padL = 138, padR = 20, barTop = 12, barH = 54, laneTop = 82, rowH = 26;
+    const plotW = W - padL - padR;
+    const plotBottom = laneTop + lanes.length * rowH;
+    const H = plotBottom + 32;
+    const t0 = pts[0].t, t1 = pts[pts.length - 1].t, span = Math.max(t1 - t0, 60);
+    const xOf = (t) => padL + Math.max(0, Math.min(1, (t - t0) / span)) * plotW;
+
+    const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, class: "chart-svg", role: "img",
+      "aria-label": `${pts.length} dated copies across ${lanes.length} platform lanes` });
+
+    const act = sp.activity;
+    if (act && act.bins && act.peak > 0) {
+      const maxB = Math.max(act.peak, 2);
+      svg.append(svgEl("text", { x: padL - 8, y: barTop + 10, "text-anchor": "end", class: "ax-txt" }, `${act.peak} peak`));
+      svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: barTop + barH, y2: barTop + barH, class: "axis-line" }));
+      const nb = act.bins.length, bw = plotW / nb, gap = Math.max(1.5, bw * 0.18);
+      act.bins.forEach((b, i) => {
+        if (!b.total) return;
+        const x = padL + i * bw + gap / 2, w = Math.max(2, bw - gap);
+        let curY = barTop + barH;
+        lanes.forEach((pl) => {
+          const c = (b.by_platform && b.by_platform[pl]) || 0;
+          if (!c) return;
+          const h = (c / maxB) * barH;
+          curY -= h;
+          svg.append(svgEl("rect", { x, y: curY, width: w, height: h, rx: 1.5, fill: PLAT_COLOR[pl] || "var(--fg)", "fill-opacity": "0.78" }));
+        });
+      });
+    }
+
+    [0, 0.25, 0.5, 0.75, 1].forEach((f, idx) => {
+      const x = padL + f * plotW;
+      svg.append(svgEl("line", { x1: x, x2: x, y1: laneTop, y2: plotBottom, class: "grid-line" }));
+      const anchor = idx === 0 ? "start" : idx === 4 ? "end" : "middle";
+      svg.append(svgEl("text", { x, y: plotBottom + 18, "text-anchor": anchor, class: "ax-txt" }, fmtAxisTick(t0 + f * span, span)));
+    });
+
+    lanes.forEach((pl, idx) => {
+      const y = laneTop + idx * rowH + rowH / 2;
+      svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: y, y2: y, class: "lane-line" }));
+      svg.append(svgEl("text", { x: padL - 8, y: y + 4, "text-anchor": "end", class: "lane-txt" },
+        `${PLATFORM[pl] || pl} (${countsByPlat[pl]})`));
+    });
+    svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: plotBottom, y2: plotBottom, class: "axis-line" }));
+
+    const inspector = el("div", { class: "chart-inspector" });
+    const showPt = (p, isEarliest) => {
+      inspector.replaceChildren();
+      inspector.append(
+        el("strong", {}, `[${PLATFORM[p.platform] || p.platform}] ${p.who}`),
+        document.createTextNode(` · ${isEarliest ? "★ Earliest dated match · " : ""}${fmtTime(p.t)} (${fmtRel(p.t - t0)})`),
+      );
+      if (p.url && /^https?:\/\//.test(p.url)) {
+        inspector.append(document.createTextNode(" · "), safeLink(p.url, "open ↗"));
+      }
+      if (p.snippet) inspector.append(el("div", { class: "muted small" }, `“${p.snippet}”`));
+    };
+
+    pts.forEach((p, idx) => {
+      const laneIdx = Math.max(0, lanes.indexOf(p.platform));
+      const jitter = ((idx % 3) - 1) * 3.2;
+      const cx = xOf(p.t), cy = laneTop + laneIdx * rowH + rowH / 2 + jitter;
+      const isEarliest = idx === 0;
+      const dot = svgEl("circle", {
+        cx, cy, r: isEarliest ? 6.5 : 4.8,
+        fill: PLAT_COLOR[p.platform] || "var(--fg)", class: "pt-dot", tabindex: "0",
+      });
+      dot.append(svgEl("title", {}, `${PLATFORM[p.platform] || p.platform}: ${p.who} · ${fmtTime(p.t)}`));
+      dot.addEventListener("mouseenter", () => showPt(p, isEarliest));
+      dot.addEventListener("focus", () => showPt(p, isEarliest));
+      dot.addEventListener("click", () => showPt(p, isEarliest));
       svg.append(dot);
     });
-    [[pad, "start", fmtTime(t0)], [W - pad, "end", fmtTime(t1)]].forEach(([x, a, label]) => {
-      const t = document.createElementNS(SVGNS, "text");
-      t.setAttribute("x", x); t.setAttribute("y", H - 8); t.setAttribute("text-anchor", a); t.setAttribute("class", "tl-label");
-      t.textContent = label;
-      svg.append(t);
-    });
+
+    showPt(pts[0], true);
+    oc.append(svg, inspector);
   }
 
   function renderTrace(r) {
@@ -333,9 +647,9 @@
     fs.replaceChildren();
     if (sp.first_seen) {
       fs.hidden = false;
-      fs.append("Earliest dated copy found: ", el("strong", {}, sp.first_seen.who), ` (${sp.first_seen.platform}) at ${fmtTime(sp.first_seen.ts)} · `, safeLink(sp.first_seen.url, "open"));
+      fs.append("Earliest dated copy found: ", el("strong", {}, sp.first_seen.who), ` (${PLATFORM[sp.first_seen.platform] || sp.first_seen.platform}) at ${fmtTime(sp.first_seen.ts)} · `, safeLink(sp.first_seen.url, "open"));
     }
-    drawTraceTimeline(sp.timeline || []);
+    renderSpreadChart(sp);
     $("notes").replaceChildren(...(r.notes || []).map((n) => el("li", {}, n)));
     if (r.cluster) $("clusters").append(card(r.cluster));
 
@@ -456,7 +770,7 @@
     status("Running coordinated campaign demo…", false);
     try {
       const csv = await (await fetch("/static/swarm_sample.csv")).text();
-      example = { platform: "demo", note: "Built-in benchmark dataset: 2 coordinated bot campaigns + organic news sharing & an event hashtag." };
+      example = { platform: "demo", note: "Built-in benchmark dataset: 2 coordinated campaigns + organic news sharing & an event hashtag." };
       const opts = { deep: $("deep").checked, tag_clusters: $("tag").checked };
       const body = await postStream("/api/swarm", { data: csv, ...opts }, false);
       status("", false);

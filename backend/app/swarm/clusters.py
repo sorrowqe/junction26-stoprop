@@ -49,6 +49,67 @@ happy morning evening night everyone everybody all today tonight friends folks g
 welcome hello hi hey wow yes true same well said""".split())
 
 
+def _build_activity(posts: list, clusters: list[dict], n_bins: int = 24) -> dict | None:
+    """Time-bucketed posting volume (likely_coordinated / worth_watching / other) + top domains & hashtags."""
+    if not posts:
+        return None
+    ts_all = [p.ts for p in posts]
+    t0, t1 = min(ts_all), max(ts_all)
+    span = max(t1 - t0, 60.0)
+    step = span / n_bins
+
+    verdict_by_id: dict[str, str] = {}
+    for c in clusters:
+        v = c["verdict"]
+        if v in ("likely_coordinated", "worth_watching"):
+            for p in c.get("_posts", []):
+                prev = verdict_by_id.get(p.id)
+                if prev != "likely_coordinated":
+                    verdict_by_id[p.id] = v
+
+    bins = [{"t0": round(t0 + k * step, 1), "t1": round(t0 + (k + 1) * step, 1),
+             "total": 0, "likely": 0, "watch": 0, "other": 0, "_authors": set()} for k in range(n_bins)]
+    dom_counts: Counter = Counter()
+    tag_counts: Counter = Counter()
+
+    for p in posts:
+        idx = min(n_bins - 1, max(0, int((p.ts - t0) / step)))
+        b = bins[idx]
+        b["total"] += 1
+        b["_authors"].add(p.author.lower())
+        v = verdict_by_id.get(p.id)
+        if v == "likely_coordinated":
+            b["likely"] += 1
+        elif v == "worth_watching":
+            b["watch"] += 1
+        else:
+            b["other"] += 1
+        found = amp.items(p)
+        for u in found["url"]:
+            host = u.split("/", 1)[0]
+            try:
+                dom_counts[dom.registrable(host)] += 1
+            except ValueError:
+                pass
+        for h in found["hashtag"]:
+            tag_counts[h] += 1
+
+    clean_bins = [{k: (len(val) if k == "_authors" else val) for k, val in b.items()} for b in bins]
+    for b in clean_bins:
+        b["authors"] = b.pop("_authors")
+    peak = max((b["total"] for b in clean_bins), default=0)
+    return {
+        "start": t0,
+        "end": t0 + span,
+        "bin_seconds": round(step, 1),
+        "mean_per_bin": round(len(posts) / n_bins, 2),
+        "peak_posts": peak,
+        "bins": clean_bins,
+        "top_domains": [{"domain": d, "posts": n} for d, n in dom_counts.most_common(5)],
+        "top_hashtags": [{"tag": h, "posts": n} for h, n in tag_counts.most_common(5)],
+    }
+
+
 def components(n: int, pairs: list) -> list[list[int]]:
     parent = list(range(n))
 
@@ -197,6 +258,11 @@ def merge_campaigns(items: list[dict]) -> list[dict]:
         if len(members) == 1:
             c = items[members[0]]
             c["kind"], c["variants"] = "cluster", []
+            s_sig = (c.get("signals") or {}).get("S") or {}
+            c["burst_windows"] = ([{
+                "variant": 1, "start": s_sig["window_start"], "end": s_sig["window_end"],
+                "window_s": s_sig["window_s"], "posts": s_sig["posts_in_window"], "expected": s_sig["expected"],
+            }] if s_sig.get("present") else [])
             out.append(c)
             continue
         vs = sorted((items[i] for i in members), key=_strength)
@@ -244,6 +310,12 @@ def merge_campaigns(items: list[dict]) -> list[dict]:
             "innocent_explanations": list(dict.fromkeys(e for v in vs for e in v["innocent_explanations"])),
             "timeline": sorted(({**pt, "variant": n} for n, v in enumerate(vs, start=1) for pt in v["timeline"]),
                                key=lambda pt: pt["t"])[:MAX_TIMELINE],
+            "burst_windows": [
+                {"variant": n, "start": s["window_start"], "end": s["window_end"],
+                 "window_s": s["window_s"], "posts": s["posts_in_window"], "expected": s["expected"]}
+                for n, v in enumerate(vs, start=1)
+                for s in [((v.get("signals") or {}).get("S") or {})] if s.get("present")
+            ],
             "variants": [{"headline": v["headline"], "verdict": v["verdict"], "families": v["families"],
                           "representative_text": v["representative_text"], "post_count": v["post_count"],
                           "author_count": v["author_count"], "time_span": v["time_span"],
@@ -346,7 +418,16 @@ async def analyze_batch(batch: Batch, *, deep: bool = False, tag_clusters: bool 
                          "first_post": min(p.ts for p in cp if p.author.lower() == a),
                          "name_pattern": a in set(acc["usernames"]["group"]) and acc["usernames"]["present"]}
                         for k, a in enumerate(authors_order)],
-            "timeline": [{"t": p.ts, "author": p.author, "id": p.id} for p in cp[:MAX_TIMELINE]],
+            "timeline": [{
+                "t": p.ts,
+                "author": p.author,
+                "id": p.id,
+                "url": p.url,
+                "platform": p.platform,
+                "snippet": p.text[:160],
+                "in_burst": bool(sync.get("present") and sync["window_start"] <= p.ts <= sync["window_end"]),
+                "name_pattern": bool(acc["usernames"]["present"] and p.author.lower() in set(acc["usernames"]["group"])),
+            } for p in cp[:MAX_TIMELINE]],
         })
 
     for c in clusters:
@@ -407,6 +488,7 @@ async def analyze_batch(batch: Batch, *, deep: bool = False, tag_clusters: bool 
     elif tag_clusters:
         notes.append("Technique tagging is not available on this server right now.")
 
+    activity = _build_activity(posts, clusters)
     out_clusters = [{k: v for k, v in c.items() if not k.startswith("_")} for c in clusters]
     by_verdict = Counter(c["verdict"] for c in clusters)
     ts = [p.ts for p in posts]
@@ -422,7 +504,8 @@ async def analyze_batch(batch: Batch, *, deep: bool = False, tag_clusters: bool 
                     "message_clusters": n_message_clusters,
                     "campaigns": sum(c["kind"] == "campaign" for c in clusters),
                     "by_verdict": {v: by_verdict.get(v, 0) for v in VERDICT_ORDER},
-                    "time_span": {"start": min(ts), "end": max(ts)} if ts else None},
+                    "time_span": {"start": min(ts), "end": max(ts)} if ts else None,
+                    "activity": activity},
         "clusters": out_clusters,
         "rejected": batch.rejected,
         "options": {"deep": deep, "tag_clusters": tag_clusters},
