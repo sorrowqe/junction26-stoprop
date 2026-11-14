@@ -117,7 +117,7 @@ def gold_rows(item: dict, text: str, spans: list[Span]) -> list[dict]:
 def write_csv(path: Path, columns: list[str], rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding=CSV_ENCODING, newline="") as f:
-        w = csv.DictWriter(f, fieldnames=columns, extrasaction="ignore")
+        w = csv.DictWriter(f, fieldnames=columns, extrasaction="ignore", lineterminator="\n")
         w.writeheader()
         for r in rows:
             w.writerow(r)
