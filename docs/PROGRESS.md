@@ -42,8 +42,12 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   (Zenodo download, md5 check, label mapping) -> `eval/data/raw/semeval_sample.csv` (100 paragraphs, 112 spans).
 
 ## In progress
-- Synthetic generation: dry run shows 22 calls (+<=7 repair), ~110k tokens estimated (upper bound ~147k) on the
-  DEV key. Waiting for Aleksandr's OK, then `python eval/make_synthetic.py --yes`, then human review (`ok` column).
+- Synthetic gold GENERATED (2026-11-14, gpt-5.5-eu, dev key): 23 calls (22 + 1 repair), 28,001 in / 20,936 out
+  tokens (1,457 reasoning) = ~49k tokens (44% of the estimate). 90/90 items accepted (157 rows), 20/20 symmetry
+  pairs (58 rows), 0 dropped; repair fixed syn-014 (planted technique missing) and syn-049 (span too long).
+  Our reported-speech detector agrees on 11/11 rs spans. NEXT: human review of the `ok` column
+  (eval/data/raw/synthetic_gold.csv, symmetry.csv) - watch for news-style items where the planted technique is
+  the reporter paraphrasing a politician (e.g. syn-001): arguably reported speech, mark n or fix.
 
 ## M3 real-network check (local PC, no AI key)
 - 11 SSRF URLs via the running app with real DNS (incl. 127.0.0.1.nip.io, localtest.me) -> all 400.
