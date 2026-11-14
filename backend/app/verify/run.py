@@ -21,6 +21,7 @@ import uuid
 
 from app.llm import budget
 from app.llm import client as llm
+from app.pipeline import oxylabs
 from app.receipts import factcheck
 from app.swarm.collectors.http import Session
 from app.trace.fingerprint import norm
@@ -28,10 +29,12 @@ from app.verify import claims as claims_mod
 from app.verify import judge as judge_mod
 from app.verify import news
 
-DEADLINE_S = 30.0
+TOTAL_DEADLINE_S = 38.0
+DEADLINE_S = 28.0
 MAX_SEARCHES = 4
 MAX_ARTICLES = 5          # articles READ in full per check
-TITLES_PER_CLAIM = 8      # extra headlines from the cited outlet judged by title only
+MAX_OXY_ARTICLES = 2      # blocked articles read via Oxylabs AI Studio per check (protects 1000-credit budget)
+TITLES_PER_CLAIM = 8      # extra headlines from the cited outlet judged by title/snippets only
 ATTRIBUTION_DAYS = 30
 CORROBORATION_DAYS = 14
 CACHE_TTL_S = 3600
@@ -146,7 +149,8 @@ async def verify(text: str, progress=None) -> dict:
     cor_hits: dict[int, list] = {}
     att_state = {i: {"needed": bool(c["cited_domains"]), "searched": False, "error": None, "results": 0}
                  for i, c in enumerate(found)}
-    async with Session(max_requests=MAX_SEARCHES + MAX_ARTICLES, deadline_s=DEADLINE_S) as s:
+    session_budget = max(8.0, min(DEADLINE_S, TOTAL_DEADLINE_S - (time.monotonic() - t0) - 7.0))
+    async with Session(max_requests=MAX_SEARCHES * 2 + MAX_ARTICLES, deadline_s=session_budget) as s:
         plan = []
         for i, c in enumerate(found):
             if c["cited_domains"]:
@@ -170,7 +174,7 @@ async def verify(text: str, progress=None) -> dict:
                     att_state[i]["error"] = str(exc)
                 else:
                     c["_search_error"] = str(exc)
-        # searches overlap: the news module spaces their START times (GDELT: one request per 5 s)
+        # searches overlap: the news module spaces their START times when needed
         await asyncio.gather(*(one(kind, i) for kind, i in plan[:MAX_SEARCHES]))
         for kind, i in plan[MAX_SEARCHES:]:
             if kind == "att":
@@ -199,9 +203,22 @@ async def verify(text: str, progress=None) -> dict:
         chosen = [a for i in picks for a in picks[i]]
         if chosen:
             say(f"Reading {len(chosen)} articles…")
-            read = await asyncio.gather(*(judge_mod.read(a, s.remaining() - 6) for a in chosen))
+            read = await asyncio.gather(*(judge_mod.read(a, min(4.5, s.remaining() - 1.0), allow_fallback=False) for a in chosen))
             by_url = {a["url"]: a for a in read}
-            cost["articles_read"] = sum(1 for a in read if a["read"])
+            # Tier-2 fallback: if key articles blocked direct reading, scrape up to MAX_OXY_ARTICLES via Oxylabs AI Studio
+            all_cited = {d for c in found for d in c["cited_domains"]}
+            blocked = [a for a in read if not a["read"]]
+            blocked.sort(key=lambda a: (0 if a.get("domain") in all_cited else 1))
+            if blocked and oxylabs.status()["available"] and s.remaining() >= 6.0:
+                retry_targets = blocked[:MAX_OXY_ARTICLES]
+                say(f"Unblocking {len(retry_targets)} protected article{'s' if len(retry_targets) != 1 else ''}…")
+                retried = await asyncio.gather(
+                    *(judge_mod.read(a, s.remaining() - 0.5, allow_fallback=True) for a in retry_targets)
+                )
+                for a in retried:
+                    if a["read"]:
+                        by_url[a["url"]] = a
+            cost["articles_read"] = sum(1 for a in by_url.values() if a["read"])
             for i in picks:
                 picks[i] = [by_url[a["url"]] for a in picks[i]]
         # more headlines from the cited outlet, judged by title only (a relevant report may not be the top hit)

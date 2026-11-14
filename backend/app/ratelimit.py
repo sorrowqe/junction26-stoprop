@@ -13,9 +13,19 @@ from collections import defaultdict, deque
 
 from fastapi import HTTPException, Request
 
+from app import config
+
 WINDOW_S = 3600
 LIMITS = {"analyze": 30, "swarm": 10, "trace": 5, "verify": 10, "receipts": 60, "feedback": 30}
 NOUNS = {"analyze": "analyses", "swarm": "swarm runs", "trace": "traces", "verify": "claim checks", "receipts": "source checks", "feedback": "reports"}
+
+
+def effective_limit(bucket: str) -> int:
+    try:
+        mult = max(1, int(config.env("RATE_LIMIT_MULTIPLIER", "1")))
+    except ValueError:
+        mult = 1
+    return LIMITS[bucket] * mult
 
 
 def client_ip(request: Request) -> str:
@@ -33,7 +43,7 @@ class RateLimiter:
 
     def hit(self, bucket: str, key: str, now: float | None = None) -> tuple[bool, int]:
         """Record a request; return (allowed, retry_after_seconds)."""
-        limit = LIMITS[bucket]
+        limit = effective_limit(bucket)
         now = time.monotonic() if now is None else now
         with self._lock:
             q = self._hits[(bucket, key)]
@@ -59,9 +69,10 @@ def enforce(bucket: str, request: Request) -> None:
     ok, retry_after = limiter.hit(bucket, client_ip(request))
     if not ok:
         minutes = max(1, math.ceil(retry_after / 60))
+        limit = effective_limit(bucket)
         raise HTTPException(
             status_code=429,
-            detail=(f"You have reached the limit of {LIMITS[bucket]} {NOUNS[bucket]} per hour from your network. "
+            detail=(f"You have reached the limit of {limit} {NOUNS[bucket]} per hour from your network. "
                     f"Please try again in about {minutes} minute{'s' if minutes != 1 else ''}."),
             headers={"Retry-After": str(retry_after)},
         )

@@ -1,26 +1,25 @@
-"""News search for claim verification (pluggable). NEWS_SEARCH=gdelt (default) | oxylabs.
+"""News search for claim verification.
 
-GDELT DOC 2.0 (https://api.gdeltproject.org/api/v2/doc/doc, free, no key): mode=ArtList, format=json,
-timespan=Nd, `domain:` filters (OR-ed in parentheses for an outlet's several domains). GDELT asks for at most one
-request every 5 seconds per client, so request STARTS are spaced 5.5 s apart process-wide (GDELT often takes
-10-15 s to answer, so requests may overlap); a 429 or an error page means "search unavailable", never "nothing
-found". Results are cached for 1 hour per query.
-Oxylabs (if configured): Web API /v1/search with `site:` and `after:` operators.
+Auto-selects the best configured provider:
+1. Brave Search API (`BRAVE_API_KEY`) -> `/res/v1/news/search` + `/res/v1/web/search` (`extra_snippets=true`, ~1 s).
+2. Oxylabs AI Studio Instant Search (`SEARCH_API_KEY` / `OXYLABS_API_KEY`) -> `/search/instant` (~2 s).
+3. GDELT DOC 2.0 (free fallback when no search API keys are configured; 5.5 s spacing per GDELT rules).
 """
 from __future__ import annotations
 
 import asyncio
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
 from app import config
+from app.pipeline import websearch
 from app.receipts import domain as dom
 from app.swarm.collectors.http import BudgetExhausted, CollectorError, HTTPStatus, RateLimited, Session
 
 GDELT = "https://api.gdeltproject.org/api/v2/doc/doc"
 MIN_INTERVAL_S = 5.5
-REQUEST_TIMEOUT_S = 16.0
-MIN_TIME_FOR_REQUEST_S = 8.0
+REQUEST_TIMEOUT_S = 12.0
+MIN_TIME_FOR_REQUEST_S = 6.0
 CACHE_TTL_S = 3600
 _lock: asyncio.Lock | None = None
 _last = [0.0]
@@ -32,9 +31,16 @@ class SearchUnavailable(Exception):
 
 
 def backend() -> str:
-    choice = config.env("NEWS_SEARCH", "gdelt").lower()
-    if choice == "oxylabs" and config.search_api_key():
+    explicit = config.env("NEWS_SEARCH", "").lower()
+    if explicit == "gdelt":
+        return "gdelt"
+    if explicit == "brave" and config.brave_api_key():
+        return "brave"
+    if explicit == "oxylabs" and config.oxylabs_api_key():
         return "oxylabs"
+    active = config.active_search_provider()
+    if active in ("brave", "oxylabs"):
+        return active
     return "gdelt"
 
 
@@ -43,6 +49,7 @@ def reset() -> None:
     _cache.clear()
     _last[0] = 0.0
     _lock = None
+    websearch.reset()
 
 
 def clean_keywords(text: str) -> str:
@@ -117,15 +124,23 @@ async def _gdelt(s: Session, keywords: str, domains: list[str], days: int, limit
     return out
 
 
-async def _oxylabs(s: Session, keywords: str, domains: list[str], days: int, limit: int) -> list[dict]:
-    from app.trace import search as tsearch
-    after = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
-    site = (" (" + " OR ".join(f"site:{d}" for d in domains) + ")") if domains else ""
+async def _search_api(s: Session, keywords: str, domains: list[str], days: int, limit: int) -> list[dict]:
+    q = keywords.replace('"', "").strip()
+    if domains:
+        sites = [f"site:{d}" for d in domains]
+        q = f"{q} {sites[0]}" if len(sites) == 1 else f"{q} ({' OR '.join(sites)})"
+    # Domain-restricted (`site:`) lookups use Brave's general web index directly (with freshness) because
+    # Brave's `/news/search` vertical omits many regional/non-US domains that `/web/search` indexes cleanly.
+    kind = "web" if domains else "news"
     try:
-        hits = await tsearch.web(s, f"{keywords}{site} after:{after}".replace('"', ""), exact=False)
-    except tsearch.SearchUnavailable as exc:
+        hits = await websearch.search_web(s, q.strip(), kind=kind, days=days, limit=limit)
+    except websearch.SearchProviderError as exc:
         raise SearchUnavailable(str(exc)) from None
-    return [{"url": h["url"], "title": h["title"], "domain": h["domain"], "ts": h["ts"], "language": None}
+    if domains:
+        allowed = set(domains)
+        hits = [h for h in hits if h["domain"] in allowed]
+    return [{"url": h["url"], "title": h["title"], "domain": h["domain"], "ts": h["ts"],
+             "language": h.get("language"), "snippets": h.get("snippets") or []}
             for h in hits[:limit]]
 
 
@@ -136,9 +151,11 @@ async def search(s: Session, keywords: str, *, domains: list[str] | None = None,
     hit = _cache.get(key)
     if hit and hit[0] > time.monotonic():
         return hit[1]
-    fn = _gdelt if name == "gdelt" else _oxylabs
+    if not keywords.strip() and not domains:
+        raise SearchUnavailable("No search words.")
     if name == "gdelt" and not keywords.strip():
         raise SearchUnavailable("No search words.")
+    fn = _gdelt if name == "gdelt" else _search_api
     result = await fn(s, keywords, list(domains or []), days, limit)
     _cache[key] = (time.monotonic() + CACHE_TTL_S, result)
     return result

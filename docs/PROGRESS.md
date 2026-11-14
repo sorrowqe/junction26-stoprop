@@ -149,12 +149,22 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   documented response shape; LLM via FakeLLM).
 - NOT yet run: the AI fingerprint and Oxylabs web search live (no SEARCH_API_KEY on the PC; needs Aleksandr's OK).
 
-## Display + claim verification DONE (not yet deployed)
+## Display + claim verification + real web search & anti-bot scraping DONE (ready to deploy)
 - Display: techniques red, not yet validated dashed, all shown; validated = precision >= 0.70 on >= 15 predictions.
-- Verify claims: `backend/app/verify/` (claims, news [GDELT/Oxylabs], judge, run), POST /api/verify, "Verify claims" card.
-  Live 2026-11-14 from the PC: GDELT rate-limited (429) most requests from the venue IP -> all checks "could not check"
-  (honest); one earlier run exposed a false "cited source not found" on a true ERR report -> fixed (lenient outlet
-  search; zero outlet articles = could not check). Check end-to-end on the server after deploy. Tests: 584 passed.
+- Verify claims: `backend/app/verify/` (claims, news, judge, run), `POST /api/verify`, "Verify claims" card.
+- Multi-tier URL scraping & search (`pipeline/oxylabs.py`, `pipeline/websearch.py`, `pipeline/extract.py`):
+  - Fixed `verify/news.py` ignoring `SEARCH_PROVIDER` and fixed `trace/search.py` to use real Oxylabs AI Studio
+    (`https://api-aistudio.oxylabs.io`, `x-api-key`) instead of `webapi.oxylabs.io`.
+  - Added **Brave Search API** (`BRAVE_API_KEY`) as primary sub-second news & exact-phrase search (`extra_snippets=true`
+    verbatim passages + ISO `page_age` dates) with automatic failover to Oxylabs AI Studio `/search/instant`.
+  - Added **Oxylabs AI Studio `/scrape`** Tier-2 Markdown fallback (after SSRF + public-DNS checks) for bot-blocked /
+    JS-rendered sites on both Analyze URL (`/`) and Verify claims, with 6 h SQLite cache + `OXYLABS_DAILY_CAP=150`.
+  - Added Tier-0 social post URL shortcut on Analyze URL (Bluesky, Mastodon, YouTube links read via native collectors).
+  - Added port-43 WHOIS registration-date fallback (`rdap.py`) for `.ee` and other ccTLDs without RDAP, plus Brave-backed
+    `syndication.py` ("Copies elsewhere") receipt on Analyze URL, and `RATE_LIMIT_MULTIPLIER` for shared venue Wi-Fi.
+  - Verified live via `scripts/live_web_smoke.py` (0 AI Router calls): Brave `site:err.ee` 5 hits in 1.75 s, Oxylabs
+    scrape `bbc.com/news` 1,419 words in 8.6 s, Bluesky post URL in 0.91 s, `err.ee` domain age `2010-07-04` in 2.95 s.
+  - Unit tests: **592 passed** (all network/LLM mocked).
 
 ## Next
 - M5 Part B: benchmark generator + run_swarm_eval.py + /metrics swarm section (announce calls/credits first).
@@ -171,9 +181,9 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 - Rate limits are in memory: they reset on every deploy.
 - Genre/language detection are simple rules; Finnish may be detected as Estonian.
 - The model tends to quote whole sentences (inflates flagged_share); prompt tuning planned for M4.
-- Receipts: .ee has no RDAP; crt.sh is often overloaded; some outlets (AP, Reuters) block fetching -> paste text.
+- Receipts: `crt.sh` is often overloaded (capped at 4.5 s so it never stalls `/source`); `.ee` and major European ccTLDs without RDAP now use a port-43 WHOIS registration-date fallback; hard paywalls that also block residential browser rendering fall back to search excerpts or paste-text.
 - Lookalike can flag dictionary words one letter away from an outlet name (e.g. lemonade vs lemonde).
-- Rate limit is per IP: at the venue many people may share one IP (30 analyses/h). Open question to Aleksandr.
+- Rate limit is per IP: set `RATE_LIMIT_MULTIPLIER=3` in server `.env` when many users share one venue Wi-Fi IP.
 
 ## How to verify (PC, Git Bash, in the repo folder)
 ```bash

@@ -12,7 +12,7 @@ import httpx2
 
 from app.pipeline import extract
 
-TIMEOUT_S = 8.0
+TIMEOUT_S = 6.0
 
 
 class SourceError(Exception):
@@ -39,10 +39,10 @@ client_factory = _default_client
 
 
 async def get_json(url: str, *, params: dict | None = None, max_bytes: int = 2_000_000,
-                   accept_404: bool = False):
+                   accept_404: bool = False, timeout_s: float | None = None):
     """GET and parse JSON. Returns None for 404 if accept_404. Raises SourceError / TooLarge."""
     try:
-        async with asyncio.timeout(TIMEOUT_S):
+        async with asyncio.timeout(TIMEOUT_S if timeout_s is None else timeout_s):
             async with client_factory() as client:
                 async with client.stream("GET", url, params=params, headers={"Accept": "application/json"}) as resp:
                     if resp.status_code == 404 and accept_404:

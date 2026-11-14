@@ -18,7 +18,8 @@ async def check(domain: str, now: datetime | None = None) -> dict:
     now = now or datetime.now(timezone.utc)
     evidence = f"https://crt.sh/?q={domain}"
     try:
-        rows = await http.get_json("https://crt.sh/", params={"q": domain, "output": "json"}, max_bytes=MAX_BYTES)
+        rows = await http.get_json("https://crt.sh/", params={"q": domain, "output": "json"}, max_bytes=MAX_BYTES,
+                                   timeout_s=4.5)
     except http.TooLarge:
         return {"status": "found", "flag": "neutral", "evidence_url": evidence,
                 "text": "Thousands of TLS certificates on record: a long certificate history."}

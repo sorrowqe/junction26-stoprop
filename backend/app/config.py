@@ -44,6 +44,41 @@ def search_api_key() -> str:
     return env("SEARCH_API_KEY")
 
 
+def brave_api_key() -> str:
+    return env("BRAVE_API_KEY")
+
+
+def oxylabs_api_key() -> str:
+    """Oxylabs AI Studio key: dedicated OXYLABS_API_KEY, or SEARCH_API_KEY when not a Brave-only setup."""
+    explicit = env("OXYLABS_API_KEY")
+    if explicit:
+        return explicit
+    if search_provider() in ("brave",):
+        return ""
+    return search_api_key()
+
+
+def oxylabs_daily_cap() -> int:
+    try:
+        return max(0, int(env("OXYLABS_DAILY_CAP", "150")))
+    except ValueError:
+        return 150
+
+
+def active_search_provider() -> str:
+    """Resolved open-web / news search backend: 'brave' | 'oxylabs' | 'none'."""
+    choice = search_provider()
+    if choice == "none":
+        return "none"
+    if choice == "oxylabs_only":
+        return "oxylabs" if oxylabs_api_key() else "none"
+    if brave_api_key() and choice in ("", "auto", "brave", "oxylabs"):
+        return "brave"
+    if oxylabs_api_key() and choice in ("", "auto", "oxylabs"):
+        return "oxylabs"
+    return "none"
+
+
 def model_embed() -> str:
     return env("MODEL_EMBED", "text-embedding-3-small-eu")
 

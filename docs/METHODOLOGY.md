@@ -102,13 +102,16 @@ spread without coordination, which is why innocent explanations are always liste
 ## Verify claims
 
 "Verify claims" on an analysis checks up to 3 factual claims against recent news; it never says "true" or "false".
-Bounded pipeline (no agent loop, about 30 s): one AI call extracts the claims, the cited outlet and the exact
+Bounded pipeline (no agent loop, <= 38 s): one AI call extracts the claims, the cited outlet and the exact
 attribution phrase (checked word for word); a lenient search of the cited outlet's domains (last 30 days, any key
-entity) and a news search across outlets (last 14 days) run on the GDELT DOC 2.0 index (free; at most 4 searches,
-request starts spaced 5.5 s apart as GDELT asks); at most 5 articles are read with the SSRF-safe fetcher plus up to 8
-more headlines from the cited outlet; one AI call per claim judges supports / contradicts / unrelated, and every
-evidence quote must appear word for word in the article or headline, otherwise the judgement is discarded. Google
-Fact Check Tools is searched when a key is configured.
+entity) and a news search across outlets (last 14 days) run via the Brave Search API (primary, with `extra_snippets`
+and automatic failover to Oxylabs AI Studio Instant Search, or free GDELT DOC 2.0 when no search keys are set); at
+most 5 articles are read with the SSRF-safe fetcher (falling back to Oxylabs AI Studio headless Markdown scraping for up
+to 2 bot-blocked pages, or Brave's verbatim `extra_snippets` when a page is paywalled) plus up to 8 more headlines from
+the cited outlet; one AI call per claim judges supports / contradicts / unrelated, and every evidence quote must appear
+word for word in the article, search excerpt, or headline, otherwise the judgement is discarded. Google Fact Check Tools
+is searched when a key is configured. Note: domain-age fallbacks on country TLDs without RDAP (such as `.ee`) read only
+the registration timestamp from port-43 WHOIS, never registrant/owner data.
 
 Verdicts: **cited source not found** (the index has recent articles from that outlet on the topic, but none says it;
 also adds a red "unverifiable attribution" span on the attribution phrase), **contradicted**, **corroborated**

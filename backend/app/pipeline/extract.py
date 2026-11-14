@@ -16,6 +16,7 @@ Defence in depth:
 from __future__ import annotations
 
 import asyncio
+import contextvars
 import ipaddress
 import re
 import socket
@@ -30,7 +31,7 @@ from app import config
 ALLOWED_SCHEMES = {"http", "https"}
 ALLOWED_PORTS = {80, 443, 8080, 8443}
 MAX_BYTES = 2_000_000
-TIMEOUT_S = 8.0
+TIMEOUT_S = 5.0
 MAX_REDIRECTS = 3
 HTML_TYPES = {"text/html", "application/xhtml+xml"}
 USER_AGENT = f"StopropBot/{config.VERSION} (+https://stoprop.tech/methodology)"
@@ -288,12 +289,13 @@ async def _fetch(url: str) -> Fetched:
     raise FetchError("too_many_redirects", f"The link redirects more than {MAX_REDIRECTS} times.", 400)
 
 
-async def fetch_html(url: str) -> Fetched:
+async def fetch_html(url: str, *, timeout_s: float | None = None) -> Fetched:
+    limit = TIMEOUT_S if timeout_s is None else timeout_s
     try:
-        async with asyncio.timeout(TIMEOUT_S):
+        async with asyncio.timeout(limit):
             return await _fetch(url)
     except TimeoutError:
-        raise FetchError("timeout", "The website took too long to answer (8 s limit).", 504) from None
+        raise FetchError("timeout", f"The website took too long to answer ({limit:g} s limit).", 504) from None
 
 
 # ------------------------------------------------------------------ extraction
@@ -307,9 +309,14 @@ class Article:
     sitename: str | None
     text: str
     redirects: list[str]
+    via: str = "direct"
 
 
 MIN_WORDS = 25
+_RETRYABLE_HTTP = {401, 402, 403, 406, 408, 429, 451, 500, 502, 503, 504, 520, 521, 522, 523, 524, 525, 526}
+_ALLOW_FALLBACK: contextvars.ContextVar[bool] = contextvars.ContextVar("extract_allow_fallback", default=True)
+_DIRECT_TIMEOUT: contextvars.ContextVar[float | None] = contextvars.ContextVar("extract_direct_timeout", default=None)
+_FALLBACK_TIMEOUT: contextvars.ContextVar[float] = contextvars.ContextVar("extract_fallback_timeout", default=28.0)
 
 
 def extract_main_text(html: str, url: str) -> tuple[str, dict]:
@@ -323,10 +330,101 @@ def extract_main_text(html: str, url: str) -> tuple[str, dict]:
     return text.strip(), info
 
 
-async def fetch_article(url: str) -> Article:
-    fetched = await fetch_html(url)
-    text, info = await asyncio.to_thread(extract_main_text, fetched.html, fetched.final_url)
-    if len(text.split()) < MIN_WORDS:
-        raise FetchError("no_text", "Couldn't find the main text on that page. Please paste the text instead.", 422)
-    return Article(url=url, final_url=fetched.final_url, title=info["title"], date=info["date"],
-                   sitename=info["sitename"], text=text, redirects=fetched.redirects)
+async def _try_social_post(url: str) -> Article | None:
+    """Tier 0: public social post links (Bluesky, Mastodon, YouTube) via our native API collectors."""
+    from datetime import datetime, timezone
+    from app.swarm import collectors
+    from app.swarm.collectors import bluesky, mastodon, youtube
+    from app.swarm.collectors.http import CollectorError
+
+    if not (bluesky.parse(url) or mastodon.parse(url) or (youtube.parse(url) and config.env("GOOGLE_API_KEY"))):
+        return None
+    try:
+        coll, _ = await collectors.collect_urls([url], cache=True)
+    except CollectorError as exc:
+        raise FetchError("social", exc.message, exc.status) from None
+    if not coll.posts:
+        raise FetchError("no_text", "That post has no text to analyze.", 422)
+    p = coll.posts[0]
+    if len(p.text.split()) < 3:
+        raise FetchError("no_text", "That post has too little text to analyze.", 422)
+    date_s = datetime.fromtimestamp(p.ts, timezone.utc).strftime("%Y-%m-%d") if p.ts else None
+    site = collectors.PLATFORM_NAMES.get(p.platform, p.platform)
+    return Article(url=url, final_url=p.url or url, title=f"Post by {p.author}", date=date_s,
+                   sitename=site, text=p.text, redirects=[], via="social_api")
+
+
+def _closed_social_reason(url: str) -> str | None:
+    from app.swarm import collectors
+    host = collectors._host(url)
+    for hosts, why in collectors.CLOSED.items():
+        if host in hosts or any(host.endswith("." + h) for h in hosts):
+            return why + " Please paste the post's text directly instead."
+    return None
+
+
+def _should_fallback(exc: FetchError) -> bool:
+    if exc.code in ("timeout", "connect", "no_text"):
+        return True
+    if exc.code == "http_status":
+        m = re.search(r"HTTP (\d{3})", exc.message)
+        return bool(m and int(m.group(1)) in _RETRYABLE_HTTP)
+    return False
+
+
+async def fetch_article(url: str, *, allow_fallback: bool | None = None, direct_timeout_s: float | None = None,
+                        fallback_timeout_s: float | None = None) -> Article:
+    """Fetch and extract article text:
+    Tier 0: native social post API (Bluesky, Mastodon, YouTube)
+    Tier 1: SSRF-safe direct HTTP + trafilatura
+    Tier 2: Oxylabs AI Studio `/scrape` fallback when Tier 1 hits anti-bot/JS walls (after SSRF check).
+    """
+    use_fallback = _ALLOW_FALLBACK.get() if allow_fallback is None else allow_fallback
+    d_timeout = _DIRECT_TIMEOUT.get() if direct_timeout_s is None else direct_timeout_s
+    fb_timeout = _FALLBACK_TIMEOUT.get() if fallback_timeout_s is None else fallback_timeout_s
+
+    check_url(url)
+    closed_msg = _closed_social_reason(url)
+    if closed_msg:
+        raise FetchError("closed_platform", closed_msg, 422)
+
+    if use_fallback:
+        social = await _try_social_post(url)
+        if social is not None:
+            return social
+
+    tier1_err: FetchError | None = None
+    tier1_final = url
+    tier1_redirects: list[str] = []
+    tier1_info: dict = {"title": None, "date": None, "sitename": None}
+    try:
+        fetched = await fetch_html(url, timeout_s=d_timeout)
+        tier1_final = fetched.final_url
+        tier1_redirects = fetched.redirects
+        text, tier1_info = await asyncio.to_thread(extract_main_text, fetched.html, fetched.final_url)
+        if len(text.split()) >= MIN_WORDS:
+            return Article(url=url, final_url=fetched.final_url, title=tier1_info["title"], date=tier1_info["date"],
+                           sitename=tier1_info["sitename"], text=text, redirects=fetched.redirects, via="direct")
+        tier1_err = FetchError("no_text", "Couldn't find the main text on that page. Please paste the text instead.", 422)
+    except FetchError as exc:
+        tier1_err = exc
+
+    if use_fallback and tier1_err is not None and _should_fallback(tier1_err):
+        from app.pipeline import oxylabs
+        if oxylabs.status()["available"]:
+            # Ensure target (and any redirected target) resolves strictly to public IPs before proxying.
+            ft = check_url(tier1_final)
+            await resolve_public(ft.host, ft.port)
+            try:
+                md_text, md_title = await oxylabs.scrape_markdown(tier1_final, timeout_s=fb_timeout)
+                if len(md_text.split()) >= MIN_WORDS:
+                    return Article(
+                        url=url, final_url=tier1_final, title=tier1_info["title"] or md_title,
+                        date=tier1_info["date"], sitename=tier1_info["sitename"], text=md_text,
+                        redirects=tier1_redirects, via="oxylabs",
+                    )
+            except oxylabs.OxylabsError:
+                pass  # surface the original user-friendly FetchError
+
+    assert tier1_err is not None
+    raise tier1_err

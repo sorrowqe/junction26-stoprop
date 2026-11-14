@@ -41,22 +41,34 @@ def excerpt(text: str, entities: list[str], limit: int = EXCERPT_CHARS) -> str:
     return "\n".join(out) if out else (text or "")[:limit]
 
 
-async def read(article: dict, timeout_s: float) -> dict:
-    """Adds 'text' (main text or '') and 'read': True/False."""
+async def read(article: dict, timeout_s: float, *, allow_fallback: bool = False) -> dict:
+    """Adds 'text' (main text or ''), 'read': True/False, and 'via'."""
+    if timeout_s < 1.5:
+        return {**article, "text": "", "read": False, "via": None}
+    cap = min(20.0 if allow_fallback else 4.5, timeout_s)
+    tok_fb = extract._ALLOW_FALLBACK.set(allow_fallback)
+    tok_dt = extract._DIRECT_TIMEOUT.set(min(4.0, cap))
+    tok_ft = extract._FALLBACK_TIMEOUT.set(max(3.0, cap - 0.5))
     try:
-        async with asyncio.timeout(max(1.0, min(FETCH_TIMEOUT_S, timeout_s))):
+        async with asyncio.timeout(cap):
             got = await extract.fetch_article(article["url"])
-        return {**article, "text": got.text, "read": True, "title": article.get("title") or got.title or "",
-                "date": got.date}
-    except Exception:  # noqa: BLE001 - paywalls, bot blocks, timeouts: judge the headline only
-        return {**article, "text": "", "read": False}
+        return {**article, "text": got.text, "read": True, "via": getattr(got, "via", "direct"),
+                "title": article.get("title") or got.title or "", "date": got.date}
+    except Exception:  # noqa: BLE001 - paywalls, bot blocks, timeouts: judge snippets / headline
+        return {**article, "text": "", "read": False, "via": None}
+    finally:
+        extract._ALLOW_FALLBACK.reset(tok_fb)
+        extract._DIRECT_TIMEOUT.reset(tok_dt)
+        extract._FALLBACK_TIMEOUT.reset(tok_ft)
 
 
 def quote_found(quote: str, article: dict) -> bool:
     q = norm(quote or "")
     if len(q.split()) < 3:
         return False
-    return q in norm(article.get("text") or "") or q in norm(article.get("title") or "")
+    if q in norm(article.get("text") or "") or q in norm(article.get("title") or ""):
+        return True
+    return any(q in norm(sn) for sn in (article.get("snippets") or []) if isinstance(sn, str))
 
 
 async def judge(claim: dict, articles: list[dict]) -> tuple[list[dict], dict]:
@@ -66,7 +78,12 @@ async def judge(claim: dict, articles: list[dict]) -> tuple[list[dict], dict]:
         return [], meta
     blocks = []
     for i, a in enumerate(articles, start=1):
-        body = excerpt(a.get("text") or "", claim.get("entities") or []) if a.get("read") else "(article text not available)"
+        if a.get("read"):
+            body = excerpt(a.get("text") or "", claim.get("entities") or [])
+        elif a.get("snippets"):
+            body = "Search excerpts from this article:\n" + "\n".join(str(x) for x in a["snippets"][:5])
+        else:
+            body = "(article text not available)"
         blocks.append(f"[Article {i}] {a.get('domain')} | {a.get('title') or ''}\n{body}")
     user = f"Claim: {claim['claim']}\n\n" + "\n\n".join(blocks)
     out = await llm.chat([{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}],

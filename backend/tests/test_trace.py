@@ -52,8 +52,8 @@ def bsky_hits(campaign=False):
     return {"posts": hits, "hitsTotal": len(hits)}
 
 
-def oxy_result(url, title, outline, pos):
-    return {"title": title, "outline": outline, "url": url, "metadata": {"position": pos}}
+def oxy_result(url, title, desc):
+    return {"title": title, "description": desc, "url": url, "content": None, "source": "web"}
 
 
 def oxy(query_text):
@@ -61,16 +61,15 @@ def oxy(query_text):
         results = [
             oxy_result("https://www.reuters.com/world/europe/harbour-dredging-contract-2026-11-11/",
                        "Harbour dredging contract approved | Reuters",
-                       [f"Nov 11, 2026 — {S1} The city said ..."], 1),
+                       f"Nov 11, 2026 — {S1} The city said ..."),
             oxy_result("https://localnews-aggregator.example/harbour", "Harbour deal",
-                       [f"Nov 12, 2026 — {S1}"], 2),
-            oxy_result("https://blog.example.org/post/1", "Some blog", ["We discuss the harbour plans of many cities ..."], 3),
-            oxy_result("https://undated.example/item", "Copy without a date", [f"... {S1} ..."], 4),
+                       f"Nov 12, 2026 — {S1}"),
+            oxy_result("https://blog.example.org/post/1", "Some blog", "We discuss the harbour plans of many cities ..."),
+            oxy_result("https://undated.example/item", "Copy without a date", f"... {S1} ..."),
         ]
     else:
         results = []
-    return {"state": "done", "results": results, "params": {"query": query_text, "max_results": 20},
-            "metadata": {"timestamp": 1794480000, "request_id": "1"}}
+    return {"run_id": "1", "status": "completed", "data": results}
 
 
 class Router:
@@ -80,7 +79,7 @@ class Router:
 
     def __call__(self, req: httpx2.Request):
         self.requests.append(req)
-        if req.url.host == "webapi.oxylabs.io":
+        if req.url.host == "api-aistudio.oxylabs.io":
             if self.oxy_status != 200:
                 return httpx2.Response(self.oxy_status, json={"error": "unauthorized"})
             return httpx2.Response(200, json=oxy(json.loads(req.content)["query"]))
@@ -188,11 +187,11 @@ def test_trace_open_web_and_bluesky(monkeypatch):
     assert [t["who"] for t in sp["timeline"]][0] == "reuters.com"
     assert any("no date in the search results" in n for n in r["notes"])
     assert r["principle"] == "We trace where this text spread. We don't research who is behind any account."
-    oxy_reqs = [q for q in router.requests if q.url.host == "webapi.oxylabs.io"]
-    assert oxy_reqs and all(q.headers["authorization"] == "Bearer oxy-test-key" for q in oxy_reqs)
-    assert json.loads(oxy_reqs[0].content)["query"].startswith('"') and json.loads(oxy_reqs[0].content)["max_results"] == 20
+    oxy_reqs = [q for q in router.requests if q.url.host == "api-aistudio.oxylabs.io"]
+    assert oxy_reqs and all(q.headers["x-api-key"] == "oxy-test-key" for q in oxy_reqs)
+    assert json.loads(oxy_reqs[0].content)["query"].startswith('"') and json.loads(oxy_reqs[0].content)["limit"] == 10
     # no profile lookups, no identity research: only search endpoints were called
-    assert {q.url.path for q in router.requests} <= {"/v1/search", "/xrpc/app.bsky.feed.searchPosts"}
+    assert {q.url.path for q in router.requests} <= {"/search/instant", "/xrpc/app.bsky.feed.searchPosts"}
     assert "oxy-test-key" not in json.dumps(r)
     assert progress
 

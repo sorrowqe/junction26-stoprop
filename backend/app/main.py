@@ -14,11 +14,12 @@ import json
 from app import config, languages, ratelimit, taxonomy
 from app.analyze import analyze_text, prewarm_samples
 from app.llm import budget
-from app.pipeline import extract
+from app.pipeline import extract, oxylabs
 from app.receipts import service as receipts_service
 from app.receipts.domain import DomainError, normalize_host
 from app.store import get_store
 from app.swarm import clusters as swarm_clusters, ingest as swarm_ingest
+from app.trace import fingerprint as trace_fp
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -61,6 +62,8 @@ def health() -> dict:
         "commit": config.git_commit(),
         "budget": budget.status(),
         "llm": {"configured": config.llm_configured(), "model": config.model_tagger()},
+        "search": {"provider": config.active_search_provider(), "configured": config.active_search_provider() != "none"},
+        "scraper": oxylabs.status(),
         "collectors": {"bluesky": True, "mastodon": True, "youtube": bool(config.env("GOOGLE_API_KEY"))},
         "storage": get_store().kind,
     }
@@ -91,9 +94,9 @@ def techniques() -> dict:
     return taxonomy.public()
 
 
-async def _safe_receipts(target: str, title: str | None) -> tuple[list, str | None]:
+async def _safe_receipts(target: str, title: str | None, quote: str | None = None) -> tuple[list, str | None]:
     try:
-        result = await receipts_service.get_receipts(target, title=title)
+        result = await receipts_service.get_receipts(target, title=title, quote=quote)
         return result["receipts"], None
     except DomainError as exc:
         return [], f"No source receipts: {exc}"
@@ -120,7 +123,8 @@ async def analyze(req: AnalyzeRequest, request: Request) -> dict:
             raise HTTPException(exc.status, exc.message) from None
         text = article.text[:MAX_CHARS]
         source = {"url": article.url, "final_url": article.final_url, "title": article.title,
-                  "date": article.date, "sitename": article.sitename, "redirects": article.redirects}
+                  "date": article.date, "sitename": article.sitename, "redirects": article.redirects,
+                  "via": article.via}
 
     receipts_target = source["final_url"] if source else url
     domain = None
@@ -129,9 +133,13 @@ async def analyze(req: AnalyzeRequest, request: Request) -> dict:
             domain = normalize_host(receipts_target)
         except DomainError:
             domain = None
+    sample_quote = None
+    if source:
+        picks = trace_fp.heuristic(text)
+        sample_quote = picks[0] if picks else None
     analysis, (receipts, receipts_note) = await asyncio.gather(
         analyze_text(text, sensitivity=req.sensitivity, lang=req.lang, private=req.private, domain=domain),
-        _safe_receipts(receipts_target, source["title"] if source else None) if receipts_target
+        _safe_receipts(receipts_target, source["title"] if source else None, quote=sample_quote) if receipts_target
         else asyncio.sleep(0, result=([], None)),
     )
     analysis["receipts"] = receipts

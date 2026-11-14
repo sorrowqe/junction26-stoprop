@@ -11,9 +11,11 @@ YOUNG_DAYS = 90
 
 async def check(domain: str, now: datetime | None = None) -> dict:
     now = now or datetime.now(timezone.utc)
-    params = {"url": domain, "output": "json", "limit": "1", "fl": "timestamp,original", "filter": "statuscode:200"}
+    params = {"url": domain, "output": "json", "limit": "1", "fl": "timestamp,original", "filter": "statuscode:200",
+              "from": "1996"}
     try:
-        rows = await http.get_json("https://web.archive.org/cdx/search/cdx", params=params, max_bytes=200_000)
+        rows = await http.get_json("https://web.archive.org/cdx/search/cdx", params=params, max_bytes=200_000,
+                                   timeout_s=5.0)
     except http.SourceError:
         return {"status": "error", "flag": "neutral", "evidence_url": f"https://web.archive.org/web/*/{domain}",
                 "text": "The Internet Archive did not answer in time. Try Refresh later."}

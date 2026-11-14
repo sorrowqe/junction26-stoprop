@@ -38,15 +38,29 @@ def _isolated(monkeypatch):
 
     monkeypatch.setattr(extract, "resolver", _no_dns)
     monkeypatch.setattr(receipts_http, "client_factory", _no_http)
+    from app.pipeline import oxylabs, websearch
+    from app.receipts import rdap
     from app.swarm import collectors
     from app.swarm.collectors import http as collectors_http
     monkeypatch.setattr(collectors_http, "client_factory", _no_http)
+    monkeypatch.setattr(oxylabs, "client_factory", _no_http)
+
+    async def _no_whois(_domain: str):
+        return None
+
+    monkeypatch.setattr(rdap, "whois_lookup", _no_whois)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
     monkeypatch.delenv("SEARCH_API_KEY", raising=False)
+    monkeypatch.delenv("BRAVE_API_KEY", raising=False)
+    monkeypatch.delenv("OXYLABS_API_KEY", raising=False)
+    monkeypatch.delenv("OXYLABS_DAILY_CAP", raising=False)
+    monkeypatch.delenv("RATE_LIMIT_MULTIPLIER", raising=False)
     monkeypatch.delenv("NEWS_SEARCH", raising=False)
     from app.verify import news as verify_news, run as verify_run
     verify_news.reset()
     verify_run.reset()
+    oxylabs.reset()
+    websearch.reset()
     monkeypatch.setenv("SEARCH_PROVIDER", "none")
     collectors.reset_cache()
     monkeypatch.delenv("FACTCHECK_API_KEY", raising=False)

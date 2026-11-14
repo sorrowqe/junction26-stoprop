@@ -31,6 +31,7 @@ TTLS = {  # type: (soft, hard) seconds
     "first_seen_archive": (7 * DAY, 28 * DAY),
     "first_certificate": (7 * DAY, 28 * DAY),
     "fact_checks": (12 * HOUR, 48 * HOUR),
+    "syndication": (6 * HOUR, 24 * HOUR),
 }
 NEGATIVE_TTL = 10 * 60
 REFRESH_MIN_AGE = 15 * 60
@@ -137,7 +138,8 @@ def _shape(rtype: str, data: dict, checked_at: float | None, *, cached: bool, re
     return out
 
 
-async def get_receipts(target: str, *, title: str | None = None, refresh: bool = False) -> dict:
+async def get_receipts(target: str, *, title: str | None = None, quote: str | None = None,
+                       refresh: bool = False) -> dict:
     """Receipts for a URL or domain. Raises DomainError for unusable input."""
     host = normalize_host(target)
     reg = registrable(host)
@@ -148,6 +150,11 @@ async def get_receipts(target: str, *, title: str | None = None, refresh: bool =
         sub = hashlib.sha256(query.lower().encode("utf-8")).hexdigest()[:16]
         return await _cached("fact_checks", sub, lambda: factcheck.check(query), refresh)
 
+    async def syn():
+        assert quote is not None
+        sub = hashlib.sha256(f"{reg}:{quote.lower().strip()}".encode("utf-8")).hexdigest()[:16]
+        return await _cached("syndication", sub, lambda: syndication.check(reg, quote), refresh)
+
     jobs = {
         "domain_age": _cached("domain_age", reg, lambda: rdap.check(reg), refresh),
         "first_seen_archive": _cached("first_seen_archive", reg, lambda: wayback.check(reg), refresh),
@@ -155,11 +162,14 @@ async def get_receipts(target: str, *, title: str | None = None, refresh: bool =
     }
     if factcheck.configured():
         jobs["fact_checks"] = fc()
+    if quote and syndication.configured():
+        jobs["syndication"] = syn()
     results = dict(zip(jobs, await asyncio.gather(*jobs.values())))
     results["lookalike"] = _shape("lookalike", lookalike.check(host), now, cached=False)
     if "fact_checks" not in results:
         results["fact_checks"] = _shape("fact_checks", factcheck.not_checked(), None, cached=False)
-    results["syndication"] = _shape("syndication", syndication.not_checked(), None, cached=False)
+    if "syndication" not in results:
+        results["syndication"] = _shape("syndication", syndication.not_checked(domain_only=not quote), None, cached=False)
     return {"domain": host, "registrable_domain": reg, "receipts": [results[t] for t in ORDER]}
 
 
