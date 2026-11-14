@@ -38,10 +38,19 @@ def names() -> dict[str, str]:
 
 
 def public() -> dict:
-    """Taxonomy for the UI legend / tooltips."""
-    keys = ("label", "name", "kind", "color", "definition", "example", "experimental", "dev_precision", "dev_predictions")
-    return {"version": version(), "labels": [{**{k: t.get(k) for k in keys}, "name": t.get("display_name") or t["name"]}
-                                             for t in load()["techniques"]]}
+    """Public taxonomy for API callers, UI legend, and tooltips."""
+    keys = ("label", "name", "kind", "color", "definition", "example")
+    return {
+        "version": version(),
+        "labels": [
+            {
+                **{k: t.get(k) for k in keys},
+                "name": t.get("display_name") or t["name"],
+                "thresholds": t.get("min_confidence"),
+            }
+            for t in load()["techniques"]
+        ],
+    }
 
 
 def gate(spans: list[dict], sensitivity: str) -> list[dict]:

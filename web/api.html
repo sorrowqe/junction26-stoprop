@@ -80,6 +80,9 @@ curl -s -N -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/
       <code>.htaccess</code>, Nginx, and <code>ufw</code> rules.</p>
     <h2>Taxonomy</h2>
     <pre><code>curl -s https://stoprop.tech/api/techniques</code></pre>
+    <p>Returns all 14 taxonomy entries (<code>label</code>, human-readable <code>name</code>, <code>kind</code>,
+      <code>color</code>, plain-English <code>definition</code>, <code>example</code>, and calibrated
+      <code>thresholds</code> for <code>strict</code>, <code>balanced</code>, and <code>broad</code>).</p>
     <h2>Health and AI budget</h2>
     <pre><code>curl -s https://stoprop.tech/api/health</code></pre>
     <h2>Rate limits</h2>

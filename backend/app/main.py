@@ -118,6 +118,7 @@ def metrics() -> dict:
 
 @app.get("/api/techniques")
 def techniques() -> dict:
+    """Return the 14-label persuasion & context taxonomy (definitions, examples, colours, and sensitivity thresholds)."""
     return taxonomy.public()
 
 
