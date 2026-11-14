@@ -65,8 +65,13 @@ def read_jsonl(path: Path) -> list[dict]:
 def load(final: bool, lang: str = LANG, limit: int | None = None) -> tuple[list[dict], list[dict]]:
     items = [i for i in read_jsonl(TEST if final else DEV) if i.get("lang") == lang]
     pairs = [p for p in read_jsonl(SYM) if p.get("lang") == lang]
-    if limit:
-        items = items[:limit]
+    if limit:  # round-robin across sources so a small sample still covers synthetic AND semeval
+        groups = defaultdict(list)
+        for it in items:
+            groups[it["source"]].append(it)
+        mixed = [it for batch in zip(*groups.values()) for it in batch]
+        rest = [it for it in items if it not in mixed]
+        items = (mixed + rest)[:limit]
         pairs = pairs[: max(1, limit // 5)] if pairs else []
     return items, pairs
 
