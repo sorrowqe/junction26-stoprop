@@ -1,17 +1,33 @@
 """FastAPI app: routes and static files."""
+import asyncio
+import logging
+from contextlib import asynccontextmanager
 from typing import Literal
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from app import config, taxonomy
-from app.analyze import analyze_text
+from app import config, ratelimit, taxonomy
+from app.analyze import analyze_text, prewarm_samples
+from app.llm import budget
+from app.store import get_store
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
 MAX_CHARS = 100_000  # hard cap on request size; word truncation (8000) happens later
 
-app = FastAPI(title="Stoprop", version=config.VERSION, docs_url="/docs", redoc_url=None)
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    get_store()  # open SQLite early (falls back to memory if data/ is not writable)
+    task = asyncio.create_task(prewarm_samples())
+    yield
+    task.cancel()
+
+
+app = FastAPI(title="Stoprop", version=config.VERSION, docs_url="/docs", redoc_url=None, lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=config.WEB_DIR / "static"), name="static")
 
 
@@ -20,7 +36,7 @@ class AnalyzeRequest(BaseModel):
     url: str | None = None
     lang: str = "auto"
     sensitivity: Literal["strict", "balanced", "broad"] = "balanced"
-    private: bool = False  # honoured by the shared cache in M2
+    private: bool = False  # analyze, but do not write to the shared cache
 
 
 @app.get("/api/health")
@@ -29,7 +45,9 @@ def health() -> dict:
         "status": "ok",
         "version": config.VERSION,
         "commit": config.git_commit(),
-        "budget": {"mode": "ok"},  # real budget guard arrives in M2
+        "budget": budget.status(),
+        "llm": {"configured": config.llm_configured(), "model": config.model_tagger()},
+        "storage": get_store().kind,
     }
 
 
@@ -39,7 +57,7 @@ def techniques() -> dict:
 
 
 @app.post("/api/analyze")
-def analyze(req: AnalyzeRequest) -> dict:
+async def analyze(req: AnalyzeRequest, request: Request) -> dict:
     text = req.text or ""
     if not text.strip():
         if req.url:
@@ -47,7 +65,8 @@ def analyze(req: AnalyzeRequest) -> dict:
         raise HTTPException(400, "Please paste some text to analyze.")
     if len(text) > MAX_CHARS:
         raise HTTPException(413, f"Text is too long (max {MAX_CHARS:,} characters).")
-    return analyze_text(text, sensitivity=req.sensitivity, lang=req.lang)
+    ratelimit.enforce("analyze", request)
+    return await analyze_text(text, sensitivity=req.sensitivity, lang=req.lang, private=req.private)
 
 
 def _page(name: str) -> FileResponse:

@@ -86,7 +86,7 @@
       const r = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, sensitivity: $("sensitivity").value, lang: "auto" }),
+        body: JSON.stringify({ text, sensitivity: $("sensitivity").value, lang: "auto", private: $("private").checked }),
       });
       const body = await r.json().catch(() => ({}));
       if (!r.ok) {
@@ -120,17 +120,47 @@
     const spans = visibleSpans();
 
     const banner = $("banner");
-    if (res.mode === "heuristics_only") {
-      banner.hidden = false;
-      banner.textContent = "AI analysis is not switched on yet. These results come from simple word rules only. " +
-        "They are marked experimental and stay hidden unless you switch on “Show experimental labels”.";
-    } else {
-      banner.hidden = true;
-    }
+    const msg = bannerText(res);
+    banner.hidden = !msg;
+    banner.textContent = msg || "";
 
     renderDoc(current.text, spans);
     renderFindings(spans, res);
     renderProfile(res);
+    renderInnocent(spans, res);
+  }
+
+  function bannerText(res) {
+    const rules = " Showing simple word-rule hints only; they are experimental and stay hidden unless you switch on “Show experimental labels”.";
+    if (res.mode === "heuristics_only") {
+      if (res.mode_reason === "budget") return "Today's AI budget is used up." + rules;
+      if (res.mode_reason === "llm_error") return "AI analysis is temporarily unavailable." + rules;
+      return "AI analysis is not switched on on this server." + rules;
+    }
+    const hidden = res.spans.filter((s) => s.experimental).length;
+    if (hidden && !$("show-exp").checked) {
+      return "Every technique is still experimental until we have measured its precision on a labelled dataset, " +
+        "so AI findings are hidden by default. Switch on “Show experimental labels” to see them.";
+    }
+    return "";
+  }
+
+  function renderInnocent(spans, res) {
+    const card = $("innocent-card");
+    const list = $("innocent");
+    list.textContent = "";
+    const anyFlag = spans.some((s) => s.color === "red" || s.color === "amber");
+    const items = res.innocent_explanations || [];
+    card.hidden = !(anyFlag && items.length);
+    items.forEach((t) => list.append(el("li", null, t)));
+  }
+
+  function modeText(res) {
+    if (res.mode !== "llm") return "Rules only";
+    if (res.cost && res.cost.cached) return "AI, from cache (no new cost)";
+    const c = res.cost || {};
+    const tokens = (c.input_tokens || 0) + (c.output_tokens || 0);
+    return `AI, ${c.llm_calls || 0} call${c.llm_calls === 1 ? "" : "s"}, ${tokens.toLocaleString("en")} tokens`;
   }
 
   // Server offsets are Unicode code points; JS strings index UTF-16 units.
@@ -235,8 +265,11 @@
       ["Techniques", counts.length ? counts.map(([l, n]) => `${labelName(l)} × ${n}`).join(", ") : "none by default"],
       ["Experimental", `${p.experimental.count} ${$("show-exp").checked ? "(shown)" : "(hidden)"}`],
       ["Reported speech", `${p.reported_speech} (not counted)`],
-      ["Mode", res.mode === "llm" ? "AI + rules" : "Rules only"],
+      ["Mode", modeText(res)],
     ];
+    if (res.stats && res.stats.seen_before > 0) {
+      rows.push(["Seen before", `${res.stats.seen_before} earlier ${res.stats.seen_before === 1 ? "analysis" : "analyses"} of this text`]);
+    }
     rows.forEach(([k, v]) => { dl.append(el("dt", null, k), el("dd", null, v)); });
     const notes = $("notes");
     notes.textContent = "";

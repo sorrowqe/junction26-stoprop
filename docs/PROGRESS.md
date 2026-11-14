@@ -1,52 +1,52 @@
 # Progress
 
-_Last updated: 2026-11-14 (M1 code done, ready to deploy)_
+_Last updated: 2026-11-14 (M2 code done; real-call check + deploy pending)_
+
+Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 
 ## Done
-- **M0 walking skeleton**: repo layout, Docker/compose/Traefik, `deploy.sh` + `scripts/server-deploy.sh`,
-  `/api/health`, router smoke script. Server set up by Aleksandr per KICKOFF.md.
-- **M1 analyzer without AI** (mode `heuristics_only`):
-  - `pipeline/segment.py`: paragraphs -> sentences (ids `p{n}s{m}`, code-point offsets into the
-    original text), abbreviation-aware splitting (EN/ET/RU), language detect en/et/ru/other.
-  - `pipeline/lexicons.py` + `config/lexicons/{en,et,ru}.txt`: small word lists (sections documented in
-    `config/lexicons/README.md`).
-  - `pipeline/heuristics.py`: hints (emotive, intensifier, absolutist, us_them, all_caps, exclamation,
-    link, attribution, number_attributed/unattributed, quotation, bandwagon_phrase, vague_authority,
-    balance_marker, opinion_marker) + 4 conservative span rules (amber, experimental, low confidence).
-  - `pipeline/validate.py`: verbatim span validation within the sentence, offsets by our code,
-    reported-speech detection, `validator_rejections` count.
-  - `pipeline/profile.py`: genre guess, words, flagged_share, density_per_1000, counts, neutral summary.
-  - `taxonomy.py` (techniques.yaml v1 with all 13 labels + gating), `analyze.py` (orchestration).
-  - API: `POST /api/analyze` (schema per CLAUDE.md §4 + `source`, `sentence_id`, `stats`),
-    `GET /api/techniques`.
-  - Web: analyzer on `/` with 3 samples, URL field disabled, sensitivity, "Show experimental labels",
-    highlights (colour + underline style + icon), tooltip (hover / click / keyboard Enter, Esc closes),
-    findings list, profile card, legend, banner for rules-only mode. Dark mode, phone layout.
-  - Tests: 103 passed (`segment`, `validate`, `heuristics`, `profile`, `analyze`, `health`).
-    The neutral sample is a test: it must produce zero red/amber spans.
+- **M0** walking skeleton + pull-based deploy (`deploy.sh` -> `live` -> cron `server-deploy.sh`).
+- **M1** segment / heuristics / validate / profile, heuristics-only analyze, web analyzer UI.
+- **v2 reconcile** (commit 1260de5): extension + EXTENSION_ORIGINS removed, MODEL_EMBED added, pages
+  `/source` `/swarm` `/metrics` (placeholders), `/methodology` (principles), `/api` (curl examples), `/docs`,
+  nav + tool cards, swarm/eval stubs, `innocent_explanations` + `receipts` fields.
+- **M2** AI tagging:
+  - `llm/client.py` (AsyncOpenAI on httpx2, 30 s timeout, 1 retry on 5xx/timeout, every attempt logged to SQLite,
+    robust JSON array extraction), `llm/budget.py` (DAILY_TOKEN_CAP, modes ok/high/over),
+    `ratelimit.py` (analyze 30/h, swarm 10/h, receipts 60/h, feedback 30/h per IP), `store.py` (SQLite:
+    paragraph cache, sightings, usage log; memory fallback).
+  - `prompts/tagger_system.md` (static rules, taxonomy rendered in), `pipeline/tagger.py` (per-paragraph cache,
+    single-flight, ~1200-word chunks, private mode, fail soft per chunk).
+  - `analyze.py`: mode `llm` / `heuristics_only` with `mode_reason` (ok / no_key / budget / llm_error),
+    cost + `llm_calls`, `stats.seen_before`, innocent explanations, background pre-warm of demo samples.
+  - `/api/health`: budget (tokens today, cap, share, mode), llm configured + model, storage kind.
+  - Web: "Don't store this text", mode banners, innocent-explanations card, AI cost / cache in profile.
+  - `scripts/tagger_smoke.py`: ONE real tagger call on a sample (in-memory store).
+  - Tests: 159 passed, LLM always mocked (a test fixture makes any real call fail loudly).
 
 ## In progress
-- M1 deploy + checklist (KICKOFF.md).
+- One announced real call (`scripts/tagger_smoke.py`), then deploy M2.
 
 ## Next
-- M2: LLM tagger via AI Router, per-paragraph cache, single-flight, budget guard, rate limit.
-  Hints from `extract_hints` go into the user message; LLM spans go through `validate_candidates`
-  and `taxonomy.gate` exactly like the heuristic ones.
-- "Report a wrong label" button (§5) needs storage -> do it with the SQLite store in M2.
+- M3: SSRF-safe URL fetch + extraction, receipts v1, `/api/receipts`, `/source`, TTLs, Refresh.
+- Later: "Report a wrong label" (`POST /api/feedback`, 30/h) and "Share result" (`/r/{id}`) - not in M2 scope.
 
 ## Known issues / limits
-- Everything is experimental (hidden by default) until M4 measures precision. To see highlights,
-  tick "Show experimental labels" (or click the button under "Findings").
-- Genre guess and language detection are simple rules; Finnish may be detected as Estonian.
-- Validator is strict: a quote spanning two sentences is rejected (by design).
+- Every technique is experimental (hidden by default) until M4 measures precision -> the UI says so and
+  offers "Show experimental labels".
+- Rate limits are in memory: they reset on every deploy.
+- Genre/language detection are simple rules; Finnish may be detected as Estonian.
 
 ## How to verify (PC, Git Bash, in the repo folder)
 ```bash
 .venv/Scripts/python -m pip install -r backend/requirements-dev.txt   # if requirements changed
-.venv/Scripts/python -m pytest -q                                     # expect: 103 passed
+.venv/Scripts/python -m pytest -q                                     # expect: 159 passed
 GIT_COMMIT=test1234 PYTHONPATH=backend .venv/Scripts/python -m uvicorn app.main:app --port 8000
-# browser: http://127.0.0.1:8000  -> click a sample
-# curl -s -X POST http://127.0.0.1:8000/api/analyze -H 'Content-Type: application/json' \
-#      -d '{"text":"Everyone knows this plan failed."}'
+# browser: http://127.0.0.1:8000 (without a key: rules-only mode + banner)
+```
+Server (after deploy):
+```bash
+curl -s https://stoprop.tech/api/health        # budget.tokens_today, llm.configured, storage
+cd /docker/stoprop && docker compose exec stoprop python scripts/tagger_smoke.py   # ONE real call
 ```
 (On Mac/Linux use `.venv/bin/python` instead of `.venv/Scripts/python`.)

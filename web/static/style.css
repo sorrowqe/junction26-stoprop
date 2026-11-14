@@ -151,3 +151,7 @@ a { color: var(--focus); }
 .page pre { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: .8rem; overflow-x: auto; font-size: .85rem; }
 .principles li { margin-bottom: .5rem; }
 .hero { padding-top: 1.5rem; }
+.private { margin-top: .5rem; }
+.private + .muted { margin: .2rem 0 .4rem; }
+.innocent { padding-left: 1.1rem; margin: .3rem 0 0; font-size: .92rem; }
+.innocent li { margin-bottom: .4rem; }

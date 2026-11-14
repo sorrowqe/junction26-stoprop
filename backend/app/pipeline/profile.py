@@ -122,3 +122,45 @@ def summary(lang, genre, words, flagged, n_experimental, n_reported, share, dens
     if n_reported:
         parts.append(f"{_plural(n_reported, 'quoted passage')} attributed to someone else, not counted.")
     return " ".join(parts)
+
+
+# ------------------------------------------------------- innocent explanations
+
+_INNOCENT_BY_LABEL = {
+    "loaded_language": "Strong wording can reflect genuine feeling or a writing style, not only an attempt to steer the reader.",
+    "name_calling": "Labels can be shorthand used within a community; check whether the text also engages with the argument.",
+    "fear_appeal": "Warnings about real risks can be legitimate; what matters is whether the danger is backed by evidence.",
+    "exaggeration_minimisation": "Informal writing often exaggerates for emphasis without meaning it literally.",
+    "whataboutism": "Comparing with others can be fair context, not only a way to deflect.",
+    "false_dilemma": "Sometimes the options really are limited; check whether other choices exist.",
+    "questionable_authority": "Short texts often summarise expert views without naming the experts; the original source may name them.",
+    "causal_oversimplification": "Short texts simplify causes for space; a longer source may give the fuller picture.",
+    "bandwagon": "Phrases like “everyone knows” are also an everyday figure of speech.",
+    "doubt_casting": "Questioning credibility can be legitimate if the evidence is given elsewhere.",
+    "unsupported_claim": "A source may be given elsewhere: in a link, an earlier paragraph, or the original article this text came from.",
+}
+_INNOCENT_BY_GENRE = {
+    "opinion": "This reads as an opinion piece; arguing for a position with persuasive language is expected there.",
+    "social": "Social media posts are often informal and emotional without any intent to mislead.",
+}
+
+
+def innocent_explanations(spans: list[dict], genre: str) -> list[str]:
+    """Plausible non-malicious explanations for what was flagged (principle 9). Empty if nothing flagged."""
+    flagged = [s for s in spans if s.get("color") in ("red", "amber")]
+    if not flagged:
+        return []
+    out: list[str] = []
+    if any(s.get("reported_speech") for s in flagged):
+        out.append("Some of the flagged wording is quoted from someone else; reporting what others said is normal journalism.")
+    if genre in _INNOCENT_BY_GENRE:
+        out.append(_INNOCENT_BY_GENRE[genre])
+    seen = set()
+    for s in sorted(flagged, key=lambda s: -s.get("confidence", 0)):
+        label = s.get("label")
+        if label in _INNOCENT_BY_LABEL and label not in seen:
+            seen.add(label)
+            out.append(_INNOCENT_BY_LABEL[label])
+    if any(s.get("source") == "heuristic" for s in flagged):
+        out.append("Rule-based hints match words, not meaning, and can misfire on ordinary text.")
+    return out[:6]

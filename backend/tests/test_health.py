@@ -12,7 +12,10 @@ def test_health_ok(monkeypatch):
     body = r.json()
     assert body["status"] == "ok"
     assert body["commit"] == "abc12345"
-    assert body["budget"] == {"mode": "ok"}
+    assert body["budget"]["mode"] == "ok"
+    assert body["budget"]["tokens_today"] == 0
+    assert body["llm"]["configured"] is False
+    assert body["storage"] in ("sqlite", "memory")
     assert body["version"]
 
 

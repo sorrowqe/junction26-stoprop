@@ -1,13 +1,24 @@
-"""Run the pipeline on a text: segment -> heuristics -> (LLM in M2) -> validate -> gate -> profile."""
+"""Run the pipeline: segment -> heuristics -> LLM tagger -> validate -> gate -> profile."""
 from __future__ import annotations
 
 import hashlib
+import json
+import logging
 
-from app import taxonomy
-from app.pipeline import heuristics, profile, segment, validate
+from app import config, taxonomy
+from app.llm import budget
+from app.pipeline import heuristics, profile, segment, tagger, validate
+from app.store import get_store
+
+log = logging.getLogger("stoprop.analyze")
 
 MAX_WORDS = 8000
 LANG_OVERRIDES = {"en", "et", "ru", "other"}
+SPAN_FIELDS = ("start", "end", "quote", "label", "color", "confidence", "explanation",
+               "reported_speech", "experimental", "source", "sentence_id")
+
+NOTE_NO_KEY = "AI analysis is not configured on this server, so only rule-based hints are shown."
+NOTE_BUDGET = "Today's AI budget is used up, so only rule-based hints are shown until tomorrow (UTC)."
 
 
 def truncate_words(text: str, max_words: int = MAX_WORDS) -> tuple[str, bool]:
@@ -21,7 +32,8 @@ def truncate_words(text: str, max_words: int = MAX_WORDS) -> tuple[str, bool]:
     return text, False
 
 
-def analyze_text(text: str, sensitivity: str = "balanced", lang: str = "auto") -> dict:
+async def analyze_text(text: str, sensitivity: str = "balanced", lang: str = "auto",
+                       private: bool = False, domain: str | None = None, count_seen: bool = True) -> dict:
     notes: list[str] = []
     text, truncated = truncate_words(text)
     if truncated:
@@ -29,37 +41,94 @@ def analyze_text(text: str, sensitivity: str = "balanced", lang: str = "auto") -
 
     seg = segment.segment(text, lang=lang if lang in LANG_OVERRIDES else None)
     if seg.lang == "other":
-        notes.append("Language not recognised as English, Estonian or Russian: only language-independent hints were used.")
+        notes.append("Language not recognised as English, Estonian or Russian: word-list hints were limited.")
 
     hints = heuristics.extract_hints(seg)
-    candidates = heuristics.spans_from_hints(hints)
+    heuristic_candidates = heuristics.spans_from_hints(hints)
+
+    available, reason = budget.llm_available()
+    mode, mode_reason = "heuristics_only", reason
+    usage = {"input_tokens": 0, "output_tokens": 0, "llm_calls": 0}
+    rejections_extra = 0
+    if available and seg.paragraphs:
+        result = await tagger.tag(seg, hints, private=private)
+        usage = {"input_tokens": result.input_tokens, "output_tokens": result.output_tokens,
+                 "llm_calls": result.llm_calls}
+        rejections_extra = result.dropped_items
+        failed = result.failed
+        ok_paras = len(seg.paragraphs) - len(failed)
+        if ok_paras > 0:
+            mode, mode_reason = "llm", "ok"
+            if failed:
+                notes.append(f"AI analysis failed for {len(failed)} of {len(seg.paragraphs)} paragraphs; "
+                             "rule-based hints are shown there instead.")
+        else:
+            mode_reason = "llm_error"
+            notes.append("AI analysis is temporarily unavailable, so only rule-based hints are shown.")
+        failed_sentences = {s.id for p in seg.paragraphs if p.id in failed for s in p.sentences}
+        candidates = result.candidates + [c for c in heuristic_candidates if c["sentence_id"] in failed_sentences]
+    else:
+        candidates = heuristic_candidates
+        if reason == "no_key":
+            notes.append(NOTE_NO_KEY)
+        elif reason == "budget":
+            notes.append(NOTE_BUDGET)
+
     spans, rejections = validate.validate_candidates(seg, candidates)
     spans = taxonomy.gate(spans, sensitivity)
     spans.sort(key=lambda s: (s["start"], -s["end"]))
     prof = profile.build_profile(seg, spans, hints, taxonomy.names())
 
-    digest = hashlib.sha256(f"{text}\x00{sensitivity}\x00{seg.lang}".encode("utf-8")).hexdigest()
+    seen_before = 0
+    if seg.paragraphs:
+        store = get_store()
+        hashes = [tagger.paragraph_hash(p.text) for p in seg.paragraphs]
+        seen_before = max(store.seen(h)[0] for h in hashes)
+        if count_seen and not private:
+            for h in hashes:
+                store.note_seen(h, domain)
+
+    digest = hashlib.sha256(
+        json.dumps([text, sensitivity, seg.lang, mode], ensure_ascii=False).encode("utf-8")).hexdigest()
     return {
         "id": "r_" + digest[:12],
         "lang": seg.lang,
         "genre": prof["genre"],
-        "spans": [
-            {k: s[k] for k in ("start", "end", "quote", "label", "color", "confidence", "explanation",
-                               "reported_speech", "experimental", "source", "sentence_id")}
-            for s in spans
-        ],
+        "spans": [{k: s[k] for k in SPAN_FIELDS} for s in spans],
         "profile": prof,
-        "innocent_explanations": [],
+        "innocent_explanations": profile.innocent_explanations(spans, prof["genre"]),
         "receipts": [],  # filled for URLs in M3
-        "mode": "heuristics_only",
+        "mode": mode,
+        "mode_reason": mode_reason,
         "notes": notes,
-        "cost": {"input_tokens": 0, "output_tokens": 0, "cached": False},
+        "cost": {
+            "input_tokens": usage["input_tokens"],
+            "output_tokens": usage["output_tokens"],
+            "llm_calls": usage["llm_calls"],
+            "cached": mode == "llm" and usage["llm_calls"] == 0,
+        },
         "stats": {
             "paragraphs": len(seg.paragraphs),
             "sentences": len(seg.sentences),
             "hints": len(hints),
-            "validator_rejections": rejections,
+            "validator_rejections": rejections + rejections_extra,
             "analyzed_chars": len(text),
             "taxonomy_version": taxonomy.version(),
+            "prompt_version": tagger.prompt_version(),
+            "model": config.model_tagger() if mode == "llm" else None,
+            "seen_before": seen_before,
         },
     }
+
+
+async def prewarm_samples() -> None:
+    """Analyze the demo samples once so judges' first clicks hit the cache (costs LLM calls only once)."""
+    if not budget.llm_available()[0]:
+        return
+    try:
+        samples = json.loads((config.WEB_DIR / "static" / "samples.json").read_text(encoding="utf-8"))
+        for s in samples:
+            await analyze_text(s["text"], count_seen=False)
+        log.info("pre-warmed %d demo samples", len(samples))
+    except Exception:  # noqa: BLE001 - never break startup
+        log.exception("pre-warm failed")

@@ -26,3 +26,15 @@ One line per decision (date, milestone, what, why).
 - 2026-11-14 v2 reconcile: placeholder pages `/source` (M3), `/swarm` (M5), `/metrics` (M4); `/methodology` lists the principles until the M6 write-up; `/api` already has curl examples; FastAPI `/docs` enabled (Swagger UI assets come from its default CDN).
 - 2026-11-14 v2 reconcile: stub modules `backend/app/swarm/*`, `eval/swarm/*`, `eval/data/raw/` per v2 layout. Analyze response gains `innocent_explanations` and `receipts` (empty until M3).
 - 2026-11-14 v2 reconcile: kept the optional `lang` request field (default `auto`, not in the v2 request schema) - useful for eval and harmless.
+- 2026-11-14 M2: openai 3.x is built on `httpx2` (not classic `httpx`); runtime code imports `httpx2` only (a test enforces this). Classic `httpx` stays a dev-only dependency for FastAPI's TestClient.
+- 2026-11-14 M2: Paragraph cache stores the model's items with paragraph-LOCAL sentence indexes; validation re-runs on every read, so a cached paragraph inside a different text maps to the right ids/offsets. Empty results ([]) are cached; LLM failures are not cached (next request retries).
+- 2026-11-14 M2: Uncached paragraphs are batched into ~1200-word chunks (one call each, max 3 concurrent); a repeated paragraph inside one text is sent once. Single-flight via an asyncio future per cache key.
+- 2026-11-14 M2: Retry policy: client retries once on 5xx/timeout/connection error; tagger retries once if the reply has no parseable JSON array; then the chunk fails soft to heuristic spans for its paragraphs.
+- 2026-11-14 M2: In `llm` mode only LLM spans are shown (heuristic hints go into the prompt); heuristic spans are used only for paragraphs whose LLM call failed, or in `heuristics_only` mode.
+- 2026-11-14 M2: private=true reads the shared cache but never writes it and does not count sightings.
+- 2026-11-14 M2: Budget day = UTC date. Budget mode: ok < 70% <= high < 100% <= over. Tokens = prompt + completion tokens from the API `usage` field.
+- 2026-11-14 M2: Rate-limit client IP = rightmost X-Forwarded-For entry (added by Traefik); left entries are client-controlled. Limits are in memory (reset on deploy). Invalid requests (400/413/422) don't count.
+- 2026-11-14 M2: If `data/` is not writable, SQLite falls back to in-memory (app still starts); `/api/health` shows `"storage": "memory"`. Fix on the server: `chown 10001:10001 /docker/stoprop/data`.
+- 2026-11-14 M2: Pre-warm runs at startup in the background: the 3 demo samples (3 LLM calls the first time; then cached in SQLite for good as long as storage is "sqlite").
+- 2026-11-14 M2: `prompt_version` = first 10 hex chars of sha256 of the rendered system prompt, so any prompt or taxonomy text change invalidates the cache automatically.
+- 2026-11-14 M2: Innocent explanations are deterministic templates (per flagged label, genre, reported speech, rule-based source), shown only when something red/amber is flagged.

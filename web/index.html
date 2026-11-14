@@ -34,6 +34,9 @@
       <form id="form" novalidate>
         <label for="text" class="field-label">Text</label>
         <textarea id="text" rows="9" placeholder="Paste a news article, social media post or comment…" spellcheck="false"></textarea>
+        <label class="inline check private"><input type="checkbox" id="private" aria-describedby="private-note"> Don't store this text</label>
+        <p id="private-note" class="muted small">AI results are cached per paragraph, so the same text is instant and free next time.
+          Tick this to analyze without saving anything to that shared cache.</p>
 
         <label for="url" class="field-label">Or a link <span class="pill">coming soon</span></label>
         <input id="url" type="url" placeholder="https://…" disabled aria-describedby="url-note">
@@ -74,6 +77,11 @@
             <p id="summary" class="summary"></p>
             <dl id="profile" class="profile"></dl>
             <ul id="notes" class="notes"></ul>
+          </section>
+          <section class="card" id="innocent-card" hidden aria-labelledby="h-innocent">
+            <h3 id="h-innocent">Other possible explanations</h3>
+            <p class="muted small">Before drawing conclusions, consider:</p>
+            <ul id="innocent" class="innocent"></ul>
           </section>
           <section class="card" aria-labelledby="h-legend">
             <h3 id="h-legend">Legend</h3>
