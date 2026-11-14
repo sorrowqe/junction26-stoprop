@@ -1,15 +1,27 @@
-# Stoprop — project brief for Claude Code
+# Stoprop — project brief for Claude Code (v2: web service only)
 
 > **Stoprop: see the spin before it sees you. We flag the tactics, not the opinions.**
 
-Stoprop is a browser extension + web app that highlights manipulation techniques in text
-(news, posts, comments), explains each one in plain language, and shows provenance
-"receipts" for the source. Built for a hackathon (Hostinger challenge: detect propaganda /
-bad-actor behaviour). **Final submission: Sunday 15 Nov 2026, 10:00 Europe/Tallinn.**
+Stoprop is a **web service** (web app + public API) that detects signs of propaganda and
+coordinated manipulation online, three ways:
 
-Judges care most about **the strength and honesty of the detection logic, including false
-positives**, and want **measured precision / false-positive rate**, not a happy-path demo.
-The product must run live on Hostinger (our KVM 2 VPS) with a public URL.
+1. **Analyze** a text or URL → highlights manipulation techniques span by span and explains
+   each one in plain language (challenge direction *"Name the technique"*).
+2. **Check the source** → plain-English provenance "receipts" for a URL/domain: domain age,
+   lookalike/clone domains, first seen, fact-checks (*"Trust the source"*).
+3. **Swarm mode** → upload a batch of posts (CSV/JSON with author + timestamp + text) →
+   detects coordinated inauthentic behaviour from text reuse, timing synchrony, account
+   similarity and amplification patterns — never from a single post (*"Spot the swarm"*).
+
+Built for Junction 2026, Hostinger challenge. **Final submission: Sunday 15 Nov 2026, 10:00
+Europe/Tallinn.** Judges care most about **the strength and honesty of the detection logic,
+including false positives**, and want **measured precision / false-positive rate**, not a
+happy-path demo. Must run live on Hostinger (our KVM 2 VPS) with a public URL: https://stoprop.tech
+
+> **Change log v2:** the browser extension is DROPPED (do not build it; remove any extension
+> scaffolding, `EXTENSION_ORIGINS`, install-token logic if present). Swarm mode is NEW (M5).
+> **M0 and M1 are DONE.** Before starting M2, read `docs/PROGRESS.md`, reconcile the existing
+> code with this v2 spec, and list any mismatches you fix.
 
 ---
 
@@ -22,338 +34,307 @@ The product must run live on Hostinger (our KVM 2 VPS) with a public URL.
   - Prefer boring, simple tech. No frameworks unless clearly needed.
   - Write tests for the detection logic and run them yourself.
 - **Never commit secrets.** All keys live in `.env` (gitignored). Provide `.env.example`.
-- **Never run destructive commands on the VPS** (rm -rf, docker system prune, compose down of
-  other projects, touching the existing `traefik` or `hermes-agent` containers) without asking.
 - **LLM credits are limited** (one shared Hostinger AI Router balance for the whole team).
-  Do not run bulk LLM calls (evals, bake-offs) without saying how many calls it will make.
-  Use small samples while developing.
+  Never run bulk LLM calls (evals, bake-offs, benchmark generation) without first printing how
+  many calls it will make and waiting for OK. Use small samples while developing.
 - When something is ambiguous, pick the simplest reasonable option and write it down in
   `docs/DECISIONS.md` (one line per decision).
-- **We develop on Aleksandr's PC (likely Windows + Git Bash)** and deploy through GitHub (§8).
+- **We develop on Aleksandr's PC (Windows + Git Bash)** and deploy through GitHub (§8).
   The venue network is unreliable: never design anything that needs a long-lived SSH session.
-  For local tests use a Python venv in `.venv` (gitignored). Commands you give him must work
-  in Git Bash.
-- **Git: commit after every working step** with a clear message (`M1: verbatim validator + tests`).
-  This is our undo button. Push `main` to GitHub often (backup). Branch `live` = production.
-- **Line endings:** `.gitattributes` must force LF for `*.sh`, `Dockerfile`, `*.py`, `*.yml`,
-  `*.yaml` (Windows CRLF breaks bash on the server). Shell scripts are invoked as `bash script.sh`
-  so the executable bit doesn't matter.
+  Local tests use a Python venv in `.venv` (gitignored). Commands you give him must work in Git Bash.
+- **Git: commit after every working step** with a clear message. Push `main` often (backup).
+  Branch `live` = production.
+- **Line endings:** `.gitattributes` forces LF for `*.sh`, `Dockerfile`, `*.py`, `*.yml`, `*.yaml`.
+  Shell scripts are invoked as `bash script.sh`.
 - **Keep `docs/PROGRESS.md` current**: done / in progress / next / known issues / how to verify.
-  Update it at the end of every milestone and before any long pause. A fresh Claude Code
-  session must be able to continue from CLAUDE.md + PROGRESS.md alone.
-- **Deploying = pushing to the `live` branch** (`bash deploy.sh`). That changes what judges see:
-  only when tests pass, and only after telling Aleksandr. Never `git push --force` to `live`.
-- **Never SSH to the server or run commands there yourself.** Print the exact commands for
-  Aleksandr instead (he runs them inside `tmux` because SSH drops).
-- **Never read or print `.env` / `.env.local` contents** (they hold router keys). Use
-  `.env.example` for documentation. To check config, check whether a variable is *set*, never its value.
+  A fresh session must be able to continue from CLAUDE.md + PROGRESS.md alone.
+- **Deploying = `bash deploy.sh`** (pushes `main:live`). Only when tests pass and after telling
+  Aleksandr. Never `git push --force` to `live`.
+- **Never SSH to the server or run commands there yourself.** Print exact commands for Aleksandr
+  (he runs them inside `tmux`).
+- **Never read or print `.env` / `.env.local` contents.** Check only whether a variable is set.
 
 ---
 
 ## 1. Principles of the detection logic (non-negotiable)
 
 1. **Detect how something is said, not what position it takes.** We label techniques
-   ("this sentence uses a fear appeal"), never authors or outlets ("propagandist").
-   Prompts must say this explicitly.
+   ("this sentence uses a fear appeal") and behaviours ("these accounts posted near-identical
+   text within 6 minutes"), never people, outlets or viewpoints ("propagandist", "bot").
+   Prompts and UI copy must follow this.
 2. **The LLM proposes, deterministic code verifies.** Every span returned by a model must be
-   found **verbatim** in the source text, or it is dropped. Character offsets are computed by
-   our code, never trusted from the model.
-3. **Reported speech is not the author's manipulation.** A loaded phrase inside a quotation
-   attributed to someone else is labelled `reported_speech` and does not count against the
-   source.
-4. **Abstain instead of guessing.** "Nothing found" and "not checked" are valid outputs and
-   must be shown honestly in the UI.
-5. **Only show what we can measure.** Each technique has a measured dev-set precision. A
-   technique is shown by default only if `dev_precision >= 0.70`; otherwise it is marked
-   `experimental` and hidden by default (user can enable).
-6. **No single "propaganda score".** Show a profile: genre, techniques found, density per
-   1000 words, receipts summary, share of text flagged.
-7. **Colour labels are descriptive, never truth claims.**
-   - `red` = manipulation technique (high-precision techniques)
-   - `amber` = unsupported claim (check-worthy factual claim with **no source given in the text**;
-     NOT "false") or lower-confidence technique
-   - `green` = claim with verifiable support in the text (link, named source, dated data);
-     NOT "true"/"verified"
-   - `blue` = balance marker (fair counter-argument, acknowledged uncertainty)
-   - most text stays uncoloured. Never rely on colour alone (underline style + icon too).
-8. **Privacy by default.** `/api/analyze` is stateless: no user identity stored with text.
-   Reading history lives only in the extension (IndexedDB). Political reading history is
-   GDPR special-category data — never send it to the server.
+   found **verbatim** in the source text or it is dropped. Offsets are computed by our code.
+3. **Reported speech is not the author's manipulation.** Loaded language inside a quotation
+   attributed to someone else is labelled `reported_speech` and does not count against the text.
+4. **Abstain instead of guessing.** "Nothing found", "insufficient data" and "not checked" are
+   valid outputs and must be shown honestly.
+5. **Two independent signals before a strong verdict.** A swarm cluster is "likely coordinated"
+   only with text-reuse evidence **plus** at least one independent family (timing or account
+   similarity). One family alone = "worth watching".
+6. **Only show what we can measure.** A technique is shown by default only if its measured
+   `dev_precision >= 0.70`; otherwise `experimental` and hidden by default.
+7. **No single "propaganda score".** Show profiles and evidence, not one number.
+8. **Colour labels are descriptive, never truth claims.**
+   `red` = manipulation technique · `amber` = unsupported claim (no source given in the text;
+   NOT "false") or lower-confidence technique · `green` = claim with verifiable support in the
+   text (NOT "true") · `blue` = balance marker. Most text stays uncoloured. Never colour alone
+   (underline style + icon too).
+9. **Show the innocent explanations.** Every flagged result lists plausible non-malicious
+   explanations (e.g. "many people share the same news headline", "quoted official statement").
+10. **Privacy by default.** No accounts. Analyses are stateless; pasted text is cached only as
+    described in §4; swarm uploads are processed in memory and never stored unless the user
+    explicitly clicks "Share result".
 
 ---
 
 ## 2. Architecture
 
 ```
-Chrome extension (MV3)                        Web app (served by backend)
-- right-click "Analyze with Stoprop"          - /            landing + paste text/URL analyzer
-- toolbar: "Analyze this page" (Readability)  - /r/{id}      shareable result page
-- highlights via CSS Custom Highlight API     - /methodology how detection works + limits
-- side panel: explanations + receipts         - /metrics     live eval results
-- local themes, history, dashboard page       - /extension   download zip + install steps
-            │                                              │
-            └──────────────► FastAPI backend ◄─────────────┘
-                             - /api/analyze   text -> spans + profile
-                             - /api/receipts  domain/url -> provenance receipts
-                             - /api/metrics   latest eval results JSON
-                             - /api/health
-                             - SQLite cache (content hash), rate limit, budget guard
-                             - Hostinger AI Router key ONLY here (never in extension)
+Browser (judges/users)
+  /            Analyze text or URL (highlights + explanations + receipts if URL)
+  /source      Check a source (receipts only, no LLM cost)
+  /swarm       Swarm mode (upload CSV/JSON or "Load sample dataset")
+  /r/{id}      Shared result (only created on explicit "Share")
+  /metrics     Live evaluation results (precision, recall, FPR, cost)
+  /methodology How it works + known limitations
+  /api         API landing (curl examples) + /docs (FastAPI OpenAPI)
+        │
+        ▼
+FastAPI backend (one container behind the existing Traefik)
+  POST /api/analyze   POST /api/receipts   POST /api/swarm   POST /api/share
+  POST /api/feedback  GET /api/metrics     GET /api/health
+  SQLite (cache, usage log, feedback, shares) · rate limit · budget guard
+  Hostinger AI Router key lives ONLY server-side
 ```
-
-Deployment: one Docker container (`stoprop`) behind the **existing Traefik** on the VPS.
 
 ---
 
-## 3. Repository layout
+## 3. Repository layout (target)
 
 ```
 stoprop/
-  CLAUDE.md                 this file
-  README.md                 what it is, how to run, how to deploy
-  .env.example
-  docker-compose.yml        stoprop service + Traefik labels
-  Dockerfile
-  deploy.sh                 git pull && docker compose up -d --build && health check
+  CLAUDE.md  README.md  .env.example  .gitignore  .gitattributes  .dockerignore
+  Dockerfile  docker-compose.yml  deploy.sh
+  scripts/      server-deploy.sh  router_smoke.py
   backend/
     app/
-      main.py               FastAPI app, routes, static files
-      config.py             env vars, settings
-      pipeline/
-        extract.py          URL fetch (SSRF-safe) + main-text extraction
-        segment.py          paragraphs, sentences (with ids), language detect
-        heuristics.py       free lexical features (hints, not verdicts)
-        tagger.py           LLM technique/claim tagging via AI Router
-        validate.py         verbatim span validation, offsets, reported-speech check
-        profile.py          genre, density, coverage, summary
-      receipts/
-        rdap.py  wayback.py  crtsh.py  lookalike.py  factcheck.py  syndication.py
-      llm/
-        client.py           OpenAI-compatible client, retries, usage + cost tracking
-        budget.py           daily credit/token cap -> heuristics-only fallback
-      store.py              SQLite: cache, results, usage log
-      ratelimit.py
-    prompts/
-      tagger_system.md      static taxonomy + rules (put FIRST for prompt caching)
-    config/
-      techniques.yaml       taxonomy, colours, thresholds, dev_precision, enabled
-      outlets.yaml          known outlets for lookalike detection
+      main.py  config.py  store.py  ratelimit.py
+      pipeline/   extract.py segment.py heuristics.py tagger.py validate.py profile.py
+      receipts/   rdap.py wayback.py crtsh.py lookalike.py factcheck.py syndication.py
+      swarm/      ingest.py textreuse.py timing.py accounts.py amplification.py clusters.py explain.py
+      llm/        client.py budget.py
+    prompts/      tagger_system.md
+    config/       techniques.yaml outlets.yaml lexicons/*.txt
     tests/
-  web/                      static HTML/CSS/vanilla JS (no build step)
-  extension/                MV3 extension (no build step), vendored Readability.js
+  web/            static HTML/CSS/vanilla JS (no build step)
   eval/
-    data/dev/*.jsonl        gold set for tuning
-    data/test/*.jsonl       LOCKED gold set, only used with --final
-    data/clean/*.jsonl      neutral texts (wire news, encyclopedic) for FPR
-    data/symmetry/*.jsonl   mirrored pairs for neutrality test
-    sheet_to_jsonl.py       convert annotation sheet (CSV: id,lang,text,quote,technique) to JSONL
-    run_eval.py             metrics -> eval/results/latest.json
+    data/raw/  data/dev/  data/test/ (LOCKED)  data/clean/  data/symmetry/
+    sheet_to_jsonl.py  run_eval.py
+    swarm/  make_benchmark.py  run_swarm_eval.py  benchmark/ (generated, committed, small)
     results/
-  docs/
-    DECISIONS.md
-    METHODOLOGY.md
+  docs/  PROGRESS.md  DECISIONS.md  METHODOLOGY.md
 ```
 
 ---
 
-## 4. Backend spec
+## 4. Backend spec — Analyze & Receipts
 
 ### Env vars (`.env.example`)
 ```
-DOMAIN=stoprop.tech                     # primary; www.stoprop.tech and stoprop.srv2159153.hstgr.cloud also routed
-ROUTER_BASE_URL=https://router.hostinger.com/v1   # Hostinger AI Router, OpenAI-compatible
-ROUTER_API_KEY=         # sk-hstgr-... use a separate key for prod (with a daily limit) and for dev/eval
-MODEL_TAGGER=claude-haiku-4.5-eu        # default until the bake-off decides
+DOMAIN=stoprop.tech
+ROUTER_BASE_URL=https://router.hostinger.com/v1
+ROUTER_API_KEY=                          # server: stoprop-prod key; PC .env.local: stoprop-dev key
+MODEL_TAGGER=claude-haiku-4.5-eu         # until the bake-off decides
 MODEL_SUMMARY=claude-haiku-4.5-eu
+MODEL_EMBED=text-embedding-3-small-eu    # swarm deep mode only
 BAKEOFF_MODELS=claude-haiku-4.5-eu,gemini-3.5-flash-lite-eu,gpt-5.4-mini,mistral-small-4-eu
-# Rules: prefer -eu variants; never use reasoning models (gpt-5*, *-reasoning) in the tagger;
-# expensive models (claude-fable-5.2, claude-opus-5.5) only for rare offline adjudication.
+# Prefer -eu variants; never reasoning models in the tagger; claude-fable-5.2 / claude-opus-5.5
+# only for rare offline adjudication.
 DAILY_TOKEN_CAP=2000000
-PUBLIC_BASE_URL=https://<domain>
-EXTENSION_ORIGINS=chrome-extension://<id>   # comma separated, for CORS
-FACTCHECK_API_KEY=      # optional, Google Fact Check Tools
-SEARCH_PROVIDER=none    # none | oxylabs | exa  (for syndication receipts)
+PUBLIC_BASE_URL=https://stoprop.tech
+FACTCHECK_API_KEY=                       # optional, Google Fact Check Tools (AIza...)
+SEARCH_PROVIDER=none                     # none | oxylabs | exa
 SEARCH_API_KEY=
 ```
 
 ### `POST /api/analyze`
-Request: `{ "text": str | null, "url": str | null, "lang": "auto", "sensitivity": "strict|balanced|broad" }`
-- If `url`: fetch server-side **SSRF-safe**: only http/https, resolve DNS and block private,
-  loopback, link-local, CGNAT and metadata ranges (incl. IPv6), max 2 MB, 8 s timeout,
-  max 3 redirects (re-check each hop). Extract main text with readability-lxml (or trafilatura).
-- Max input ~8000 words (truncate with a visible note) to protect the budget.
-- Cache key: sha256(normalized text) + taxonomy version + model. Cache hit = no LLM call.
-
-Response:
+Request: `{ "text": str|null, "url": str|null, "sensitivity": "strict|balanced|broad", "private": bool }`
+- `url`: SSRF-safe fetch: http/https only; resolve DNS and block private, loopback, link-local,
+  CGNAT 100.64/10, multicast, 169.254.169.254 and IPv6 equivalents (::1, fc00::/7, fe80::/10,
+  IPv4-mapped); re-check every redirect (max 3); 2 MB; 8 s timeout; text/html only.
+  Extract main text (trafilatura or readability-lxml). Include receipts for the domain.
+- Max ~8000 words (truncate with visible note).
+- Response:
 ```json
-{
-  "id": "r_abc123",
-  "lang": "en",
-  "genre": "news|opinion|social|unknown",
-  "spans": [
-    {"start": 120, "end": 168, "quote": "...", "label": "fear_appeal", "color": "red",
-     "confidence": 0.82, "explanation": "plain-language why", "reported_speech": false,
-     "experimental": false}
-  ],
-  "profile": {"words": 812, "flagged_share": 0.06, "density_per_1000": 4.9,
-              "counts": {"fear_appeal": 2}, "summary": "one or two neutral sentences"},
-  "mode": "llm|heuristics_only",
-  "notes": ["text truncated to 8000 words"],
-  "cost": {"input_tokens": 0, "output_tokens": 0, "cached": true}
-}
+{ "id": "r_abc123", "lang": "en", "genre": "news|opinion|social|unknown",
+  "spans": [{"start":120,"end":168,"quote":"...","label":"fear_appeal","color":"red",
+             "confidence":0.82,"explanation":"plain-language why","reported_speech":false,
+             "experimental":false}],
+  "profile": {"words":812,"flagged_share":0.06,"density_per_1000":4.9,
+              "counts":{"fear_appeal":2},"summary":"neutral template sentence(s)"},
+  "innocent_explanations": ["..."],
+  "receipts": [...], "mode": "llm|heuristics_only", "notes": [],
+  "cost": {"input_tokens":0,"output_tokens":0,"cached":true} }
 ```
 
 ### Pipeline
-1. **segment**: paragraphs -> sentences, each with an id `p3s2`. Detect language.
-2. **heuristics** (free): intensifiers, absolutist words, us-vs-them pronouns, ALL CAPS,
-   exclamation density, numbers without attribution, presence of links/named sources,
-   quotation detection. Output = hints passed into the prompt. They are **not** verdicts.
-3. **tagger** (LLM): system prompt = static taxonomy + rules (cache-friendly, first);
-   user content = numbered sentences + hints. Model returns JSON:
-   `[{ "sentence_id": "p3s2", "quote": "exact words", "label": "...", "confidence": 0-1,
-       "explanation": "..." }]` or `[]`. Must allow "nothing found".
-   Chunk long texts by paragraphs (~1200 words per call). Robust JSON parsing, one retry,
-   then fail soft (heuristics-only for that chunk).
-4. **validate**: find `quote` verbatim (whitespace-normalized) inside that sentence ->
-   compute offsets ourselves. Drop if not found and count it (`validator_rejections`).
-   Mark `reported_speech` if the span is inside quotation marks attributed to a third party.
-5. **gate**: apply `techniques.yaml` (enabled, min_confidence per sensitivity, experimental).
-6. **profile**: genre, coverage, density, counts, neutral summary (template, no extra LLM call).
+1. **segment** → paragraphs/sentences with ids (`p3s2`), language (en/et/ru/other). *(done in M1)*
+2. **heuristics** (free) → hints, not verdicts. *(done in M1)*
+3. **tagger** (LLM): static, cache-friendly system prompt (taxonomy + rules first); user message
+   = numbered sentences + hints. Output JSON array
+   `[{sentence_id, quote, label, confidence, explanation}]` or `[]`. Chunk ~1200 words/call.
+   Robust JSON parsing, one retry, fail soft to heuristics for that chunk.
+4. **validate** → verbatim match, our offsets, reported-speech flag, count rejections. *(done in M1)*
+5. **gate** → `techniques.yaml` (enabled, min_confidence per sensitivity, experimental).
+6. **profile** → genre, coverage, density, counts, template summary, innocent explanations.
 
-### Taxonomy (`config/techniques.yaml`), v1 — keep it to these:
-Techniques (red unless experimental/low confidence):
-- `loaded_language` — emotionally charged words used to sway rather than inform
-- `name_calling` — labelling a person/group to discredit instead of arguing
-- `fear_appeal` — invoking threat/danger to push a conclusion or action
-- `exaggeration_minimisation` — overstating or downplaying beyond what evidence supports
-- `whataboutism` — deflecting criticism by pointing to someone else's wrongdoing
-- `false_dilemma` — presenting only two options when more exist
-- `questionable_authority` — appeal to vague/unnamed/irrelevant/fabricated authority
-- `causal_oversimplification` — single cause for a complex outcome
-- `bandwagon` — "everyone knows / everyone agrees" as the argument
-- `doubt_casting` — undermining credibility without evidence
-Claim labels:
-- `unsupported_claim` (amber) — check-worthy factual claim with no source in the text
-- `supported_claim` (green) — factual claim with a link/named source/dated data in the text
-- `balance` (blue) — fair counter-argument or acknowledged uncertainty
-Each entry: `{label, color, definition, example, enabled, min_confidence: {strict, balanced, broad}, dev_precision: null, experimental: true}`.
-`run_eval.py` writes `dev_precision`; `experimental` becomes false when `dev_precision >= 0.70`.
+### Taxonomy v1 (`config/techniques.yaml`)
+Techniques: `loaded_language`, `name_calling`, `fear_appeal`, `exaggeration_minimisation`,
+`whataboutism`, `false_dilemma`, `questionable_authority`, `causal_oversimplification`,
+`bandwagon`, `doubt_casting`. Claim labels: `unsupported_claim` (amber), `supported_claim`
+(green), `balance` (blue). Each: `{label, color, definition, example, enabled,
+min_confidence:{strict,balanced,broad}, dev_precision:null, experimental:true}`.
 
 ### Caching & freshness ("our memory is a database, not a chat history")
-- **Technique analysis never goes stale.** Cache per *paragraph*, key =
+- **Technique analysis never goes stale**: cache per paragraph, key =
   `sha256(normalize(paragraph)) + model + prompt_version + taxonomy_version`, no TTL.
-  `normalize` = Unicode NFKC, strip zero-width chars (U+200B–U+200D, U+2060, U+FEFF),
-  collapse whitespace. Keep original text for offsets. Also store `seen_count` and
-  `distinct_domains` per paragraph hash (free swarm signal: "seen on N pages").
-- **Receipts have per-type TTLs** (soft TTL = serve + refresh in background, hard TTL = refresh before serving):
-  lookalike: until outlets.yaml changes · rdap: 7 d · first archive / first cert: 7 d ·
-  fact_checks: 12 h · syndication/corroboration: 2 h if content < 48 h old, else 24 h.
-- **Single-flight**: concurrent requests for the same uncached key wait for one in-flight
-  computation (asyncio lock/future per key) — never duplicate LLM or search calls.
-- **Negative caching**: errors/not-found cached 10 min.
-- **Budget-aware TTLs**: when daily usage > 70% of cap, multiply all soft TTLs by 2; at 100% -> heuristics-only.
-- **User-visible freshness**: every receipt shows `checked_at`; "Refresh" allowed at most once
-  per 15 min per item globally.
-- **Themes are computed per theme, not per user** (stretch): one scheduled job per theme
-  every few hours, shared by all users watching it.
-- **Private mode**: requests flagged `private=true` (or without a public URL) are analyzed but
-  NOT written to the shared cache.
-- **Semantic claim memory** (SHOULD, after M4): embed extracted claims with
-  `text-embedding-3-small-eu`; near-duplicates may reuse *search results* and be grouped into a
-  narrative, but never reuse a verdict (negations embed closely).
+  `normalize` = NFKC, strip zero-width chars (U+200B–U+200D, U+2060, U+FEFF), collapse whitespace.
+  Store `seen_count` and `distinct_domains` per paragraph hash ("seen on N pages").
+- `private=true` → analyze but do not write to the shared cache. UI checkbox
+  "Don't store this text" (default off), explained in one line under the textarea.
+- **Receipt TTLs** (soft = serve + refresh in background, hard = refresh first): lookalike: until
+  outlets.yaml changes · rdap 7 d · first archive / first cert 7 d · fact_checks 12 h ·
+  syndication 2 h if content < 48 h old else 24 h.
+- **Single-flight** per cache key (asyncio future) — never duplicate LLM/search calls.
+- **Negative caching** 10 min. **Budget-aware TTLs**: >70% of daily cap → soft TTLs ×2;
+  100% → heuristics-only + banner.
+- Receipts show `checked_at`; "Refresh" max once per 15 min per item globally.
+- Demo sample texts are pre-warmed into the cache at startup (no LLM cost for judges' first clicks
+  after the first run).
 
 ### Budget guard & rate limit
-- Log usage (tokens from API `usage` field) per call in SQLite. If daily cap is hit ->
-  `mode: heuristics_only` + UI banner. Expose `/api/health` with budget status.
-- Rate limit `/api/analyze`: 30/hour per IP (+ per install token from extension).
+- Log every LLM/embedding call (model, tokens, latency, ok) in SQLite. `/api/health` shows today's
+  usage and mode.
+- Rate limits per client IP (from Traefik `X-Forwarded-For`): analyze 30/h, swarm 10/h,
+  receipts 60/h, feedback 30/h. Friendly 429 messages.
 
-### `POST /api/receipts`
-Request `{ "url": str }` or `{ "domain": str }`. Each receipt:
-`{ "type": "...", "status": "found|not_found|not_checked|error", "text": "plain English",
-   "evidence_url": "...", "checked_at": "ISO" }`. "not checked" must be shown, not hidden.
-Receipts (all cached 24 h, 8 s timeouts, run concurrently):
-- `domain_age` — RDAP via `https://rdap.org/domain/{domain}` (registration date)
-- `first_seen_archive` — Wayback CDX first capture
-- `first_certificate` — crt.sh JSON (slow; tolerate timeouts)
-- `lookalike` — compare registrable domain to `outlets.yaml` (edit distance, homoglyphs,
-  TLD swaps, hyphen/word insertion like `err-news.ee` vs `err.ee`)
-- `fact_checks` — Google Fact Check Tools API (only if key set)
-- `syndication` — exact-phrase search of 1–2 distinctive sentences (only if SEARCH_PROVIDER set).
-  Distinguish wire syndication (AP/Reuters/BNS/ERR attribution) from copy networks.
+### `POST /api/receipts` (also powers `/source`)
+Request `{url}` or `{domain}`. Each receipt `{type, status: found|not_found|not_checked|error,
+text (plain English), evidence_url, checked_at}`. Concurrent, 8 s timeouts.
+- `domain_age` (RDAP `https://rdap.org/domain/{d}`) · `first_seen_archive` (Wayback CDX) ·
+  `first_certificate` (crt.sh, tolerate timeouts) · `lookalike` (vs `outlets.yaml`: edit
+  distance, homoglyphs, TLD swaps, hyphen/word insertion) · `fact_checks` (Google Fact Check
+  Tools, only if key) · `syndication` (only if SEARCH_PROVIDER; distinguish wire syndication
+  from copy networks).
+- **AI-generated-text detection is deliberately NOT included** — detectors are unreliable and
+  known to be biased against non-native writers. Say so in /methodology.
 
 ---
 
-## 5. Web app spec (`web/`, served by FastAPI)
+## 5. Backend spec — Swarm mode (`POST /api/swarm`)
 
-- `/` — hero with the punchline, textarea + URL field, "Analyze" button, 3 sample texts
-  (one manipulative, one neutral wire-style, one opinion piece) so judges can try instantly.
-- Result view: text with highlights (colour + underline style + icon), legend, hover/click
-  tooltip (technique name, definition, why this span, confidence, "reported speech" badge),
-  profile card, receipts panel (if URL), "Report a wrong label" button (stores feedback).
-- `/methodology` — renders `docs/METHODOLOGY.md`: pipeline, principles, known limits.
-- `/metrics` — renders `eval/results/latest.json`: per-technique P/R/F1, clean-text FPR,
-  flags per 1000 words on clean text, symmetry flip rate, validator rejection rate,
-  cost & latency per analysis, model bake-off table, git commit + date of the run.
-- `/extension` — download zip + 4-step "load unpacked" instructions.
-- Plain HTML/CSS/vanilla JS, accessible, works in dark mode. No build step.
+### Input
+- CSV upload or JSON: required `id, author, timestamp (ISO 8601 or unix), text`;
+  optional `url, author_created_at, platform`. Max 2000 posts / 2 MB. Validate and report
+  rejected rows. Processed **in memory**; nothing stored unless the user clicks Share.
+- Options: `deep: bool` (embedding-based paraphrase detection; costs credits, capped at 2000
+  embeddings per request and shown in the UI), `tag_clusters: bool` (run the technique tagger
+  on each flagged cluster's representative text; max 10 LLM calls).
 
----
+### Signal families (deterministic unless noted)
+- **T — text reuse**: normalize (as §4 + lowercase, strip URLs/@mentions for comparison),
+  character 5-gram shingles, MinHash LSH (`datasketch`), near-duplicate if Jaccard ≥ 0.6.
+  Only posts with ≥ 8 words count as evidence (short texts like "so true!" or "happy new year"
+  collide innocently). Exact duplicates of ≥ 8 words always count. `deep=true`: embeddings,
+  cosine ≥ 0.92, posts ≥ 12 words, marked as weaker "paraphrase" evidence.
+  Clusters = connected components over near-duplicate pairs **from different authors**.
+- **S — timing synchrony** (per cluster): tightest window containing ≥ 60% of the cluster's
+  posts; compare against the dataset's overall posting rate (Poisson tail probability).
+  Signal if p < 0.001 and ≥ 3 distinct authors. Also per-author cadence regularity
+  (coefficient of variation of inter-post intervals < 0.2 with ≥ 5 posts) as supporting evidence.
+- **A — account similarity** (per cluster): username pattern similarity (shared stem + digits,
+  Levenshtein ≤ 2 between stems), creation dates clustered within 7 days (if provided), share of
+  cluster authors whose posts are mostly (≥ 70%) cluster content.
+- **M — amplification**: the same non-mainstream URL/hashtag/mention pushed by ≥ 5 cluster
+  authors; mainstream outlets (from `outlets.yaml`) do not count.
 
-## 6. Extension spec (`extension/`, Manifest V3, Chrome)
-
-- Permissions: `activeTab`, `contextMenus`, `sidePanel`, `storage`, `scripting`.
-  Host permission only for our API domain. No `<all_urls>` unless auto-analyze is on.
-- Context menu on selection: "Analyze with Stoprop".
-- Toolbar action: "Analyze this page" -> content script runs vendored Readability, sends text
-  (+ domain only if the user allows it, for receipts).
-- Highlights with **CSS Custom Highlight API** (no DOM mutation); map offsets back to text nodes.
-- Side panel: list of findings, explanations, profile, receipts.
-- Options page: API base URL, sensitivity, enabled labels, **themes** (name + keywords, ET/RU/EN),
-  auto-analyze on theme match (off by default; max N per hour), "send domain for receipts".
-- Storage: settings in `chrome.storage.local` (NOT sync). History in IndexedDB:
-  `{ts, domain, content_hash, themes_matched, counts}` — no full text, no full URL by default.
-- Dashboard page (`dashboard.html`, extension page, local-only): techniques over time,
-  themes encountered, domains with repeated bad receipts, recurring identical paragraphs.
-- Sends a random install token header for rate limiting (not tied to identity).
-
----
-
-## 7. Evaluation spec (`eval/`)
-
-- Gold format (JSONL): `{id, lang, genre, text, spans:[{start,end,label}]}`.
-  Team annotates in a shared sheet (`id, lang, text, quote, label`); `sheet_to_jsonl.py`
-  converts quotes to offsets and reports quotes it cannot find.
-- Splits: `dev` for tuning thresholds; `test` is **locked** — only `run_eval.py --final`.
-- Metrics (`run_eval.py`):
-  - span-level P/R/F1 per label; match = same label and overlap >= 50% of the shorter span
-  - **clean-text FPR**: share of clean paragraphs with >= 1 red/amber span; flags per 1000 words
-  - **symmetry flip rate**: pairs with sides/entities swapped -> share where label sets differ
-  - validator rejection rate, abstention rate, mean cost (tokens) & latency per analysis
-  - inter-annotator agreement (Cohen's kappa) if two annotators labelled the same items
-  - `--models a,b,c` bake-off: same dev sample through several models -> F1 vs cost table
-  - **print the number of LLM calls before running and ask for confirmation**
-- Output `eval/results/latest.json` with git commit hash + timestamp; update
-  `dev_precision` in `techniques.yaml`.
+### Verdict per cluster (never per person)
+- `likely_coordinated`: T + at least one of {S, A, M}
+- `worth_watching`: exactly one family
+- `organic_looking`: reuse explained by an innocent pattern (below) and no S/A
+- `insufficient_data`: < 3 distinct authors
+- **Innocent-pattern checks** (downgrade one level + list in `innocent_explanations`):
+  cluster text ≈ title of a linked mainstream article (headline sharing); very short or generic
+  text; quoted official statement (quotation marks + attribution); event hashtag burst affecting
+  many unrelated clusters at the same time.
+- Output per cluster: id, verdict, families present, evidence for / evidence against,
+  innocent explanations, authors (role: first poster / amplifier), post count, time span,
+  representative text, timeline points, optional technique tags. Language: behaviours, not
+  labels ("these 14 accounts posted near-identical text within 6 minutes").
 
 ---
 
-## 8. Deployment spec
+## 6. Web app spec (`web/`, served by FastAPI, plain HTML/CSS/vanilla JS)
 
-- VPS: Hostinger KVM 2 (2 vCPU, 8 GB). Existing containers: `traefik-traefik-1` (reverse
-  proxy, handles HTTPS) and `hermes-agent-...` — **do not modify them**.
-- Project lives in `/docker/stoprop` on the VPS (Hostinger Docker Manager lists `/docker/*`).
-- **Existing Traefik (verified)**: runs with `network_mode: host`, docker provider with
-  `exposedbydefault=false`, entrypoints `web` (:80, redirects to https) and `websecure` (:443),
-  certresolver `letsencrypt` (HTTP challenge). Because Traefik is in the host network namespace
-  it reaches containers on their own bridge network directly — **no shared network needed and
-  no published ports**. Use exactly this compose file:
+- `/` — hero + punchline; tabs or cards linking the three tools; Analyze: textarea + URL field,
+  sensitivity, "Don't store this text", 3 sample texts (manipulative, neutral wire-style, opinion).
+  Result: highlights (colour + underline style + icon), legend, tooltips (label, definition, why,
+  confidence, reported-speech badge), profile card, innocent explanations, receipts (if URL),
+  "Report a wrong label", "Share result".
+- `/source` — URL/domain → receipts with status icons, "checked X ago", Refresh.
+- `/swarm` — upload/paste, "Load sample dataset" (from the benchmark, includes campaigns AND hard
+  negatives so judges see both a hit and a correctly ignored lookalike), options (deep, tag);
+  results: cluster cards sorted by verdict, simple timeline chart (inline SVG or a small
+  vendored chart lib), evidence for/against, innocent explanations, author table, JSON download.
+- `/metrics` — renders `eval/results/latest.json` + `eval/results/swarm_latest.json`.
+- `/methodology` — renders `docs/METHODOLOGY.md`.
+- `/api` — what the API does + curl examples; link to `/docs`.
+- Accessible, keyboard-usable, dark-mode friendly, works on mobile.
+
+---
+
+## 7. Evaluation spec
+
+### Analyze (techniques)
+- Gold JSONL `{id, lang, genre, text, spans:[{start,end,label}]}`; team annotates a sheet
+  (`id, lang, genre, text, quote, label`) → `sheet_to_jsonl.py` (reports unfound quotes; seeded
+  70/30 split into dev/test; test LOCKED, only `run_eval.py --final`).
+- Metrics: span P/R/F1 per label (same label, overlap ≥ 50% of shorter span); **clean-text FPR**
+  (share of neutral paragraphs with ≥ 1 red/amber span) + flags per 1000 words; **symmetry flip
+  rate** (mirrored pairs → label sets differ); validator rejection rate; abstention; Cohen's kappa
+  where annotators overlap; mean tokens & latency; `--models` bake-off (F1 vs cost).
+- Writes `eval/results/latest.json` (git commit + timestamp) and updates `dev_precision` /
+  `experimental` in `techniques.yaml`.
+
+### Swarm (coordination)
+- `eval/swarm/make_benchmark.py` (seeded, reproducible): organic background posts from a public
+  short-text dataset (document which in METHODOLOGY), with synthetic authors and timestamps
+  (diurnal Poisson). Inject ~8 campaigns (5–40 accounts each) at three difficulty levels:
+  `copy` (identical), `template` (slot words, emoji, hashtags), `paraphrase` (LLM-generated with
+  the **dev** key — ask before generating, cache to disk, ≤ 100 calls total). Add **hard
+  negatives**: organic users sharing the same news headline + mainstream URL within an hour;
+  an event-hashtag burst; generic short phrases. Hold out half the campaigns + negatives as test.
+- `run_swarm_eval.py`: author-level precision / recall for campaign membership, cluster purity,
+  **FPR on organic authors**, **FPR on hard negatives** (reported separately), results by
+  difficulty level, with and without `deep`. Writes `eval/results/swarm_latest.json`.
+- Be explicit in /metrics: *the swarm benchmark is synthetic; it measures the mechanics, not
+  real-world prevalence.*
+
+---
+
+## 8. Deployment spec (unchanged, working since M0)
+
+- VPS: Hostinger KVM 2. Existing containers `traefik-traefik-1` and `hermes-agent-*` — **never
+  modify them**. Project dir on server: `/docker/stoprop`.
+- Traefik (host network, entrypoints `web`/`websecure`, certresolver `letsencrypt`) reaches the
+  container directly — **no shared network, never a `ports:` section**. Compose:
   ```yaml
   services:
     stoprop:
       build:
         context: .
         args:
-          - GIT_COMMIT          # taken from the environment of server-deploy.sh
+          - GIT_COMMIT
       restart: unless-stopped
       env_file: .env
       volumes:
@@ -372,83 +353,44 @@ Receipts (all cached 24 h, 8 s timeouts, run concurrently):
         timeout: 5s
         retries: 3
   ```
-  (`${DOMAIN}` is interpolated by docker compose from the `.env` file in the project dir.)
-- Run uvicorn with `--host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips='*'`
-  so rate limiting sees the real client IP from Traefik's `X-Forwarded-For` (safe because the
-  container port is not published; only Traefik/host can reach it).
-- **Never add a `ports:` section** (that would expose the app on a raw public port).
-- **Deploy flow (pull-based, survives a bad network):**
-  PC: develop → test → commit → `bash deploy.sh` (pushes `main` and `main:live`, then polls
-  `https://stoprop.tech/api/health` until `commit` equals the local short hash).
-  VPS: cron runs `scripts/server-deploy.sh` every minute; if `origin/live` changed it pulls,
-  rebuilds, health-checks, and **rolls back automatically** if the new build is unhealthy.
-- `/api/health` must return `"commit"` = `GIT_COMMIT` env baked in at build time
-  (compose `build.args: [GIT_COMMIT]`, Dockerfile `ARG GIT_COMMIT` + `ENV GIT_COMMIT=$GIT_COMMIT`).
-  Always use 8-char short hashes: `git rev-parse --short=8 HEAD`.
-- `scripts/server-deploy.sh` (runs ON the VPS, from cron, as root):
-  ```bash
-  #!/usr/bin/env bash
-  set -uo pipefail
-  exec 9>/tmp/stoprop-deploy.lock; flock -n 9 || exit 0          # one deploy at a time
-  cd /docker/stoprop
-  git fetch -q origin live || exit 0                              # network hiccup: try next minute
-  NEW=$(git rev-parse origin/live); CUR=$(git rev-parse HEAD)
-  if [ "$NEW" = "$CUR" ] && [ "${1:-}" != "--force" ]; then exit 0; fi
-  echo "$(date -Is) deploying ${NEW:0:8} (was ${CUR:0:8})"
-  build() { export GIT_COMMIT=$(git rev-parse --short=8 HEAD); docker compose up -d --build; }
-  healthy() { for i in $(seq 1 12); do
-      docker compose exec -T stoprop python -c "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/health',timeout=3)" >/dev/null 2>&1 && return 0
-      sleep 5; done; return 1; }
-  git reset -q --hard "$NEW"        # tracked files only; .env and data/ are untracked + gitignored
-  if build && healthy; then echo "$(date -Is) OK ${NEW:0:8}"
-  else echo "$(date -Is) FAILED ${NEW:0:8} -> rolling back to ${CUR:0:8}"
-       git reset -q --hard "$CUR"; build; fi
-  ```
-  **Never use `git clean`** on the server (it would delete `.env` and `data/`).
-- `deploy.sh` (runs on the PC, Git Bash compatible, no python dependency):
-  ```bash
-  #!/usr/bin/env bash
-  set -euo pipefail
-  git diff --quiet && git diff --cached --quiet || { echo "Uncommitted changes - commit first"; exit 1; }
-  for i in 1 2 3 4 5; do
-    git push origin main && git push origin main:live && break
-    echo "Push failed (network?), retry $i/5 in 10s"; sleep 10
-  done
-  WANT=$(git rev-parse --short=8 HEAD); echo "Waiting for the server to go live with $WANT ..."
-  for i in $(seq 1 36); do
-    GOT=$(curl -fsS --max-time 10 https://stoprop.tech/api/health 2>/dev/null \
-          | grep -o '"commit": *"[^"]*"' | grep -o '[0-9a-f]\{8\}' || true)
-    [ "$GOT" = "$WANT" ] && { echo "LIVE: $WANT"; exit 0; }
-    sleep 10
-  done
-  echo "Not live after 6 min. Check: ssh stoprop 'tail -40 /var/log/stoprop-deploy.log'"; exit 1
-  ```
-- Cron on the VPS: `* * * * * bash /docker/stoprop/scripts/server-deploy.sh >> /var/log/stoprop-deploy.log 2>&1`
-- `.env` exists **only on the server** (`/docker/stoprop/.env`, `chmod 600`, created by Aleksandr).
-  For local eval runs on the PC, `.env.local` (gitignored) holds the **dev** key.
-- `.dockerignore` must exclude `.git`, `.env`, `.env.local`, `.venv`, `data/`, `eval/data/`,
-  `__pycache__` so secrets and data never end up inside the image.
+- uvicorn: `--host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips='*'`.
+- Deploy flow: PC `bash deploy.sh` pushes `main` + `main:live` (5 retries) and polls
+  `/api/health` until `commit` = `git rev-parse --short=8 HEAD`. VPS cron every minute runs
+  `scripts/server-deploy.sh`: fetch `origin/live` → if changed: `git reset --hard`, build with
+  `GIT_COMMIT`, health-check via `docker compose exec`, **auto-rollback** if unhealthy, flock
+  against parallel runs. **Never `git clean`** on the server. Log: `/var/log/stoprop-deploy.log`.
+- `.env` only on the server (`chmod 600`); `.env.local` (dev key) only on the PC; both gitignored
+  and in `.dockerignore` (with `.git`, `.venv`, `data/`, `eval/data/`, `__pycache__`).
+- Env changes on the server need `cd /docker/stoprop && docker compose up -d` (no new commit).
+- Memory: keep the container lean (2 vCPU / 8 GB shared with Traefik + Hermes). Swarm requests
+  must finish in < 20 s for 2000 posts without deep mode.
 
 ---
 
-## 9. Milestones (do them in order, stop and report after each)
+## 9. Milestones (in order; stop and report after each)
 
-- **M0 walking skeleton**: repo, Dockerfile, compose, `/api/health` + placeholder `/` live over
-  HTTPS on our domain behind Traefik. One test call to AI Router succeeds from the container.
-- **M1**: segment + heuristics + validate + profile; `/api/analyze` in heuristics-only mode;
-  web analyzer renders highlights and tooltips. Unit tests for validator & offsets.
-- **M2**: LLM tagger via AI Router, cache, budget guard, rate limit, sensitivity gating.
-- **M3**: receipts v1 (RDAP, Wayback, crt.sh, lookalike) + receipts panel; SSRF-safe URL fetch.
-- **M4**: eval harness, `sheet_to_jsonl.py`, `/metrics` page, small bake-off (ask first).
-- **M5**: extension MVP (context menu, analyze page, highlights, side panel).
-- **M6**: themes, local history, extension dashboard page.
-- **M7**: `/methodology`, README, demo samples, final eval with `--final`.
-- Stretch (only if all above done): fact-check API, syndication search, Telegram digest.
-
-Feature freeze: Sunday 08:30. Final eval + submission text by 09:30.
+- ✅ **M0** walking skeleton, deploy pipeline. ✅ **M1** segment, heuristics, validate, profile,
+  heuristics-only analyze, web analyzer UI.
+- **M2 (target Sat 17:00)** — reconcile code with v2 (remove extension bits) → LLM tagger via
+  AI Router, prompt file, per-paragraph cache + single-flight + private mode, budget guard,
+  rate limits, sensitivity gating, innocent explanations, pre-warmed demo samples. LLM mocked in
+  tests; one announced real call.
+- **M3 (target 19:00)** — SSRF-safe URL fetch + extraction; receipts v1 (rdap, wayback, crtsh,
+  lookalike, factcheck if key); `/api/receipts`; `/source` page; receipts in analyze results;
+  TTLs, Refresh button. Tests for every SSRF block case (network mocked).
+- **M4 (target 21:30)** — `sheet_to_jsonl.py`, `run_eval.py`, `/metrics` (analyze part), small
+  bake-off (announce call count first), update `techniques.yaml` gating.
+- **M5 (target Sun 01:00)** — Swarm mode: ingest, T/S/A/M signals, clustering, verdicts,
+  innocent-pattern checks, `/api/swarm`, `/swarm` page with sample dataset, benchmark generator
+  + `run_swarm_eval.py`, swarm section on `/metrics`.
+- **M6 (Sun, freeze 08:30)** — `/methodology` (incl. "Known limitations" and why no AI-text
+  detection), `/api` page, README, share links, mobile check, final `--final` eval (announce
+  calls), PROGRESS.md, tag `v1.0`.
+- **Stretch (only if all above done)**: syndication search receipt; semantic claim memory;
+  "watch boards" (a few curated RSS feeds per theme, refreshed hourly per theme, shared).
 
 ## 10. Non-goals
-- No user accounts, no server-side reading history.
-- No "is this person/outlet a propagandist" verdicts, no single overall score.
-- No AI-generated-face/image analysis.
+- No browser extension. No user accounts, no server-side reading history.
+- No verdicts about people/outlets ("bot", "propagandist"); no single overall score.
+- No AI-generated text/image detection.
 - No autonomous agent loops in the request path (cost, latency, prompt injection).
