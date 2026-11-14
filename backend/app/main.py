@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from typing import Literal
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -61,6 +61,7 @@ def health() -> dict:
         "commit": config.git_commit(),
         "budget": budget.status(),
         "llm": {"configured": config.llm_configured(), "model": config.model_tagger()},
+        "collectors": {"bluesky": True, "mastodon": True, "youtube": bool(config.env("GOOGLE_API_KEY"))},
         "storage": get_store().kind,
     }
 
@@ -162,6 +163,9 @@ _SWARM_BODY = {"requestBody": {"content": {
         "data": {"type": "string", "description": "CSV or JSON text (id, author, timestamp, text; optional url, "
                                                   "author_created_at, platform)"},
         "posts": {"type": "array", "items": {"type": "object"}},
+        "url": {"type": "string", "description": "a public post link (Bluesky, Mastodon, YouTube): the post + its replies"},
+        "urls": {"type": "array", "items": {"type": "string"}, "description": "up to 50 post links, one post each"},
+        "stream": {"type": "boolean", "default": False, "description": "link mode: NDJSON progress lines, then the result"},
         "deep": {"type": "boolean", "default": False, "description": "embedding paraphrase detection (costs credits)"},
         "tag_clusters": {"type": "boolean", "default": False, "description": "technique tags, max 10 LLM calls"}}}},
     "text/csv": {"schema": {"type": "string"}}}}}
@@ -177,7 +181,8 @@ async def _tag_text(text: str) -> tuple[list[str], dict]:
 async def swarm(request: Request, deep: bool = False, tag_clusters: bool = False) -> dict:
     """Coordinated-behaviour analysis of a batch of posts (max 2000 posts / 2 MB), in memory only.
     JSON body {"data": "<csv or json text>"} or {"posts": [...]}, or a raw CSV body (Content-Type: text/csv;
-    options as query parameters)."""
+    options as query parameters). Link mode: {"url": "<post link>"} (the post and its replies) or
+    {"urls": [...]} (up to 50 links, one post each); add "stream": true for NDJSON progress lines."""
     body = await request.body()
     if len(body) > swarm_ingest.MAX_BYTES + 65536:
         raise HTTPException(413, "The upload is larger than 2 MB.")
@@ -187,6 +192,9 @@ async def swarm(request: Request, deep: bool = False, tag_clusters: bool = False
                 payload = json.loads(body or b"null")
             except json.JSONDecodeError:
                 raise HTTPException(400, "The request body is not valid JSON.") from None
+            if isinstance(payload, dict) and ("url" in payload or "urls" in payload):
+                return await _swarm_links(payload, request, bool(payload.get("deep", deep)),
+                                          bool(payload.get("tag_clusters", tag_clusters)))
             if isinstance(payload, dict) and ("data" in payload or "posts" in payload):
                 deep = bool(payload.get("deep", deep))
                 tag_clusters = bool(payload.get("tag_clusters", tag_clusters))
@@ -202,6 +210,10 @@ async def swarm(request: Request, deep: bool = False, tag_clusters: bool = False
         first = "; ".join(f"row {r['row']}: {r['reason']}" for r in batch.rejected[:3])
         raise HTTPException(400, f"No valid posts found ({batch.rejected_total} rows rejected{': ' + first if first else ''}).")
     ratelimit.enforce("swarm", request)
+    return await _run_swarm(batch, deep, tag_clusters)
+
+
+async def _run_swarm(batch, deep: bool, tag_clusters: bool) -> dict:
     llm_ok = budget.llm_available()[0]
     embed = None
     if deep and llm_ok:
@@ -209,6 +221,80 @@ async def swarm(request: Request, deep: bool = False, tag_clusters: bool = False
         embed = lambda texts: llm.embed(texts, model=config.model_embed())  # noqa: E731
     return await swarm_clusters.analyze_batch(batch, deep=deep, tag_clusters=tag_clusters, embed=embed,
                                               tagger=_tag_text if (tag_clusters and llm_ok) else None)
+
+
+COLLECT_TIMEOUT_S = 30
+
+
+async def _swarm_links(payload: dict, request: Request, deep: bool, tag_clusters: bool):
+    """Link mode: collect public posts (in memory, cached 10 min per link), then the same analysis."""
+    from app.swarm import collectors
+    from app.swarm.collectors.http import CollectorError
+    multi = payload.get("urls") is not None
+    try:
+        if multi:
+            urls = payload["urls"]
+            if not isinstance(urls, list) or not all(isinstance(u, str) for u in urls):
+                raise CollectorError("“urls” must be a list of links.", 400)
+            collectors.validate_urls(urls)
+        else:
+            url = payload.get("url")
+            if not isinstance(url, str):
+                raise CollectorError("“url” must be a link.", 400)
+            collectors.classify(url)
+    except CollectorError as exc:
+        raise HTTPException(exc.status, exc.message) from None
+    ratelimit.enforce("swarm", request)
+
+    async def run(progress) -> dict:
+        async with asyncio.timeout(COLLECT_TIMEOUT_S):
+            coll, cached = await (collectors.collect_urls(urls, progress) if multi else collectors.collect_url(url, progress))
+        if progress:
+            progress(f"Collected {len(coll.posts)} posts from {len({p.author.lower() for p in coll.posts})} accounts. "
+                     "Looking for coordination…")
+        batch = swarm_ingest.Batch(posts=list(coll.posts), rows_total=len(coll.posts))
+        result = await _run_swarm(batch, deep, tag_clusters)
+        result["source"] = {**coll.summary(), "cached": cached, "mode": "links" if multi else "thread"}
+        result["notes"] = list(coll.notes) + result["notes"]
+        if cached:
+            result["notes"].append("These posts were collected less than 10 minutes ago and reused from memory.")
+        return result
+
+    def error(exc: Exception) -> tuple[int, str]:
+        if isinstance(exc, CollectorError):
+            return exc.status, exc.message
+        if isinstance(exc, TimeoutError):
+            return 504, "Collecting took too long. Please try again."
+        logging.getLogger("stoprop.swarm").exception("link collection failed")
+        return 500, "Something went wrong while collecting posts."
+
+    if not payload.get("stream"):
+        try:
+            return await run(None)
+        except Exception as exc:  # noqa: BLE001 - mapped to a plain message
+            status, msg = error(exc)
+            raise HTTPException(status, msg) from None
+
+    async def lines():
+        queue: asyncio.Queue = asyncio.Queue()
+        task = asyncio.create_task(run(queue.put_nowait))
+        while True:
+            getter = asyncio.ensure_future(queue.get())
+            done, _ = await asyncio.wait({task, getter}, return_when=asyncio.FIRST_COMPLETED)
+            if getter in done:
+                yield json.dumps({"progress": getter.result()}) + "\n"
+                continue
+            getter.cancel()
+            while not queue.empty():
+                yield json.dumps({"progress": queue.get_nowait()}) + "\n"
+            break
+        try:
+            yield json.dumps({"result": task.result()}, ensure_ascii=False) + "\n"
+        except Exception as exc:  # noqa: BLE001
+            status, msg = error(exc)
+            yield json.dumps({"error": {"status": status, "detail": msg}}) + "\n"
+
+    return StreamingResponse(lines(), media_type="application/x-ndjson")
 
 
 def _page(name: str) -> FileResponse:

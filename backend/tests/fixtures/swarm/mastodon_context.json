@@ -1,0 +1,652 @@
+{
+ "ancestors": [],
+ "descendants": [
+  {
+   "id": "1000",
+   "created_at": "2026-08-18T15:30:00.000Z",
+   "in_reply_to_id": "999",
+   "in_reply_to_account_id": "13179",
+   "sensitive": false,
+   "spoiler_text": "",
+   "visibility": "public",
+   "language": "en",
+   "uri": "https://spam.example/users/exodus_now11/statuses/1000",
+   "url": "https://spam.example/@exodus_now11/1000",
+   "replies_count": 0,
+   "reblogs_count": 1,
+   "favourites_count": 3,
+   "quotes_count": 0,
+   "edited_at": null,
+   "content": "<p><span class=\"h-card\"><a href=\"https://mastodon.example/@Project\" class=\"u-url mention\">@<span>Project</span></a></span> This update is a disaster pushed by insiders, everyone is leaving for <a href=\"https://better-network.example/join\" rel=\"nofollow\">better-network.example/join</a> right now <a href=\"https://mastodon.example/tags/Exodus\" class=\"mention hashtag\">#<span>Exodus</span></a></p>",
+   "reblog": null,
+   "account": {
+    "id": "500",
+    "username": "exodus_now11",
+    "acct": "exodus_now11@spam.example",
+    "display_name": "exodus_now11",
+    "locked": false,
+    "bot": false,
+    "discoverable": true,
+    "indexable": true,
+    "group": false,
+    "created_at": "2026-08-15T00:00:00.000Z",
+    "note": "",
+    "url": "https://spam.example/@exodus_now11",
+    "uri": "https://remote.example/users/someone",
+    "avatar": "https://files.example/a.png",
+    "avatar_static": "https://files.example/a.png",
+    "avatar_description": "Cat with pixealrt eyeglasses",
+    "header": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_static": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_description": "Wooden house between mountains",
+    "followers_count": 185,
+    "following_count": 110,
+    "statuses_count": 6360,
+    "last_status_at": "2026-11-14",
+    "hide_collections": true,
+    "show_media": true,
+    "show_media_replies": true,
+    "show_featured": true,
+    "feature_approval": {
+     "automatic": [
+      "public"
+     ],
+     "manual": [],
+     "current_user": "denied"
+    },
+    "emojis": [
+     {
+      "shortcode": "apple_inc",
+      "url": "https://files.example/cache/custom_emojis/images/001/299/014/original/07af9a22dd87eb00.png",
+      "static_url": "https://files.example/cache/custom_emojis/images/001/299/014/static/07af9a22dd87eb00.png",
+      "visible_in_picker": true
+     }
+    ],
+    "fields": []
+   },
+   "media_attachments": [],
+   "mentions": [],
+   "tags": [],
+   "emojis": [],
+   "tagged_collections": [],
+   "quote": null,
+   "card": {
+    "url": "https://better-network.example/join",
+    "title": "Join"
+   },
+   "poll": null,
+   "quote_approval": {
+    "automatic": [
+     "public"
+    ],
+    "manual": [],
+    "current_user": "denied"
+   }
+  },
+  {
+   "id": "1001",
+   "created_at": "2026-08-18T15:31:00.000Z",
+   "in_reply_to_id": "999",
+   "in_reply_to_account_id": "13179",
+   "sensitive": false,
+   "spoiler_text": "",
+   "visibility": "public",
+   "language": "en",
+   "uri": "https://spam.example/users/exodus_now12/statuses/1001",
+   "url": "https://spam.example/@exodus_now12/1001",
+   "replies_count": 0,
+   "reblogs_count": 1,
+   "favourites_count": 3,
+   "quotes_count": 0,
+   "edited_at": null,
+   "content": "<p><span class=\"h-card\"><a href=\"https://mastodon.example/@Project\" class=\"u-url mention\">@<span>Project</span></a></span> This update is a disaster pushed by insiders, everyone is leaving for <a href=\"https://better-network.example/join\" rel=\"nofollow\">better-network.example/join</a> right now <a href=\"https://mastodon.example/tags/Exodus\" class=\"mention hashtag\">#<span>Exodus</span></a></p>",
+   "reblog": null,
+   "account": {
+    "id": "501",
+    "username": "exodus_now12",
+    "acct": "exodus_now12@spam.example",
+    "display_name": "exodus_now12",
+    "locked": false,
+    "bot": false,
+    "discoverable": true,
+    "indexable": true,
+    "group": false,
+    "created_at": "2026-08-16T00:00:00.000Z",
+    "note": "",
+    "url": "https://spam.example/@exodus_now12",
+    "uri": "https://remote.example/users/someone",
+    "avatar": "https://files.example/a.png",
+    "avatar_static": "https://files.example/a.png",
+    "avatar_description": "Cat with pixealrt eyeglasses",
+    "header": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_static": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_description": "Wooden house between mountains",
+    "followers_count": 185,
+    "following_count": 110,
+    "statuses_count": 6360,
+    "last_status_at": "2026-11-14",
+    "hide_collections": true,
+    "show_media": true,
+    "show_media_replies": true,
+    "show_featured": true,
+    "feature_approval": {
+     "automatic": [
+      "public"
+     ],
+     "manual": [],
+     "current_user": "denied"
+    },
+    "emojis": [
+     {
+      "shortcode": "apple_inc",
+      "url": "https://files.example/cache/custom_emojis/images/001/299/014/original/07af9a22dd87eb00.png",
+      "static_url": "https://files.example/cache/custom_emojis/images/001/299/014/static/07af9a22dd87eb00.png",
+      "visible_in_picker": true
+     }
+    ],
+    "fields": []
+   },
+   "media_attachments": [],
+   "mentions": [],
+   "tags": [],
+   "emojis": [],
+   "tagged_collections": [],
+   "quote": null,
+   "card": {
+    "url": "https://better-network.example/join",
+    "title": "Join"
+   },
+   "poll": null,
+   "quote_approval": {
+    "automatic": [
+     "public"
+    ],
+    "manual": [],
+    "current_user": "denied"
+   }
+  },
+  {
+   "id": "1002",
+   "created_at": "2026-08-18T15:32:00.000Z",
+   "in_reply_to_id": "999",
+   "in_reply_to_account_id": "13179",
+   "sensitive": false,
+   "spoiler_text": "",
+   "visibility": "public",
+   "language": "en",
+   "uri": "https://spam.example/users/exodus_now13/statuses/1002",
+   "url": "https://spam.example/@exodus_now13/1002",
+   "replies_count": 0,
+   "reblogs_count": 1,
+   "favourites_count": 3,
+   "quotes_count": 0,
+   "edited_at": null,
+   "content": "<p><span class=\"h-card\"><a href=\"https://mastodon.example/@Project\" class=\"u-url mention\">@<span>Project</span></a></span> This update is a disaster pushed by insiders, everyone is leaving for <a href=\"https://better-network.example/join\" rel=\"nofollow\">better-network.example/join</a> right now <a href=\"https://mastodon.example/tags/Exodus\" class=\"mention hashtag\">#<span>Exodus</span></a></p>",
+   "reblog": null,
+   "account": {
+    "id": "502",
+    "username": "exodus_now13",
+    "acct": "exodus_now13@spam.example",
+    "display_name": "exodus_now13",
+    "locked": false,
+    "bot": false,
+    "discoverable": true,
+    "indexable": true,
+    "group": false,
+    "created_at": "2026-08-15T00:00:00.000Z",
+    "note": "",
+    "url": "https://spam.example/@exodus_now13",
+    "uri": "https://remote.example/users/someone",
+    "avatar": "https://files.example/a.png",
+    "avatar_static": "https://files.example/a.png",
+    "avatar_description": "Cat with pixealrt eyeglasses",
+    "header": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_static": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_description": "Wooden house between mountains",
+    "followers_count": 185,
+    "following_count": 110,
+    "statuses_count": 6360,
+    "last_status_at": "2026-11-14",
+    "hide_collections": true,
+    "show_media": true,
+    "show_media_replies": true,
+    "show_featured": true,
+    "feature_approval": {
+     "automatic": [
+      "public"
+     ],
+     "manual": [],
+     "current_user": "denied"
+    },
+    "emojis": [
+     {
+      "shortcode": "apple_inc",
+      "url": "https://files.example/cache/custom_emojis/images/001/299/014/original/07af9a22dd87eb00.png",
+      "static_url": "https://files.example/cache/custom_emojis/images/001/299/014/static/07af9a22dd87eb00.png",
+      "visible_in_picker": true
+     }
+    ],
+    "fields": []
+   },
+   "media_attachments": [],
+   "mentions": [],
+   "tags": [],
+   "emojis": [],
+   "tagged_collections": [],
+   "quote": null,
+   "card": {
+    "url": "https://better-network.example/join",
+    "title": "Join"
+   },
+   "poll": null,
+   "quote_approval": {
+    "automatic": [
+     "public"
+    ],
+    "manual": [],
+    "current_user": "denied"
+   }
+  },
+  {
+   "id": "1003",
+   "created_at": "2026-08-18T15:33:00.000Z",
+   "in_reply_to_id": "999",
+   "in_reply_to_account_id": "13179",
+   "sensitive": false,
+   "spoiler_text": "",
+   "visibility": "public",
+   "language": "en",
+   "uri": "https://spam.example/users/exodus_now14/statuses/1003",
+   "url": "https://spam.example/@exodus_now14/1003",
+   "replies_count": 0,
+   "reblogs_count": 1,
+   "favourites_count": 3,
+   "quotes_count": 0,
+   "edited_at": null,
+   "content": "<p><span class=\"h-card\"><a href=\"https://mastodon.example/@Project\" class=\"u-url mention\">@<span>Project</span></a></span> This update is a disaster pushed by insiders, everyone is leaving for <a href=\"https://better-network.example/join\" rel=\"nofollow\">better-network.example/join</a> right now <a href=\"https://mastodon.example/tags/Exodus\" class=\"mention hashtag\">#<span>Exodus</span></a></p>",
+   "reblog": null,
+   "account": {
+    "id": "503",
+    "username": "exodus_now14",
+    "acct": "exodus_now14@spam.example",
+    "display_name": "exodus_now14",
+    "locked": false,
+    "bot": false,
+    "discoverable": true,
+    "indexable": true,
+    "group": false,
+    "created_at": "2026-08-16T00:00:00.000Z",
+    "note": "",
+    "url": "https://spam.example/@exodus_now14",
+    "uri": "https://remote.example/users/someone",
+    "avatar": "https://files.example/a.png",
+    "avatar_static": "https://files.example/a.png",
+    "avatar_description": "Cat with pixealrt eyeglasses",
+    "header": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_static": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_description": "Wooden house between mountains",
+    "followers_count": 185,
+    "following_count": 110,
+    "statuses_count": 6360,
+    "last_status_at": "2026-11-14",
+    "hide_collections": true,
+    "show_media": true,
+    "show_media_replies": true,
+    "show_featured": true,
+    "feature_approval": {
+     "automatic": [
+      "public"
+     ],
+     "manual": [],
+     "current_user": "denied"
+    },
+    "emojis": [
+     {
+      "shortcode": "apple_inc",
+      "url": "https://files.example/cache/custom_emojis/images/001/299/014/original/07af9a22dd87eb00.png",
+      "static_url": "https://files.example/cache/custom_emojis/images/001/299/014/static/07af9a22dd87eb00.png",
+      "visible_in_picker": true
+     }
+    ],
+    "fields": []
+   },
+   "media_attachments": [],
+   "mentions": [],
+   "tags": [],
+   "emojis": [],
+   "tagged_collections": [],
+   "quote": null,
+   "card": {
+    "url": "https://better-network.example/join",
+    "title": "Join"
+   },
+   "poll": null,
+   "quote_approval": {
+    "automatic": [
+     "public"
+    ],
+    "manual": [],
+    "current_user": "denied"
+   }
+  },
+  {
+   "id": "1004",
+   "created_at": "2026-08-18T15:34:00.000Z",
+   "in_reply_to_id": "999",
+   "in_reply_to_account_id": "13179",
+   "sensitive": false,
+   "spoiler_text": "",
+   "visibility": "public",
+   "language": "en",
+   "uri": "https://spam.example/users/exodus_now15/statuses/1004",
+   "url": "https://spam.example/@exodus_now15/1004",
+   "replies_count": 0,
+   "reblogs_count": 1,
+   "favourites_count": 3,
+   "quotes_count": 0,
+   "edited_at": null,
+   "content": "<p><span class=\"h-card\"><a href=\"https://mastodon.example/@Project\" class=\"u-url mention\">@<span>Project</span></a></span> This update is a disaster pushed by insiders, everyone is leaving for <a href=\"https://better-network.example/join\" rel=\"nofollow\">better-network.example/join</a> right now <a href=\"https://mastodon.example/tags/Exodus\" class=\"mention hashtag\">#<span>Exodus</span></a></p>",
+   "reblog": null,
+   "account": {
+    "id": "504",
+    "username": "exodus_now15",
+    "acct": "exodus_now15@spam.example",
+    "display_name": "exodus_now15",
+    "locked": false,
+    "bot": false,
+    "discoverable": true,
+    "indexable": true,
+    "group": false,
+    "created_at": "2026-08-15T00:00:00.000Z",
+    "note": "",
+    "url": "https://spam.example/@exodus_now15",
+    "uri": "https://remote.example/users/someone",
+    "avatar": "https://files.example/a.png",
+    "avatar_static": "https://files.example/a.png",
+    "avatar_description": "Cat with pixealrt eyeglasses",
+    "header": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_static": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_description": "Wooden house between mountains",
+    "followers_count": 185,
+    "following_count": 110,
+    "statuses_count": 6360,
+    "last_status_at": "2026-11-14",
+    "hide_collections": true,
+    "show_media": true,
+    "show_media_replies": true,
+    "show_featured": true,
+    "feature_approval": {
+     "automatic": [
+      "public"
+     ],
+     "manual": [],
+     "current_user": "denied"
+    },
+    "emojis": [
+     {
+      "shortcode": "apple_inc",
+      "url": "https://files.example/cache/custom_emojis/images/001/299/014/original/07af9a22dd87eb00.png",
+      "static_url": "https://files.example/cache/custom_emojis/images/001/299/014/static/07af9a22dd87eb00.png",
+      "visible_in_picker": true
+     }
+    ],
+    "fields": []
+   },
+   "media_attachments": [],
+   "mentions": [],
+   "tags": [],
+   "emojis": [],
+   "tagged_collections": [],
+   "quote": null,
+   "card": {
+    "url": "https://better-network.example/join",
+    "title": "Join"
+   },
+   "poll": null,
+   "quote_approval": {
+    "automatic": [
+     "public"
+    ],
+    "manual": [],
+    "current_user": "denied"
+   }
+  },
+  {
+   "id": "1010",
+   "created_at": "2026-08-18T16:00:00.000Z",
+   "in_reply_to_id": "999",
+   "in_reply_to_account_id": "13179",
+   "sensitive": false,
+   "spoiler_text": "",
+   "visibility": "public",
+   "language": "en",
+   "uri": "https://example.social/users/localfan/statuses/1010",
+   "url": "https://example.social/@localfan/1010",
+   "replies_count": 0,
+   "reblogs_count": 1,
+   "favourites_count": 3,
+   "quotes_count": 0,
+   "edited_at": null,
+   "content": "<p>Looks great, the calmer layout is exactly what I wanted.</p>",
+   "reblog": null,
+   "account": {
+    "id": "510",
+    "username": "localfan",
+    "acct": "localfan",
+    "display_name": "localfan",
+    "locked": false,
+    "bot": false,
+    "discoverable": true,
+    "indexable": true,
+    "group": false,
+    "created_at": "2022-11-05T00:00:00.000Z",
+    "note": "",
+    "url": "https://example.social/@localfan",
+    "uri": "https://remote.example/users/someone",
+    "avatar": "https://files.example/a.png",
+    "avatar_static": "https://files.example/a.png",
+    "avatar_description": "Cat with pixealrt eyeglasses",
+    "header": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_static": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_description": "Wooden house between mountains",
+    "followers_count": 185,
+    "following_count": 110,
+    "statuses_count": 6360,
+    "last_status_at": "2026-11-14",
+    "hide_collections": true,
+    "show_media": true,
+    "show_media_replies": true,
+    "show_featured": true,
+    "feature_approval": {
+     "automatic": [
+      "public"
+     ],
+     "manual": [],
+     "current_user": "denied"
+    },
+    "emojis": [
+     {
+      "shortcode": "apple_inc",
+      "url": "https://files.example/cache/custom_emojis/images/001/299/014/original/07af9a22dd87eb00.png",
+      "static_url": "https://files.example/cache/custom_emojis/images/001/299/014/static/07af9a22dd87eb00.png",
+      "visible_in_picker": true
+     }
+    ],
+    "fields": []
+   },
+   "media_attachments": [],
+   "mentions": [],
+   "tags": [],
+   "emojis": [],
+   "tagged_collections": [],
+   "quote": null,
+   "card": null,
+   "poll": null,
+   "quote_approval": {
+    "automatic": [
+     "public"
+    ],
+    "manual": [],
+    "current_user": "denied"
+   }
+  },
+  {
+   "id": "1011",
+   "created_at": "2026-08-18T16:01:00.000Z",
+   "in_reply_to_id": "999",
+   "in_reply_to_account_id": "13179",
+   "sensitive": false,
+   "spoiler_text": "",
+   "visibility": "public",
+   "language": "en",
+   "uri": "https://example.social/users/reader1/statuses/1011",
+   "url": "https://example.social/@reader1/1011",
+   "replies_count": 0,
+   "reblogs_count": 1,
+   "favourites_count": 3,
+   "quotes_count": 0,
+   "edited_at": null,
+   "content": "<p>Will the new composer support alt text reminders?</p>",
+   "reblog": null,
+   "account": {
+    "id": "511",
+    "username": "reader1",
+    "acct": "reader1",
+    "display_name": "reader1",
+    "locked": false,
+    "bot": false,
+    "discoverable": true,
+    "indexable": true,
+    "group": false,
+    "created_at": "2022-11-05T00:00:00.000Z",
+    "note": "",
+    "url": "https://example.social/@reader1",
+    "uri": "https://remote.example/users/someone",
+    "avatar": "https://files.example/a.png",
+    "avatar_static": "https://files.example/a.png",
+    "avatar_description": "Cat with pixealrt eyeglasses",
+    "header": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_static": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_description": "Wooden house between mountains",
+    "followers_count": 185,
+    "following_count": 110,
+    "statuses_count": 6360,
+    "last_status_at": "2026-11-14",
+    "hide_collections": true,
+    "show_media": true,
+    "show_media_replies": true,
+    "show_featured": true,
+    "feature_approval": {
+     "automatic": [
+      "public"
+     ],
+     "manual": [],
+     "current_user": "denied"
+    },
+    "emojis": [
+     {
+      "shortcode": "apple_inc",
+      "url": "https://files.example/cache/custom_emojis/images/001/299/014/original/07af9a22dd87eb00.png",
+      "static_url": "https://files.example/cache/custom_emojis/images/001/299/014/static/07af9a22dd87eb00.png",
+      "visible_in_picker": true
+     }
+    ],
+    "fields": []
+   },
+   "media_attachments": [],
+   "mentions": [],
+   "tags": [],
+   "emojis": [],
+   "tagged_collections": [],
+   "quote": null,
+   "card": null,
+   "poll": null,
+   "quote_approval": {
+    "automatic": [
+     "public"
+    ],
+    "manual": [],
+    "current_user": "denied"
+   }
+  },
+  {
+   "id": "1012",
+   "created_at": "2026-08-18T16:02:00.000Z",
+   "in_reply_to_id": "999",
+   "in_reply_to_account_id": "13179",
+   "sensitive": false,
+   "spoiler_text": "",
+   "visibility": "public",
+   "language": "en",
+   "uri": "https://example.social/users/reader2/statuses/1012",
+   "url": "https://example.social/@reader2/1012",
+   "replies_count": 0,
+   "reblogs_count": 1,
+   "favourites_count": 3,
+   "quotes_count": 0,
+   "edited_at": null,
+   "content": "<p>Excited to try it on my phone. Any beta for small servers?</p>",
+   "reblog": null,
+   "account": {
+    "id": "512",
+    "username": "reader2",
+    "acct": "reader2",
+    "display_name": "reader2",
+    "locked": false,
+    "bot": false,
+    "discoverable": true,
+    "indexable": true,
+    "group": false,
+    "created_at": "2022-11-05T00:00:00.000Z",
+    "note": "",
+    "url": "https://example.social/@reader2",
+    "uri": "https://remote.example/users/someone",
+    "avatar": "https://files.example/a.png",
+    "avatar_static": "https://files.example/a.png",
+    "avatar_description": "Cat with pixealrt eyeglasses",
+    "header": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_static": "https://files.example/cache/accounts/headers/115/087/969/476/854/615/original/8797e3b6cbd5b81d.png",
+    "header_description": "Wooden house between mountains",
+    "followers_count": 185,
+    "following_count": 110,
+    "statuses_count": 6360,
+    "last_status_at": "2026-11-14",
+    "hide_collections": true,
+    "show_media": true,
+    "show_media_replies": true,
+    "show_featured": true,
+    "feature_approval": {
+     "automatic": [
+      "public"
+     ],
+     "manual": [],
+     "current_user": "denied"
+    },
+    "emojis": [
+     {
+      "shortcode": "apple_inc",
+      "url": "https://files.example/cache/custom_emojis/images/001/299/014/original/07af9a22dd87eb00.png",
+      "static_url": "https://files.example/cache/custom_emojis/images/001/299/014/static/07af9a22dd87eb00.png",
+      "visible_in_picker": true
+     }
+    ],
+    "fields": []
+   },
+   "media_attachments": [],
+   "mentions": [],
+   "tags": [],
+   "emojis": [],
+   "tagged_collections": [],
+   "quote": null,
+   "card": null,
+   "poll": null,
+   "quote_approval": {
+    "automatic": [
+     "public"
+    ],
+    "manual": [],
+    "current_user": "denied"
+   }
+  }
+ ]
+}

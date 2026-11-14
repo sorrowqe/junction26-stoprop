@@ -12,26 +12,48 @@
   <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm" aria-current="page">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
   <main class="wrap page wide">
     <h1>Swarm mode</h1>
-    <p class="lede">Upload a batch of posts (author, time, text) and Stoprop looks for coordinated behaviour:
-      text reuse, timing synchrony, account similarity and amplification. It never judges a single post or person.
+    <p class="lede">Paste a link to a public post and Stoprop reads the replies, then looks for coordinated behaviour:
+      copied text, timing bursts, look-alike accounts and pushed links. It never judges a single post or person.
       A group is called “likely coordinated” only when copied text <em>and</em> at least one independent signal agree.</p>
 
     <section class="card" aria-labelledby="h-in">
-      <h2 id="h-in">Your posts</h2>
+      <h2 id="h-in" class="sr-only">Posts to check</h2>
+      <div class="tabs" role="tablist" aria-label="How to provide posts">
+        <button type="button" role="tab" id="tab-link" aria-controls="panel-link" aria-selected="true">Paste a link</button>
+        <button type="button" role="tab" id="tab-links" aria-controls="panel-links" aria-selected="false" tabindex="-1">Paste several links</button>
+        <button type="button" role="tab" id="tab-file" aria-controls="panel-file" aria-selected="false" tabindex="-1">Upload a file</button>
+      </div>
       <form id="swarm-form" novalidate>
-        <div class="row-actions">
-          <button type="button" id="load-sample" class="secondary">Load sample dataset</button>
-          <label class="file-pick secondary-like">Upload CSV or JSON<input type="file" id="file" accept=".csv,.json,.txt,text/csv,application/json"></label>
-          <span id="file-info" class="muted small" aria-live="polite"></span>
+        <div role="tabpanel" id="panel-link" aria-labelledby="tab-link">
+          <label for="link" class="field-label">Link to a public post</label>
+          <input id="link" type="url" inputmode="url" autocomplete="off" placeholder="https://bsky.app/profile/…/post/…">
+          <p class="muted small">Stoprop collects the post and its replies (up to 2000 posts, about 25 seconds).</p>
         </div>
-        <label for="data" class="field-label">Or paste CSV / JSON</label>
-        <textarea id="data" rows="8" spellcheck="false" placeholder="id,author,timestamp,text&#10;1,alice,2026-11-14T10:00:00Z,Example post text"></textarea>
-        <details class="small">
-          <summary>Format</summary>
-          <p>Columns <code>id, author, timestamp, text</code> (timestamp in ISO 8601 or unix time), optional
-            <code>url, author_created_at, platform</code>. JSON: a list of objects with the same fields.
-            Up to 2000 posts or 2 MB. Rows with problems are skipped and listed.</p>
-        </details>
+        <div role="tabpanel" id="panel-links" aria-labelledby="tab-links" hidden>
+          <label for="links" class="field-label">Up to 50 links, one per line</label>
+          <textarea id="links" rows="6" spellcheck="false" placeholder="https://bsky.app/profile/…/post/…&#10;https://mastodon.social/@…/…"></textarea>
+          <p class="muted small">Each link counts as one post (replies are not collected). Use this to check whether
+            posts you found in different places come from a coordinated group.</p>
+        </div>
+        <div role="tabpanel" id="panel-file" aria-labelledby="tab-file" hidden>
+          <div class="row-actions">
+            <label class="file-pick">Choose a CSV or JSON file<input type="file" id="file" accept=".csv,.json,.txt,text/csv,application/json"></label>
+            <span id="file-info" class="muted small" aria-live="polite"></span>
+          </div>
+          <label for="data" class="field-label">Or paste CSV / JSON</label>
+          <textarea id="data" rows="8" spellcheck="false" placeholder="id,author,timestamp,text&#10;1,alice,2026-11-14T10:00:00Z,Example post text"></textarea>
+          <details class="small">
+            <summary>Format</summary>
+            <p>Columns <code>id, author, timestamp, text</code> (timestamp in ISO 8601 or unix time), optional
+              <code>url, author_created_at, platform</code>. JSON: a list of objects with the same fields.
+              Up to 2000 posts or 2 MB. Rows with problems are skipped and listed.</p>
+          </details>
+        </div>
+
+        <p class="examples small">Try an example:
+          <button type="button" class="secondary" id="ex-sample">Fictional posts with two campaigns</button>
+          <button type="button" class="secondary" id="ex-bsky">A real Bluesky thread (snapshot)</button>
+        </p>
         <fieldset class="options">
           <legend class="sr-only">Options</legend>
           <label class="inline check"><input type="checkbox" id="deep"> Deep mode: also find paraphrases
@@ -39,23 +61,41 @@
           <label class="inline check"><input type="checkbox" id="tag"> Tag techniques in flagged groups
             <span class="muted small">(AI, up to 10 calls)</span></label>
         </fieldset>
-        <p class="muted small">Processed in memory only; nothing you upload is stored.</p>
         <button type="submit" id="go">Find coordinated groups</button>
         <p id="status" class="status" role="status" aria-live="polite"></p>
       </form>
+
+      <details class="platforms small">
+        <summary>Which links work?</summary>
+        <ul>
+          <li><strong>Bluesky</strong>: any public post (bsky.app/profile/…/post/…), with all replies and quote posts.</li>
+          <li><strong>Mastodon</strong>: a post on any server (…/@user/123…). Many servers share at most 60 replies with
+            visitors who are not logged in; Stoprop says so when that happens.</li>
+          <li><strong>YouTube</strong>: a video link (watch, youtu.be, shorts), with its comments.
+            <span id="yt-status" class="muted"></span></li>
+          <li><strong>Not possible</strong>: X (Twitter), Facebook, Instagram, Threads, TikTok and Reddit do not let
+            outside tools read posts without login or paid or approved API access. Export the posts yourself and use
+            “Upload a file”.</li>
+        </ul>
+        <p class="muted">Collected posts are processed in memory and kept for 10 minutes so a repeated check is instant;
+          nothing is written to disk.</p>
+      </details>
     </section>
 
     <section id="result" hidden aria-labelledby="h-res">
       <div class="card">
         <h2 id="h-res">Result</h2>
+        <div id="source" hidden></div>
         <p id="summary"></p>
         <ul id="notes" class="notes small"></ul>
+        <details id="failed-wrap" hidden><summary id="failed-sum"></summary><ul id="failed" class="small"></ul></details>
         <details id="rejected-wrap" hidden><summary id="rejected-sum"></summary><ul id="rejected" class="small"></ul></details>
         <button type="button" id="download" class="secondary">Download JSON</button>
       </div>
       <p class="muted small">Verdicts describe behaviour in this batch, never people. “Likely coordinated” needs copied
         text plus timing, account or amplification evidence. Innocent explanations (shared headlines, generic phrases,
-        quoted statements, event hashtags) lower the verdict and are listed with each group.</p>
+        quoted statements, event hashtags) lower the verdict and are listed with each group. Groups of the same
+        accounts posting several different messages are shown as one campaign.</p>
       <div id="clusters"></div>
     </section>
   </main>

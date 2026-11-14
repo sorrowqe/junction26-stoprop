@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-14 (M4 deployed + verified; M5 Part A (swarm detector + UI) done, Part B next)_
+_Last updated: 2026-11-14 (M5 Part A deployed; Part A2 (link collection) done, not yet deployed; Part B next)_
 
 Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 
@@ -90,7 +90,7 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   (bandwagon, questionable_authority, unsupported_claim, loaded_language, name_calling).
 - Observation: quotes are often whole sentences instead of the shortest passage -> tune in M4 with eval data.
 
-## M5 Part A DONE (swarm detector + UI, not yet deployed)
+## M5 Part A DONE (swarm detector + UI, deployed)
 - `backend/app/swarm/`: `ingest.py` (CSV/JSON, aliases, ISO/unix s/ms, row-level reasons, 2000 posts / 2 MB),
   `textreuse.py` (T: normalize + lowercase, URLs/@mentions stripped, char 5-gram MinHash LSH via datasketch,
   exact Jaccard >= 0.6 decides, >= 8 words, different authors; deep: embeddings >= 12 words, cosine >= 0.92,
@@ -109,8 +109,31 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   (T+S, downgraded to worth watching), generic phrase (organic), event-hashtag cheers (organic). ~130 ms.
 - Tests: 496 passed (40 swarm tests incl. 2000 posts < 20 s, every signal + innocent pattern, API, rate limit).
 
+## M5 Part A2 DONE (link-based collection, not yet deployed)
+- `backend/app/swarm/collectors/`: `http.py` (Session: 40 requests, 25 s deadline, SSRF-safe client, no redirects,
+  StopropBot User-Agent, 429 -> stop), `bluesky.py` (public AppView: getPostThread depth 1000 + re-fetch of cut
+  branches, getQuotes up to 300, getProfiles only for missing createdAt; single mode getProfiles + getPosts 25/call),
+  `mastodon.py` (server API status + context; 60-reply cap for logged-out visitors disclosed; 401/403 explained),
+  `youtube.py` (Data API v3 with GOOGLE_API_KEY: videos, commentThreads, comments for 5 long reply threads,
+  channels 50/call; "not configured" without key; quota/comments-disabled messages), `__init__.py` (classify,
+  closed-platform messages for X / Meta / TikTok / Reddit, 10-min in-memory cache, multi-link up to 50).
+  Image/video-only posts are left out with a note.
+- Campaign merging (`clusters.merge_campaigns`): clusters with author-set Jaccard >= 0.5 -> one campaign card with
+  message variants; verdicts unchanged (strongest variant shown).
+- `/api/swarm`: `{"url"}` / `{"urls"}` (+ `"stream": true` NDJSON progress); same 10/h limit, invalid/closed
+  links do not count. `/api/health.collectors` (youtube configured?).
+- `/swarm`: tabs "Paste a link" (default) / "Paste several links" / "Upload a file", "Which links work?",
+  examples (fictional campaigns; real Bluesky thread snapshot `web/static/examples/bluesky_thread.json`, account
+  names pseudonymized, built from the recorded live run, no live fetch), live progress line, source box, campaigns.
+- Live checks (2026-11-14): Bluesky https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22 -> 639 posts / 547 accounts /
+  8 requests, all creation dates, 0 clusters; Mastodon https://mastodon.social/@Mastodon/117117221397911074 ->
+  61 posts / 20 accounts / 2 requests, 60-reply cap note, 0 clusters; YouTube NOT run (no GOOGLE_API_KEY on the PC).
+- Tests: 546 passed (50 collector tests on anonymized recorded responses; YouTube from documented API shapes).
+- `scripts/swarm_live_check.py` (one live run, --record, --replay, --snapshot, --pseudonymize).
+
 ## Next
 - M5 Part B: benchmark generator + run_swarm_eval.py + /metrics swarm section (announce calls/credits first).
+- YouTube live check once GOOGLE_API_KEY (YouTube Data API v3 enabled) is in .env.local and the server .env.
 - Later: "Report a wrong label" (`POST /api/feedback`, 30/h) and "Share result" (`/r/{id}`).
 - Sunday morning: `run_eval.py --final` (announce calls).
 

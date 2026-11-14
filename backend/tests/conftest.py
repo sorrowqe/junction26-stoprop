@@ -38,6 +38,11 @@ def _isolated(monkeypatch):
 
     monkeypatch.setattr(extract, "resolver", _no_dns)
     monkeypatch.setattr(receipts_http, "client_factory", _no_http)
+    from app.swarm import collectors
+    from app.swarm.collectors import http as collectors_http
+    monkeypatch.setattr(collectors_http, "client_factory", _no_http)
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    collectors.reset_cache()
     monkeypatch.delenv("FACTCHECK_API_KEY", raising=False)
     receipts_service.reset()
     yield store

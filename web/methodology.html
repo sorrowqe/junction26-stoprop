@@ -40,6 +40,14 @@
       “Likely coordinated” needs text reuse plus one other family; text reuse alone is “worth watching”. Shared news
       headlines, generic phrases, quoted statements and event hashtags lower the verdict and are shown as innocent
       explanations. Verdicts describe groups and behaviour, never individual people.</p>
+    <p><strong>Where swarm posts come from.</strong> Paste a link and Stoprop reads the post and its replies through
+      public interfaces: Bluesky's public AppView API (no login), the Mastodon server's own public API (many
+      servers share at most 60 replies with visitors who are not logged in; we say so), and the YouTube Data API
+      (comments, with a server key). Each run is limited to 2000 posts, 40 API requests and 25 seconds; collected
+      posts stay in memory for 10 minutes and are never written to disk. X (Twitter), Facebook, Instagram, Threads,
+      TikTok and Reddit do not allow outside tools to read posts without login or paid/approved API access, so
+      they are not supported; export the posts yourself and upload a file instead. We do not scrape logged-in
+      pages. Groups of the same accounts posting several messages are shown as one campaign.</p>
     <p class="muted">No AI-generated-text detection: such detectors are unreliable and known to be biased against non-native writers.</p>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>

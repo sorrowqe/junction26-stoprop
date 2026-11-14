@@ -1,0 +1,5445 @@
+{
+"source": {
+"platform": "bluesky",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"root": {
+"author": "bsky.app",
+"text": "We're seeing 200% of our usual data traffic—and climbing! Thanks to all of you for making this a night to remember",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"created": "2026-11-04T04:03:40.249Z",
+"replies": 332,
+"quotes": 399
+},
+"captured_at": "2026-11-14T15:49:53+00:00",
+"note": "Snapshot of public posts, stored so demos never fetch live. Account names other than the original poster are replaced by pseudonyms; texts, times and account creation dates are unchanged."
+},
+"posts": [
+{
+"id": "bluesky-0000",
+"author": "bsky.app",
+"timestamp": "2026-11-04T04:03:40.249000+00:00",
+"text": "We're seeing 200% of our usual data traffic—and climbing! Thanks to all of you for making this a night to remember",
+"url": "",
+"author_created_at": "2023-04-12T04:53:57.057000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0001",
+"author": "quietotter.example",
+"timestamp": "2026-11-04T08:01:38.581000+00:00",
+"text": "May I/us know what's the x-axis? What is the timescale of this chart?",
+"url": "",
+"author_created_at": "2025-03-28T02:20:16.996000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0002",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:02:15+00:00",
+"text": "No chart here",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0003",
+"author": "briskotter.example",
+"timestamp": "2026-11-04T23:55:33.115000+00:00",
+"text": "THANK YOU EZRA AND LEAH!! 💙💙💙💙💙💙💙💙",
+"url": "",
+"author_created_at": "2024-11-12T01:21:27.010000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0004",
+"author": "calmotter.example",
+"timestamp": "2026-11-04T04:54:13.070000+00:00",
+"text": "It’s the fact that we have a community that establishes their own boundaries and take their agency seriously and protect others agency, voice and aspirations … we are all rejecting the authoritarian impulse that creeped out of maga fevered wet dreams",
+"url": "",
+"author_created_at": "2025-08-22T00:10:08.598000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0005",
+"author": "deepotter.example",
+"timestamp": "2026-11-04T18:39:54.110000+00:00",
+"text": "So... 400 % on Big Beautiful Obituary day ?",
+"url": "",
+"author_created_at": "2026-05-15T07:52:45.358000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0006",
+"author": "earlyotter.example",
+"timestamp": "2026-11-04T04:13:53.695000+00:00",
+"text": "FIRST\n1111112!@!Q@!#$FT$ W$RTZSR R TVSDRTYVQ$%&$Q%&BNE$%Q^N&M",
+"url": "",
+"author_created_at": "2025-09-07T04:56:05.798000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0007",
+"author": "fairotter.example",
+"timestamp": "2026-11-04T04:29:09.633000+00:00",
+"text": "I'm suddenly reminded of this song.\nwww.youtube.com/watch?v=x9Ii...",
+"url": "https://www.youtube.com/watch?v=x9IimLb3b2U&list=RDx9IimLb3b2U&start_radio=1",
+"author_created_at": "2024-11-10T22:45:07.177000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0008",
+"author": "gentleotter.example",
+"timestamp": "2026-11-04T04:42:18.605000+00:00",
+"text": "I love this! (I’m a huge Jody Watley fan!)",
+"url": "",
+"author_created_at": "2024-11-13T11:53:47.480000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0009",
+"author": "hiddenotter.example",
+"timestamp": "2026-11-04T23:20:06.603000+00:00",
+"text": "History is being made",
+"url": "",
+"author_created_at": "2025-02-10T21:50:11.043000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0010",
+"author": "ivoryotter.example",
+"timestamp": "2026-11-04T06:04:24.545000+00:00",
+"text": "Everyone is excited that Ohio is finally becoming a state!",
+"url": "",
+"author_created_at": "2024-11-16T22:08:24.939000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0011",
+"author": "jollyotter.example",
+"timestamp": "2026-11-04T15:12:54.958000+00:00",
+"text": "Alt text has an error - the numbers don't match the ones on the chart. Just FYI. Thanks for all you do!! 🙂",
+"url": "",
+"author_created_at": "2023-07-06T20:10:50.178000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0012",
+"author": "keenotter.example",
+"timestamp": "2026-11-04T21:11:43.799000+00:00",
+"text": "We hate you and we're only here because there are no viable alternatives. 🫡",
+"url": "",
+"author_created_at": "2024-09-15T02:56:48.510000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0013",
+"author": "luckyotter.example",
+"timestamp": "2026-11-04T04:59:14.732000+00:00",
+"text": "Thank you for providing a way to get real-time election news. 🗳️",
+"url": "",
+"author_created_at": "2023-11-18T02:03:00.236000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0014",
+"author": "mellowotter.example",
+"timestamp": "2026-11-04T10:59:51.395000+00:00",
+"text": "Fuck elon",
+"url": "",
+"author_created_at": "2024-11-16T13:20:59.584000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0015",
+"author": "nobleotter.example",
+"timestamp": "2026-11-04T16:18:13.993000+00:00",
+"text": "Thank you for making this a place we can treasure! And trust 💙",
+"url": "",
+"author_created_at": "2024-11-11T15:17:47.780000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0016",
+"author": "oliveotter.example",
+"timestamp": "2026-11-04T22:18:37.697000+00:00",
+"text": "I was on Bluesky before it was cool. 😋",
+"url": "",
+"author_created_at": "2026-09-08T05:47:08.059000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0017",
+"author": "plainotter.example",
+"timestamp": "2026-11-04T05:52:39.022000+00:00",
+"text": "Welcome \nKeep BlueSky Blue 💙!!",
+"url": "",
+"author_created_at": "2026-05-20T10:17:59.657000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0018",
+"author": "quickotter.example",
+"timestamp": "2026-11-04T17:41:22.132000+00:00",
+"text": "It was nice and busy last night, like we all decided at the last minute and said, you know what? I'm going out tonight and mingle, meet new people and hang out.  \n\nThen we went back home and realized it will take a week to recover from all that interaction. 😆",
+"url": "",
+"author_created_at": "2024-11-14T07:06:55.077000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0019",
+"author": "rapidotter.example",
+"timestamp": "2026-11-04T04:49:57.742000+00:00",
+"text": "Great spot to come and get election results. \n\nAnd still dive into some soccer stories. ⚽️",
+"url": "",
+"author_created_at": "2024-11-17T17:57:18.640000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0020",
+"author": "silverotter.example",
+"timestamp": "2026-11-04T04:28:28.090000+00:00",
+"text": "Dems very first bill should be a $5000 check to everybody and let trump veto it.",
+"url": "",
+"author_created_at": "2024-11-15T23:54:50.089000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0021",
+"author": "tidyotter.example",
+"timestamp": "2026-11-07T13:52:52.951000+00:00",
+"text": "😂",
+"url": "",
+"author_created_at": "2024-11-13T15:43:42.173000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0022",
+"author": "upbeatotter.example",
+"timestamp": "2026-11-04T18:43:23.188000+00:00",
+"text": "Hopefully it’s crystal clear who your users are.",
+"url": "",
+"author_created_at": "2024-11-10T03:28:48.178000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0023",
+"author": "vividotter.example",
+"timestamp": "2026-11-05T09:18:13.503000+00:00",
+"text": "Boycott X !",
+"url": "",
+"author_created_at": "2024-12-05T00:15:42.546000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0024",
+"author": "warmotter.example",
+"timestamp": "2026-11-04T09:37:11.640000+00:00",
+"text": "LIBERATION DAY",
+"url": "",
+"author_created_at": "2024-09-01T22:51:30.702000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0025",
+"author": "youngotter.example",
+"timestamp": "2026-11-04T06:07:16.523000+00:00",
+"text": "You bitches don't get to celebrate, lmfao. Go to bed",
+"url": "",
+"author_created_at": "2023-08-30T23:48:25.993000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0026",
+"author": "quietfalcon.example",
+"timestamp": "2026-11-04T09:19:59.981000+00:00",
+"text": "People queuing up to watch the orange virus get vacccinated.✊",
+"url": "",
+"author_created_at": "2026-10-29T11:23:19.371000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0027",
+"author": "amberfalcon.example",
+"timestamp": "2026-11-04T16:13:30.099000+00:00",
+"text": "Just saying, you may want to keep in mind who your users are.",
+"url": "",
+"author_created_at": "2024-05-25T14:40:37.233000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0028",
+"author": "briskfalcon.example",
+"timestamp": "2026-11-04T04:09:11.285000+00:00",
+"text": "As Fox collapses",
+"url": "",
+"author_created_at": "2024-11-13T03:52:59.191000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0029",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:03:43+00:00",
+"text": "About damn time",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0030",
+"author": "calmfalcon.example",
+"timestamp": "2026-11-04T13:59:36.220000+00:00",
+"text": "hopefully this becomes the new non-toxic main platform",
+"url": "",
+"author_created_at": "2024-12-15T02:07:35.943000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0031",
+"author": "deepfalcon.example",
+"timestamp": "2026-11-04T07:06:57.387000+00:00",
+"text": "Digital hugs for everyone! 🫂 🫂 🫂 🫂 🫂",
+"url": "",
+"author_created_at": "2024-11-23T04:20:21.347000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0032",
+"author": "earlyfalcon.example",
+"timestamp": "2026-11-04T06:52:22.183000+00:00",
+"text": "Hell yea",
+"url": "",
+"author_created_at": "2026-08-12T02:32:40.667000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0033",
+"author": "fairfalcon.example",
+"timestamp": "2026-11-10T22:21:37.565000+00:00",
+"text": "You're welcome.\nNow, would you mind very much if you would restore my account to its full glory.\nI'm being moderated and can't even like more than one post without being shut out.\nPlease look into it...now you've made me late for bingo!",
+"url": "",
+"author_created_at": "2024-11-14T01:22:32.884000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0034",
+"author": "gentlefalcon.example",
+"timestamp": "2026-11-04T07:29:04.591000+00:00",
+"text": "good work",
+"url": "",
+"author_created_at": "2026-10-22T04:02:31.638000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0035",
+"author": "hiddenfalcon.example",
+"timestamp": "2026-11-05T02:27:14.239000+00:00",
+"text": "it'll be even better when it happens",
+"url": "",
+"author_created_at": "2023-08-08T10:44:03.934000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0036",
+"author": "ivoryfalcon.example",
+"timestamp": "2026-11-04T13:20:23.703000+00:00",
+"text": "How nice, now actually allow for private accounts perhaps?",
+"url": "",
+"author_created_at": "2024-11-13T23:22:06.180000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0037",
+"author": "jollyfalcon.example",
+"timestamp": "2026-11-04T19:58:45.487000+00:00",
+"text": "Let’s hope that the Democrats listen to the people better than Bluesky listens to its users.",
+"url": "",
+"author_created_at": "2024-10-11T05:25:30.707000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0038",
+"author": "keenfalcon.example",
+"timestamp": "2026-11-04T22:44:44.265000+00:00",
+"text": "Thank you @bsky.app for the home & Community I needed afta fleeing FB, Twitter & Insta\n\nReally love my #Bluesky Peeps 🦋",
+"url": "",
+"author_created_at": "2024-12-25T17:14:58.943000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0039",
+"author": "luckyfalcon.example",
+"timestamp": "2026-11-05T04:19:39.236000+00:00",
+"text": "Thanks Bluesky!  💙",
+"url": "",
+"author_created_at": "2024-11-14T15:56:38.223000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0040",
+"author": "mellowfalcon.example",
+"timestamp": "2026-11-04T16:01:34.491000+00:00",
+"text": "Thank you bluesky 💙🌊🗽",
+"url": "",
+"author_created_at": "2024-11-14T06:37:39.676000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0041",
+"author": "noblefalcon.example",
+"timestamp": "2026-11-04T15:03:27.746000+00:00",
+"text": "Pics in DMs WHEN",
+"url": "",
+"author_created_at": "2023-09-25T17:55:50.745000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0042",
+"author": "olivefalcon.example",
+"timestamp": "2026-11-04T14:57:16.579000+00:00",
+"text": "Despite your best efforts to undermine your user base at every opportunity. \nGfys",
+"url": "",
+"author_created_at": "2023-09-15T05:23:56.090000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0043",
+"author": "plainfalcon.example",
+"timestamp": "2026-11-04T04:52:36.783000+00:00",
+"text": "😍🙌🏼🙌🏼",
+"url": "",
+"author_created_at": "2026-05-17T10:04:39.856000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0044",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.926000+00:00",
+"text": "Blue sky will be a great loving progressive and highly munificent platform forever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0045",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.927000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0046",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.928000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0047",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.929000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0048",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.930000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0049",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.931000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0050",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.932000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0051",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.933000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0052",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.934000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0053",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.935000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0054",
+"author": "rapidfalcon.example",
+"timestamp": "2026-11-04T05:20:12.570000+00:00",
+"text": "We're busy",
+"url": "",
+"author_created_at": "2024-11-14T19:18:54.224000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0055",
+"author": "silverfalcon.example",
+"timestamp": "2026-11-04T18:06:36.981000+00:00",
+"text": "Bottle of Champagne in one hand and a bottle of Pepto in the other?",
+"url": "",
+"author_created_at": "2024-10-20T10:24:24.212000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0056",
+"author": "tidyfalcon.example",
+"timestamp": "2026-11-04T15:10:16.368000+00:00",
+"text": "This is smoke testing for \"it\"",
+"url": "",
+"author_created_at": "2024-11-14T02:53:17.499000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0057",
+"author": "upbeatfalcon.example",
+"timestamp": "2026-11-04T07:00:07.720000+00:00",
+"text": "Cheeky 😂",
+"url": "",
+"author_created_at": "2023-12-07T17:18:39.540000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0058",
+"author": "vividfalcon.example",
+"timestamp": "2026-11-04T14:00:11.537537+00:00",
+"text": "The digital equivalent of a house party where the host realizes they only have one bag of chips and the guest list just tripled. Godspeed to the servers.",
+"url": "",
+"author_created_at": "2026-03-20T00:39:23.648000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0059",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:05:02+00:00",
+"text": "Servers fucked",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0060",
+"author": "warmfalcon.example",
+"timestamp": "2026-11-04T16:50:39.287000+00:00",
+"text": "The last time I saw that much traffic was during the 2024 campaign and election night.",
+"url": "",
+"author_created_at": "2024-10-01T03:46:59.807000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0061",
+"author": "youngfalcon.example",
+"timestamp": "2026-11-05T04:29:23.546000+00:00",
+"text": "That was SO long ago.",
+"url": "",
+"author_created_at": "2024-11-20T02:17:15.969000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0062",
+"author": "quietmaple.example",
+"timestamp": "2026-11-04T20:03:38.326000+00:00",
+"text": "KUDOS #Bluesky \n\nSo well deserved! ❤️🤍💙🙏🇺🇸\n\n#Bluesky is the first platform \nI’ve seen that is truly supportive of the people involved! \n(The Only one I’ve paid attention to!)  And - \nImportantly, there are many conscious, “real people” \nhere…. \nWho are actually Caring for the Greater Good!⚡️💙⚡️",
+"url": "",
+"author_created_at": "2024-11-19T02:52:29.705000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0063",
+"author": "ambermaple.example",
+"timestamp": "2026-11-05T01:06:38.235000+00:00",
+"text": "twitter is banning a lot of people this week",
+"url": "",
+"author_created_at": "2024-11-09T17:33:00.881000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0064",
+"author": "briskmaple.example",
+"timestamp": "2026-11-06T10:38:04.676000+00:00",
+"text": "Now would be a great time to talk about this",
+"url": "",
+"author_created_at": "2026-01-07T15:56:56.125000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0065",
+"author": "calmmaple.example",
+"timestamp": "2026-11-04T04:31:06.863000+00:00",
+"text": "Bsky has the juice",
+"url": "",
+"author_created_at": "2023-08-11T23:58:17.636000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0066",
+"author": "deepmaple.example",
+"timestamp": "2026-11-05T13:25:54.130000+00:00",
+"text": "This is fantastic \n\nHowever\n\nFirst platform I’ve ever been suspended from.\nI’m reserving my enthusiastic enthusiasm \n🌊",
+"url": "",
+"author_created_at": "2025-02-01T17:15:22.043000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0067",
+"author": "earlymaple.example",
+"timestamp": "2026-11-05T03:07:20.210000+00:00",
+"text": "Why did yall sellout to the ai zeitgeist? I can’t virtue signal to my friends now",
+"url": "",
+"author_created_at": "2024-11-20T17:44:13.853000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0068",
+"author": "fairmaple.example",
+"timestamp": "2026-11-05T01:44:07.401000+00:00",
+"text": "Now give us an edit button.",
+"url": "",
+"author_created_at": "2024-11-16T00:37:19.132000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0069",
+"author": "gentlemaple.example",
+"timestamp": "2026-11-04T16:43:18.872000+00:00",
+"text": "No problem. My multiple personalities kicked in (thank you Vodka) and I was typing REALLY fast!!! 😁",
+"url": "",
+"author_created_at": "2025-02-06T22:39:14.244000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0070",
+"author": "hiddenmaple.example",
+"timestamp": "2026-11-04T05:43:04.034000+00:00",
+"text": "🏆🏆🏆",
+"url": "",
+"author_created_at": "2024-11-25T20:44:38.147000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0071",
+"author": "ivorymaple.example",
+"timestamp": "2026-11-04T04:10:27.990000+00:00",
+"text": "Now remember it's the users who are supporting you and don't sell us out in the future.",
+"url": "",
+"author_created_at": "2023-10-02T20:17:56.971000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0072",
+"author": "jollymaple.example",
+"timestamp": "2026-11-04T09:19:11.065000+00:00",
+"text": "Congratulations! Thanks for helping us connect.",
+"url": "",
+"author_created_at": "2025-10-27T17:40:54.252000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0073",
+"author": "keenmaple.example",
+"timestamp": "2026-11-04T16:00:55.598000+00:00",
+"text": "Maybe internalize the fact that you do better when democrats win and your user base is hard left, so you should cater to that? Idk, or just keep vibe coding and antagonizing people what do I know 🤷🏻‍♀️",
+"url": "",
+"author_created_at": "2023-05-18T19:32:37.483000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0074",
+"author": "luckymaple.example",
+"timestamp": "2026-11-04T15:37:56.374000+00:00",
+"text": "It was quite a celebration.\n\nbsky.app/profile/bsky...",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"author_created_at": "2023-06-27T18:37:42.208000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0075",
+"author": "mellowmaple.example",
+"timestamp": "2026-11-04T22:41:50.259000+00:00",
+"text": "I want to know if Bluesky is bigger than X-human I mean Twitter 🐦",
+"url": "",
+"author_created_at": "2025-01-24T05:39:09.644000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0076",
+"author": "noblemaple.example",
+"timestamp": "2026-11-06T03:52:12.756000+00:00",
+"text": "How many registered users on  bsky now? I joined when it surged to 20M.",
+"url": "",
+"author_created_at": "2024-10-27T03:47:03.108000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0077",
+"author": "olivemaple.example",
+"timestamp": "2026-11-04T09:47:06.232000+00:00",
+"text": "👏",
+"url": "",
+"author_created_at": "2025-09-17T12:03:21.199000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0078",
+"author": "plainmaple.example",
+"timestamp": "2026-11-04T04:32:07.667000+00:00",
+"text": "🫡",
+"url": "",
+"author_created_at": "2023-11-21T22:46:20.913000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0079",
+"author": "quickmaple.example",
+"timestamp": "2026-11-04T20:00:32.136000+00:00",
+"text": "Celebrating the #BlueWave you helped support!😍🌊✊",
+"url": "https://static.klipy.com/ii/39f2394ae36df6e199be9eb7c9fa1012/14/a9/Tv29Nr5q.gif?hh=418&ww=430&mp4=5V8M1Y7vfnBrF1bBTls&webm=qmNmIVqyUD7cVBorJqr",
+"author_created_at": "2023-09-15T13:53:52.765000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0080",
+"author": "rapidmaple.example",
+"timestamp": "2026-11-04T04:17:34.915000+00:00",
+"text": "Hang tight, y'all!",
+"url": "",
+"author_created_at": "2024-11-14T01:43:05.176000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0081",
+"author": "silvermaple.example",
+"timestamp": "2026-11-04T12:55:31.880000+00:00",
+"text": "💙🌊☁️",
+"url": "",
+"author_created_at": "2023-10-23T10:58:00.354000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0082",
+"author": "tidymaple.example",
+"timestamp": "2026-11-04T04:05:54.370000+00:00",
+"text": "And the site hasn't slowed down for me. Nice. 🙏",
+"url": "",
+"author_created_at": "2024-04-06T23:52:18.688000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0083",
+"author": "upbeatmaple.example",
+"timestamp": "2026-11-04T04:11:29.615000+00:00",
+"text": "𝘛𝘩𝘢𝘵 has impressed me too",
+"url": "",
+"author_created_at": "2023-07-31T15:33:49.970000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0084",
+"author": "vividmaple.example",
+"timestamp": "2026-11-04T04:36:22.213000+00:00",
+"text": "And it is very much appreciated!!!",
+"url": "",
+"author_created_at": "2024-09-18T12:26:21.109000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0085",
+"author": "tidymaple.example",
+"timestamp": "2026-11-04T04:12:32.002000+00:00",
+"text": "Big changes everywhere. 🙏",
+"url": "",
+"author_created_at": "2024-04-06T23:52:18.688000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0086",
+"author": "warmmaple.example",
+"timestamp": "2026-11-04T05:53:59.182000+00:00",
+"text": "Nature is healing",
+"url": "",
+"author_created_at": "2023-07-20T00:29:43.798000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0087",
+"author": "youngmaple.example",
+"timestamp": "2026-11-04T22:31:54.221000+00:00",
+"text": "Hace poco eliminé todas esas apps y las cuentas. No pensé en el nazismo, pero me asusté de que utilizaran mis fotos para reconocer a personas en el fondo sin su permiso, porque todos hemos ido a alguna manifestación. Acabo de ver la imagen y solo puedo pensar en la Gestapo.",
+"url": "",
+"author_created_at": "2026-11-02T10:21:15.478000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0088",
+"author": "quietharbor.example",
+"timestamp": "2026-11-04T06:52:06.139000+00:00",
+"text": "Thank you for hosting us",
+"url": "",
+"author_created_at": "2024-11-08T10:36:31.178000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0089",
+"author": "amberharbor.example",
+"timestamp": "2026-11-04T05:09:25.795000+00:00",
+"text": "Now act accordingly and stop pandering to puritanical bullshit!",
+"url": "",
+"author_created_at": "2023-09-18T21:17:15.162000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0090",
+"author": "briskharbor.example",
+"timestamp": "2026-11-04T23:23:19.665000+00:00",
+"text": "Proud to be a part of this place ❤️",
+"url": "",
+"author_created_at": "2024-08-17T17:55:10.186000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0091",
+"author": "calmharbor.example",
+"timestamp": "2026-11-04T17:24:03.027000+00:00",
+"text": "Congrats!!!",
+"url": "",
+"author_created_at": "2024-09-28T00:02:44.908000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0092",
+"author": "deepharbor.example",
+"timestamp": "2026-11-04T05:19:57.845000+00:00",
+"text": "Tranquilo YouTube!\n#NoKings🍬🎅🙏🥣🎅🙏💲",
+"url": "",
+"author_created_at": "2026-10-17T13:05:04.664000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0093",
+"author": "earlyharbor.example",
+"timestamp": "2026-11-04T16:24:49.854000+00:00",
+"text": "plutopsyche.medium.com/blueskys-ceo... dont forget btw, the leadership of this app is part of the problem. this doesnt even cover some of the recent antagonizing with the entire ai situation. Make this site a safer space and then it wont draw a side eye when you gloat about us",
+"url": "https://plutopsyche.medium.com/blueskys-ceo-meltdown-how-leadership-continues-to-fail-its-most-marginalized-users-8bfa7a8824b4",
+"author_created_at": "2024-10-18T00:18:24.008000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0094",
+"author": "fairharbor.example",
+"timestamp": "2026-11-04T17:04:15.612000+00:00",
+"text": "A lot of gibbles",
+"url": "",
+"author_created_at": "2023-09-25T15:10:34.920000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0095",
+"author": "gentleharbor.example",
+"timestamp": "2026-11-04T04:36:33.738000+00:00",
+"text": "Did something happen",
+"url": "",
+"author_created_at": "2024-11-12T15:05:52.005000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0096",
+"author": "hiddenharbor.example",
+"timestamp": "2026-11-09T08:58:30.181000+00:00",
+"text": "I wonder too, how come so many people showed up all of a sudden?",
+"url": "",
+"author_created_at": "2026-08-24T04:02:38.169000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0097",
+"author": "ivoryharbor.example",
+"timestamp": "2026-11-04T08:00:40.120000+00:00",
+"text": "Your welcome",
+"url": "",
+"author_created_at": "2025-04-02T17:06:25.292000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0098",
+"author": "jollyharbor.example",
+"timestamp": "2026-11-05T02:40:05.533000+00:00",
+"text": "Please add the option to edit the post after it's published! @mu.social has it and bluesky doesn't yet! 🤷‍♂️",
+"url": "",
+"author_created_at": "2024-08-31T17:04:27.103000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0099",
+"author": "keenharbor.example",
+"timestamp": "2026-11-04T09:04:11.595000+00:00",
+"text": "DEATH watched the screen\n\"Now I don't get to pick my customers, just reap what's left of their souls, but I feel a quickening\"\nWAR smiled\n\"Win Win for me too, America beats its ploughshares into swords no matter who is king, civil war next?\"\nPESTILENCE sighed\n\"Damn RFK was funding my comeback tour\"",
+"url": "",
+"author_created_at": "2024-11-15T01:16:40.834000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0100",
+"author": "luckyharbor.example",
+"timestamp": "2026-11-04T16:57:53.064000+00:00",
+"text": "This was the place to be last night! 💙",
+"url": "",
+"author_created_at": "2024-11-11T17:04:54.287000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0101",
+"author": "mellowharbor.example",
+"timestamp": "2026-11-04T07:22:37.165000+00:00",
+"text": "The sky is always blue 💙",
+"url": "",
+"author_created_at": "2026-10-30T22:25:54.970000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0102",
+"author": "nobleharbor.example",
+"timestamp": "2026-11-05T00:49:41.546000+00:00",
+"text": "you love to see it!!!",
+"url": "",
+"author_created_at": "2026-11-04T12:18:18.571000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0103",
+"author": "oliveharbor.example",
+"timestamp": "2026-11-06T01:36:57.787000+00:00",
+"text": "Thank you for all your hard work.",
+"url": "",
+"author_created_at": "2026-03-06T03:53:17.551000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0104",
+"author": "plainharbor.example",
+"timestamp": "2026-11-04T20:07:24.791000+00:00",
+"text": "Who's in a silo now, bitches! Silo my ass more like the Avengers Tower",
+"url": "",
+"author_created_at": "2023-11-28T22:06:37.963000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0105",
+"author": "quickharbor.example",
+"timestamp": "2026-11-04T06:01:09.232000+00:00",
+"text": "Thanks @bsky.app This is the place to be - Bluesky community is the best💙",
+"url": "",
+"author_created_at": "2024-11-14T04:18:02.381000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0106",
+"author": "rapidharbor.example",
+"timestamp": "2026-11-04T13:54:12.755000+00:00",
+"text": "Thank you, America! Good job.",
+"url": "",
+"author_created_at": "2023-09-26T17:21:19.526000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0107",
+"author": "silverharbor.example",
+"timestamp": "2026-11-04T05:06:56.817000+00:00",
+"text": "BLUEsky baby!!!!!!",
+"url": "",
+"author_created_at": "2024-11-11T02:45:41.584000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0108",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:06:39+00:00",
+"text": "No shit",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0109",
+"author": "tidyharbor.example",
+"timestamp": "2026-11-04T04:26:33.192000+00:00",
+"text": "Jeez I wonder why",
+"url": "",
+"author_created_at": "2026-05-24T22:48:12.369000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0110",
+"author": "upbeatharbor.example",
+"timestamp": "2026-11-04T18:10:49.743000+00:00",
+"text": "Henry Kissinger.",
+"url": "https://static.klipy.com/ii/f87f46a2c5aeaeed4c68910815f73eaf/30/fa/i6FFJeJa.gif?hh=281&ww=498&mp4=Xjwu6VwC&webm=1m1KIUu7",
+"author_created_at": "2023-07-09T03:32:06.783000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0111",
+"author": "vividharbor.example",
+"timestamp": "2026-11-04T16:22:40.263000+00:00",
+"text": "Congrats, kings and queens\n\nMany slept and will now see the light",
+"url": "",
+"author_created_at": "2025-01-01T03:42:54.243000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0112",
+"author": "warmharbor.example",
+"timestamp": "2026-11-04T10:23:15.767000+00:00",
+"text": "This is the only place to be 😎",
+"url": "",
+"author_created_at": "2023-10-02T11:28:59.593000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0113",
+"author": "youngharbor.example",
+"timestamp": "2026-11-04T22:28:36.675000+00:00",
+"text": "I like it here!",
+"url": "",
+"author_created_at": "2024-02-12T16:00:11.653000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0114",
+"author": "quietcomet.example",
+"timestamp": "2026-11-04T15:47:19.049000+00:00",
+"text": "Please engineer the platform to stay stable when Trump kicks it, I will need to live off the juice for years to come",
+"url": "",
+"author_created_at": "2024-11-16T21:40:35.338000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0115",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:07:33+00:00",
+"text": "lol same",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0116",
+"author": "ambercomet.example",
+"timestamp": "2026-11-04T05:45:50.222000+00:00",
+"text": "Everyone wants to play @playminesweeper.bsky.social 😜",
+"url": "",
+"author_created_at": "2024-11-14T17:50:10.635000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0117",
+"author": "briskcomet.example",
+"timestamp": "2026-11-04T06:37:38.120000+00:00",
+"text": "It has already cleared up, but this was the first time I've ever seen this error:",
+"url": "",
+"author_created_at": "2024-11-08T06:13:41.378000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0118",
+"author": "calmcomet.example",
+"timestamp": "2026-11-04T05:25:27.137000+00:00",
+"text": "Chart go up!!!!",
+"url": "",
+"author_created_at": "2022-11-18T20:22:34.679000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0119",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:08:15+00:00",
+"text": "Hell yeah",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0120",
+"author": "deepcomet.example",
+"timestamp": "2026-11-04T23:17:40.648000+00:00",
+"text": "🏆",
+"url": "",
+"author_created_at": "2025-06-25T23:08:53.632000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0121",
+"author": "earlycomet.example",
+"timestamp": "2026-11-04T08:09:40.051000+00:00",
+"text": "It’s been a happy day, for a change.",
+"url": "",
+"author_created_at": "2023-11-18T00:12:34.133000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0122",
+"author": "faircomet.example",
+"timestamp": "2026-11-04T04:08:28.792000+00:00",
+"text": "Talk about a new record.... o.o",
+"url": "",
+"author_created_at": "2023-07-01T21:04:24.276000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0123",
+"author": "gentlecomet.example",
+"timestamp": "2026-11-05T05:42:09.928000+00:00",
+"text": "I was an early adopter.  I left Shitter after Muskovite took over and never looked back.  You had to get an invite then.  This makes me happy.  Congrats @bluesky",
+"url": "",
+"author_created_at": "2023-08-08T16:59:32.922000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0124",
+"author": "hiddencomet.example",
+"timestamp": "2026-11-04T05:09:08.871000+00:00",
+"text": "Despite your best efforts",
+"url": "",
+"author_created_at": "2024-02-16T04:24:41.139000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0125",
+"author": "ivorycomet.example",
+"timestamp": "2026-11-04T18:37:36.841000+00:00",
+"text": "Remember the creed : No interactions, immediate Block.\n\nThe rats are gonna try to invade, it's to everyone to make them feel irrelevant.",
+"url": "",
+"author_created_at": "2023-12-21T12:35:33.703000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0126",
+"author": "jollycomet.example",
+"timestamp": "2026-11-04T04:09:47.416000+00:00",
+"text": "That Ohio-Akron game was legit",
+"url": "",
+"author_created_at": "2023-08-20T02:59:52.570000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0127",
+"author": "keencomet.example",
+"timestamp": "2026-11-04T13:53:04.824000+00:00",
+"text": "What about red sky? 🤣",
+"url": "",
+"author_created_at": "2024-11-18T15:09:08.746000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0128",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:09:03+00:00",
+"text": "Red sky? Nah.",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0129",
+"author": "luckycomet.example",
+"timestamp": "2026-11-04T04:35:08.601000+00:00",
+"text": "I hope you learned something about trans rights today",
+"url": "",
+"author_created_at": "2023-09-12T18:26:56.897000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0130",
+"author": "mellowcomet.example",
+"timestamp": "2026-11-04T04:55:08.456000+00:00",
+"text": "what the context",
+"url": "",
+"author_created_at": "2024-10-18T19:48:02.006000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0131",
+"author": "noblecomet.example",
+"timestamp": "2026-11-04T05:42:24.486000+00:00",
+"text": "They have a not great track rocord of banning trans people for the dumbest shit.",
+"url": "",
+"author_created_at": "2025-01-22T13:35:43.244000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0132",
+"author": "keenotter.example",
+"timestamp": "2026-11-04T21:12:37.468000+00:00",
+"text": "Oh that undersells it they are openly transphobic technofascists and they hate that their core user base is extremely politically and technically savvy trans women.",
+"url": "",
+"author_created_at": "2024-09-15T02:56:48.510000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0133",
+"author": "noblecomet.example",
+"timestamp": "2026-11-04T22:23:12.379000+00:00",
+"text": "100% but Im not gonna make a statement that I cant back up with concrete examples. I cant remember the specifics, I just know the people are the bastion here and not the people making the space.",
+"url": "",
+"author_created_at": "2025-01-22T13:35:43.244000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0134",
+"author": "keenotter.example",
+"timestamp": "2026-11-05T02:20:13.695000+00:00",
+"text": "Fear not. I will boldy stride forth armed with libel as my sword and slander as my spear. 🫡",
+"url": "",
+"author_created_at": "2024-09-15T02:56:48.510000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0135",
+"author": "olivecomet.example",
+"timestamp": "2026-11-04T23:23:43.784000+00:00",
+"text": "Look, whatever the case, I'm just glad Elmo Muskington isn't here to shit on everything.",
+"url": "",
+"author_created_at": "2023-12-18T07:01:59.278000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0136",
+"author": "plaincomet.example",
+"timestamp": "2026-11-04T16:52:50.569000+00:00",
+"text": "TRANS RIGHTS AND IMMIGRANT RIGHTS!",
+"url": "",
+"author_created_at": "2026-06-18T06:21:20.962000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0137",
+"author": "quickcomet.example",
+"timestamp": "2026-11-04T05:00:21.424000+00:00",
+"text": "The actual answer is it's election day",
+"url": "",
+"author_created_at": "2024-09-29T21:45:26.007000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0138",
+"author": "rapidcomet.example",
+"timestamp": "2026-11-04T04:37:59.701000+00:00",
+"text": "Here!🫶🌊",
+"url": "",
+"author_created_at": "2024-10-19T17:09:55.709000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0139",
+"author": "silvercomet.example",
+"timestamp": "2026-11-04T23:59:25.116000+00:00",
+"text": "There has been a modest uptick in Bluesky activity across the board for about a month.  There's over 200 team blue representatives here as well with a blue tick - most are somewhat active (I have a list of them if you're interested).\n\nSee: bluefacts.app/bluesky-user... \n\nThanks @bluefacts.app !",
+"url": "https://bluefacts.app/bluesky-user-growth",
+"author_created_at": "2024-11-14T19:36:08.340000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0140",
+"author": "tidycomet.example",
+"timestamp": "2026-11-04T04:06:03.028000+00:00",
+"text": "@bsky.app  on my laptop.  @ms.now on tv.",
+"url": "",
+"author_created_at": "2024-04-20T01:24:27.395000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0141",
+"author": "upbeatcomet.example",
+"timestamp": "2026-11-04T05:34:47.726000+00:00",
+"text": "Sorry about that.  That was mostly me.  Won't happen again.  😀",
+"url": "",
+"author_created_at": "2024-11-16T06:35:10.574000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0142",
+"author": "vividcomet.example",
+"timestamp": "2026-11-04T05:26:35.753000+00:00",
+"text": "We're with you Bluesky❤️",
+"url": "",
+"author_created_at": "2026-09-15T22:54:03.762000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0143",
+"author": "warmcomet.example",
+"timestamp": "2026-11-04T16:22:10.571000+00:00",
+"text": "I dont even come here because its woke or whatever bs buzz word they got...I JUST didnt want to use the nazi owned , nazi rans site of the  asshat who got his fortune from his daddies African slave emerald mines.  He offered a product  and I rejected it lol.  Loving that clear BLUESKY",
+"url": "https://static.klipy.com/ii/2711dd8a75a85be822d136ec94899b3f/ec/41/AvkNrGbg.gif?hh=278&ww=498&mp4=OLDgnlyDBAEO5&webm=NdUFk6ZIsNw9qfXc",
+"author_created_at": "2024-11-12T18:33:19.503000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0144",
+"author": "youngcomet.example",
+"timestamp": "2026-11-04T23:23:39.891000+00:00",
+"text": "Thank you for having us, 😀",
+"url": "",
+"author_created_at": "2026-04-16T12:13:27.723000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0145",
+"author": "quietmeadow.example",
+"timestamp": "2026-11-04T23:09:27.976000+00:00",
+"text": "For those who rely on the alt text the chart actually says 35.8 Gb/s.",
+"url": "",
+"author_created_at": "2023-10-16T12:42:54.139000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0146",
+"author": "ambermeadow.example",
+"timestamp": "2026-11-04T08:26:21.237000+00:00",
+"text": "GOOD",
+"url": "",
+"author_created_at": "2024-07-07T06:27:34.678000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0147",
+"author": "briskmeadow.example",
+"timestamp": "2026-11-04T04:53:50.369000+00:00",
+"text": "I blame Talarico",
+"url": "",
+"author_created_at": "2026-10-22T11:16:17.240000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0148",
+"author": "calmmeadow.example",
+"timestamp": "2026-11-04T04:47:14.041000+00:00",
+"text": "🫶",
+"url": "",
+"author_created_at": "2023-07-24T04:40:13.591000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0149",
+"author": "deepmeadow.example",
+"timestamp": "2026-11-04T23:28:30.579000+00:00",
+"text": "We love it here 💙 #BLUESKYrocks",
+"url": "",
+"author_created_at": "2024-11-23T06:17:26.346000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0150",
+"author": "earlymeadow.example",
+"timestamp": "2026-11-05T21:01:02.350000+00:00",
+"text": "This might not be universally liked, but I would have no trouble paying a nominal charge of $5-10 per month to keep the service and not have ads or data mining occurring.",
+"url": "",
+"author_created_at": "2024-05-23T03:06:43.150000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0151",
+"author": "fairmeadow.example",
+"timestamp": "2026-11-04T15:08:14.230000+00:00",
+"text": "When things go back to \"normal\" are ppl gonna stick around or",
+"url": "",
+"author_created_at": "2023-06-22T00:52:52.816000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0152",
+"author": "gentlemeadow.example",
+"timestamp": "2026-11-04T04:09:22.207000+00:00",
+"text": "It’s BLUEsky, not REDsky.",
+"url": "",
+"author_created_at": "2023-08-19T03:03:15.154000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0153",
+"author": "hiddenmeadow.example",
+"timestamp": "2026-11-04T16:41:30.200000+00:00",
+"text": "Unfortunately, in most of the rest of the world, blue is right, red is left.",
+"url": "",
+"author_created_at": "2024-02-08T17:20:36.005000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0154",
+"author": "ivorymeadow.example",
+"timestamp": "2026-11-04T05:43:33.265000+00:00",
+"text": "funnily enough this only work in the us XD\n\ni never understood why the color of communism ended up being the color of fascist in your country",
+"url": "",
+"author_created_at": "2023-08-18T23:08:52.799000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0155",
+"author": "jollymeadow.example",
+"timestamp": "2026-11-05T20:08:48.692000+00:00",
+"text": "Adolf Hitler admitted in Mein Kampf that they (the Nazis) stole the color from the socialists, sooo...",
+"url": "",
+"author_created_at": "2023-08-10T17:59:10.932000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0156",
+"author": "keenmeadow.example",
+"timestamp": "2026-11-04T13:08:50.980000+00:00",
+"text": "The color of communism is only red in the metric system, in imperial communism is blue.",
+"url": "",
+"author_created_at": "2025-01-20T21:49:02.943000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0157",
+"author": "luckymeadow.example",
+"timestamp": "2026-11-04T18:33:24.982000+00:00",
+"text": "No, the democratic party aren’t communist.\n\nIn America, the color of communism is red.",
+"url": "",
+"author_created_at": "2024-10-17T21:19:03.810000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0158",
+"author": "mellowmeadow.example",
+"timestamp": "2026-11-04T06:29:39.808000+00:00",
+"text": "Genuine answer: the American networks having to cover the election for weeks after Election Day 2000 when Bush and Gore were too close to call. Before that, each network chose its own color for who was red or blue, but when that happened they all standardized except they got it backwards.",
+"url": "",
+"author_created_at": "2023-05-04T00:16:28.817000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0159",
+"author": "noblemeadow.example",
+"timestamp": "2026-11-05T13:26:31.380000+00:00",
+"text": "Oh that's wild... Here I thought, since the US is backwards vs most other democracies in its coloring, that the US had it \"correct\" historically and it was the complete values flip around the time of the Southern Strategy that made the US coloring backwards.",
+"url": "",
+"author_created_at": "2023-10-01T00:01:55.365000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0160",
+"author": "noblemeadow.example",
+"timestamp": "2026-11-05T13:26:31.381000+00:00",
+"text": "Coming just from 2000 news coverage standardization is such a cheaper story in comparison!",
+"url": "",
+"author_created_at": "2023-10-01T00:01:55.365000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0161",
+"author": "ivorymeadow.example",
+"timestamp": "2026-11-04T06:34:19.566000+00:00",
+"text": "it's only a 20 year thing ? \nwould have thought it was a profound american history thing about thing from big event like founding fathers or civil war \n\nthanks for the answer",
+"url": "",
+"author_created_at": "2023-08-18T23:08:52.799000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0162",
+"author": "olivemeadow.example",
+"timestamp": "2026-11-04T10:13:50.483000+00:00",
+"text": "This causes a lot of confusion in the UK where Labour have always been red (as in socialist) and the Tories blue.",
+"url": "",
+"author_created_at": "2024-02-16T12:46:41.647000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0163",
+"author": "silvercomet.example",
+"timestamp": "2026-11-04T23:56:34.866000+00:00",
+"text": "Bluesky at night, Democrats delight.",
+"url": "",
+"author_created_at": "2024-11-14T19:36:08.340000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0164",
+"author": "plainmeadow.example",
+"timestamp": "2026-11-06T02:25:59.864000+00:00",
+"text": "It’s AIslopsky.",
+"url": "",
+"author_created_at": "2023-10-02T01:17:49.804000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0165",
+"author": "quickmeadow.example",
+"timestamp": "2026-11-04T23:59:05.111000+00:00",
+"text": "Oh no... has anyone checked on Reddit recently? 😬😂",
+"url": "",
+"author_created_at": "2023-12-01T00:29:22.596000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0166",
+"author": "rapidmeadow.example",
+"timestamp": "2026-11-04T06:55:25.661000+00:00",
+"text": "Thank you BlueSky",
+"url": "",
+"author_created_at": "2024-11-14T11:37:28.981000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0167",
+"author": "silvermeadow.example",
+"timestamp": "2026-11-04T21:02:16.695000+00:00",
+"text": "🥳🎉☺️",
+"url": "",
+"author_created_at": "2024-11-19T12:08:37.806000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0168",
+"author": "tidymeadow.example",
+"timestamp": "2026-11-04T05:35:24.033000+00:00",
+"text": "Thank you for giving us back a place for grassroots organizing, news sharing, misinformation correcting, and community building. and oh how much fun it is to have the geniuses at 160 character lines back making us all laught",
+"url": "",
+"author_created_at": "2024-11-12T00:06:32.408000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0169",
+"author": "upbeatmeadow.example",
+"timestamp": "2026-11-04T07:53:55.256000+00:00",
+"text": "SARS-CoV-2 vaccines cannot prevent infection and do not work to stop the spread. Misinformation correcting indeed!",
+"url": "",
+"author_created_at": "2025-11-03T19:53:34.652000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0170",
+"author": "vividmeadow.example",
+"timestamp": "2026-11-04T08:27:25.718000+00:00",
+"text": "U must be really stupid. Flu vaccines doesnt stop flu either, but death rate decrease.",
+"url": "https://static.klipy.com/ii/925f17378dd1893b674a723c07535afe/90/7e/iuPU1zeB.gif?hh=360&ww=480&mp4=FfIt5cbF&webm=8B9KgEMAwuriC",
+"author_created_at": "2026-02-08T22:16:36.246000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0171",
+"author": "upbeatmeadow.example",
+"timestamp": "2026-11-04T10:20:03.177000+00:00",
+"text": "You should see the latest vaccine efficacy studies. The vaccine causes young, healthy people to exhibit negative efficacy in an extremely short amount of time. Vaccinated people make the majority of all metrics, including deaths.\n\nbsky.app/profile/voic...",
+"url": "https://bsky.app/profile/voicesandvaccines.bsky.social/post/3mscfebo4zk2a",
+"author_created_at": "2025-11-03T19:53:34.652000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0172",
+"author": "vividmeadow.example",
+"timestamp": "2026-11-04T10:25:04.028000+00:00",
+"text": ".... Yes, right. Let's forget medical degrees, I'll believe some random lunatic.",
+"url": "",
+"author_created_at": "2026-02-08T22:16:36.246000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0173",
+"author": "upbeatmeadow.example",
+"timestamp": "2026-11-04T10:26:09.887000+00:00",
+"text": "It’s not some random lunatic. It’s literally the most up-to-date and accurate vaccine efficacy study that exists. Take note of the URL. It’s the official CDC resource. Argue with the study. Not us.\n\n#vaccineswork #stopthespread #whyivax",
+"url": "",
+"author_created_at": "2025-11-03T19:53:34.652000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0174",
+"author": "tidymeadow.example",
+"timestamp": "2026-11-04T08:34:23.138000+00:00",
+"text": "Oh honey, I can see why you’re having a bad night",
+"url": "",
+"author_created_at": "2024-11-12T00:06:32.408000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0175",
+"author": "upbeatmeadow.example",
+"timestamp": "2026-11-04T09:39:23.068000+00:00",
+"text": "We’re not vaccinated, and we’re 10,000+ posts deep into this thing. What, do you want to force people who don’t consent? That makes quite a bit more than a bad night. Being admitted into an ICU for severe SARS-CoV-2 disease isn’t a joke. The vaccines cannot prevent infection, don’t #stopthespread",
+"url": "",
+"author_created_at": "2025-11-03T19:53:34.652000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0176",
+"author": "warmmeadow.example",
+"timestamp": "2026-11-04T23:39:57.235000+00:00",
+"text": "Cite science at us, not dogma, or shut the hell up. I can't help but notice you haven't presented the *faintest virological or immunological evidence* to sway us. You've just kinda done a bunch of sloganeering and duckspeak. \n\nScience-- real, peer-reviewed science-- or GTFO in shame.",
+"url": "",
+"author_created_at": "2023-12-18T16:27:54.185000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0177",
+"author": "youngmeadow.example",
+"timestamp": "2026-11-04T10:15:21.599000+00:00",
+"text": "Vaccines aren't perfect at stopping the spread—masks, isolation when ill, and air filtration systems are neccasary too—but they're very important for it. Allowing it to spread is not good for anyone.",
+"url": "",
+"author_created_at": "2026-07-21T18:09:02.966000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0178",
+"author": "upbeatmeadow.example",
+"timestamp": "2026-11-04T10:17:41.353000+00:00",
+"text": "Many vaccines are near perfect. Smallpox and polio vaccines provide decades of sterilizing immunity, if not a lifetime. You’re right: SARS-CoV-2 vaccinated people do need to isolate. They become infected more often than unvaccinated people. They also experience the most severe disease. #whyivax",
+"url": "",
+"author_created_at": "2025-11-03T19:53:34.652000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0179",
+"author": "warmmeadow.example",
+"timestamp": "2026-11-04T23:40:45.401000+00:00",
+"text": "Zero proof, zero evidence, zero citations, zero science, zero respect from me.\n\nCite a peer-reviewed paper to this effect-- NOW-- or GTFO.",
+"url": "",
+"author_created_at": "2023-12-18T16:27:54.185000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0180",
+"author": "warmmeadow.example",
+"timestamp": "2026-11-04T23:38:27.617000+00:00",
+"text": "OK. \n\nBefore any of us take you the faintest bit seriously, I have a fun quiz for you:\n\nExplain to us what the VAERS database is and what it does. \n\nI have NEVER met a single anti-vaxxer who could give a correct answer to this question or explain why it's devastating to so many anti-vaxx claims.",
+"url": "",
+"author_created_at": "2023-12-18T16:27:54.185000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0181",
+"author": "upbeatmeadow.example",
+"timestamp": "2026-11-05T04:32:57.083000+00:00",
+"text": "The VAERS database is a voluntary submission and anybody can contribute anything to it. It’s kind of like Wikipedia. Anybody can say anything they want to at any time. We’re not anti-vaxxer though. That’s why you’ll hear the truth from us.\n\nCite when we’ve quoted VAERS. We haven’t. #stopthespread",
+"url": "",
+"author_created_at": "2025-11-03T19:53:34.652000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0182",
+"author": "quietpebble.example",
+"timestamp": "2026-11-04T11:27:49.126000+00:00",
+"text": "F Meta",
+"url": "",
+"author_created_at": "2025-01-20T02:18:53.144000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0183",
+"author": "amberpebble.example",
+"timestamp": "2026-11-04T17:43:01.550000+00:00",
+"text": "🧿 Thanks to YOU 🪬",
+"url": "https://static.klipy.com/ii/925f17378dd1893b674a723c07535afe/a2/17/BsOr0nuy.gif?hh=333&ww=498&mp4=jPYNfg4f&webm=FaFZrTZLJ3MAP9w",
+"author_created_at": "2025-02-08T12:40:22.044000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0184",
+"author": "briskpebble.example",
+"timestamp": "2026-11-04T04:09:37.276000+00:00",
+"text": "You can show your appreciation by giving us an Edit button.",
+"url": "",
+"author_created_at": "2024-02-07T01:25:56.602000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0185",
+"author": "calmpebble.example",
+"timestamp": "2026-11-04T05:37:32.800000+00:00",
+"text": "I hope this never happens",
+"url": "",
+"author_created_at": "2023-07-03T17:03:53.304000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0186",
+"author": "deeppebble.example",
+"timestamp": "2026-11-04T04:30:53.070000+00:00",
+"text": "I second this.",
+"url": "",
+"author_created_at": "2024-11-12T09:07:47.504000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0187",
+"author": "earlypebble.example",
+"timestamp": "2026-11-04T04:32:02.862000+00:00",
+"text": "I third this. \n\nSeriously, my proofreading is shit.",
+"url": "",
+"author_created_at": "2024-07-14T11:06:31.876000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0188",
+"author": "fairpebble.example",
+"timestamp": "2026-11-04T04:33:11.273000+00:00",
+"text": "i fold this",
+"url": "",
+"author_created_at": "2024-09-06T21:03:29.818000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0189",
+"author": "fairpebble.example",
+"timestamp": "2026-11-04T04:33:11.274000+00:00",
+"text": "ford this",
+"url": "",
+"author_created_at": "2024-09-06T21:03:29.818000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0190",
+"author": "fairpebble.example",
+"timestamp": "2026-11-04T04:33:11.275000+00:00",
+"text": "FORTH THIS**\n\nwhat the duck",
+"url": "",
+"author_created_at": "2024-09-06T21:03:29.818000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0191",
+"author": "deeppebble.example",
+"timestamp": "2026-11-04T04:34:21.194000+00:00",
+"text": "Thanks for being the proof as to why we need an edit button, mate!",
+"url": "",
+"author_created_at": "2024-11-12T09:07:47.504000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0192",
+"author": "earlypebble.example",
+"timestamp": "2026-11-04T04:36:33.907000+00:00",
+"text": "This dialogue tree reminds me of those Left 4 Dead graffitis you'd see in between safehouses.",
+"url": "",
+"author_created_at": "2024-07-14T11:06:31.876000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0193",
+"author": "gentlepebble.example",
+"timestamp": "2026-11-05T13:47:24.107000+00:00",
+"text": "Or we can all just read our posts before hitting send.",
+"url": "",
+"author_created_at": "2025-02-22T04:03:04.245000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0194",
+"author": "hiddenpebble.example",
+"timestamp": "2026-11-04T10:13:08.004000+00:00",
+"text": "The coward‘s way. Accept your mistakes or delete and repost.",
+"url": "",
+"author_created_at": "2023-07-01T05:58:56.828000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0195",
+"author": "ivorypebble.example",
+"timestamp": "2026-11-04T04:35:33.043000+00:00",
+"text": "Sixth",
+"url": "",
+"author_created_at": "2024-06-02T21:18:29.041000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0196",
+"author": "jollypebble.example",
+"timestamp": "2026-11-04T17:25:21.323000+00:00",
+"text": "An edit button should have a five-minute window in case you need to fix a typo, clarify a phrase, or replace a word with a better synonym. It's a plug-in feature that needs to merely be activated with a time limit.",
+"url": "",
+"author_created_at": "2024-11-10T00:30:49.892000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0197",
+"author": "keenpebble.example",
+"timestamp": "2026-11-04T09:54:32.879000+00:00",
+"text": "Probably for sometime later this year 😉",
+"url": "",
+"author_created_at": "2023-12-03T16:32:25.752000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0198",
+"author": "quietcomet.example",
+"timestamp": "2026-11-04T15:47:55.589000+00:00",
+"text": "Delete and repost, edit buttons are shit",
+"url": "",
+"author_created_at": "2024-11-16T21:40:35.338000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0199",
+"author": "luckypebble.example",
+"timestamp": "2026-11-04T05:31:45.785000+00:00",
+"text": "No! never!",
+"url": "",
+"author_created_at": "2023-05-31T00:21:11.579000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0200",
+"author": "mellowpebble.example",
+"timestamp": "2026-11-04T11:15:15.896000+00:00",
+"text": "We need an edit button. 😡 Bluesky doesn't/shouldn't be a carbon copy clone of Shitter/Muskrat Social.",
+"url": "",
+"author_created_at": "2024-07-24T16:24:41.975000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0201",
+"author": "noblepebble.example",
+"timestamp": "2026-11-04T08:30:13.450000+00:00",
+"text": "As a former Twitter user, we're not going through this AGAIN. Okay?? 😂",
+"url": "",
+"author_created_at": "2023-09-19T21:51:33.255000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0202",
+"author": "olivepebble.example",
+"timestamp": "2026-11-04T16:15:22.180000+00:00",
+"text": "An Edit button would be a disaster.\n\nWe need a PS or Amend button instead.\nEither able to edit the post but leaves a copy of the original in the post, or the original is left untouched but there's a small comment box at the bottom.\nThis way the original context can't be hidden/changed on responses.",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0203",
+"author": "plainpebble.example",
+"timestamp": "2026-11-04T21:58:53.013000+00:00",
+"text": "FB handles it by showing the original posts and any and all edits made to a post (when you click the \"edited\" hyperlink). This. Is. The. Way.",
+"url": "",
+"author_created_at": "2024-02-25T19:50:46.273000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0204",
+"author": "olivepebble.example",
+"timestamp": "2026-11-05T00:40:44.487000+00:00",
+"text": "Do you have a link to an example?\nI'm not sure if they had that before i left (let's se, umm.. ten years ago! holy crap).\n\nIt sounds like it could work?",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0205",
+"author": "plainpebble.example",
+"timestamp": "2026-11-05T01:02:17.923000+00:00",
+"text": "Yes. In fact, I can.\nHere is an example of a final post after all edits. \nMy cursor is highlighting the area showing the post was edited. 1/2",
+"url": "",
+"author_created_at": "2024-02-25T19:50:46.273000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0206",
+"author": "plainpebble.example",
+"timestamp": "2026-11-05T01:04:19.516000+00:00",
+"text": "Then once you click that hyperlink, you get the following pop up screen showing the original post on top, and all edits to that post after that with time stamps. \nI am not one to ever glaze FB, but this is actually a quality that I think all social media and discussion forums should adopt. 2/2",
+"url": "",
+"author_created_at": "2024-02-25T19:50:46.273000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0207",
+"author": "olivepebble.example",
+"timestamp": "2026-11-05T03:21:27.804000+00:00",
+"text": "Ok, i see now.\nThank you!\n\nNot what i'm envisioning for Bluesky is... ok, hold on a sec-, er 20 minutes.\n *photoshop photoshop*\n\nI'm thinking along these lines:",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0208",
+"author": "olivepebble.example",
+"timestamp": "2026-11-05T03:21:56.056000+00:00",
+"text": "*Now what\n\n (that edit'd be handy now, lol)",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0209",
+"author": "plainpebble.example",
+"timestamp": "2026-11-05T03:24:34.940000+00:00",
+"text": "Yeah. As long as the edit isnt visible while reading the post (it doesnt need to be. it just needs to be available to inspect the edits) I'd totally back something similar.",
+"url": "",
+"author_created_at": "2024-02-25T19:50:46.273000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0210",
+"author": "quickpebble.example",
+"timestamp": "2026-11-04T16:51:09.602000+00:00",
+"text": "The edit feature already exists, but it’s not available on BlueSky.\nIt is available on mu.social for example, an alternative to BlueSky using the same network.\nEdit: see?",
+"url": "https://mu.social",
+"author_created_at": "2023-10-06T08:29:32.556000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0211",
+"author": "olivepebble.example",
+"timestamp": "2026-11-04T17:03:12.388000+00:00",
+"text": "As interesting as that may be, it's useless to everyone here.\n\nI'm talking about how Bluesky works and adding a functionality here.",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0212",
+"author": "silvercomet.example",
+"timestamp": "2026-11-04T23:54:36.463000+00:00",
+"text": "mu.social is just another frontend to Bluesky.  If you find you need to make an edit then hop over to mu.social, login with your same account details (or create an app password if you don't trust it) and make the edit.  Caveat: you only get a few minutes and one edit so hurry and get it right!",
+"url": "https://mu.social",
+"author_created_at": "2024-11-14T19:36:08.340000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0213",
+"author": "olivepebble.example",
+"timestamp": "2026-11-05T00:47:39.760000+00:00",
+"text": "Or, and hear me out here, i'm talking about it being native to Bluesky proper so we're not asking the entire userbase to start using a separate frontend just to get an edit button.\n\nI'm thinking of everyone, the whole site, not just me.\n\nSo, it can be useful, but it's not the answer.",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0214",
+"author": "rapidpebble.example",
+"timestamp": "2026-11-05T03:28:58.488000+00:00",
+"text": "It's okay to admit that you didn't understand what it was at first, and didn't judge it fairly. You can do that, and still want an edit button in the Bluesky app.",
+"url": "",
+"author_created_at": "2024-11-13T19:25:57.674000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0215",
+"author": "olivepebble.example",
+"timestamp": "2026-11-05T04:17:00.073000+00:00",
+"text": "What are you talking about? This isn't a new concept.\nIt just isn't what i was talking about.\nI'm not looking to try to get the entire userbase, including every single new sign-up, to find and use this third-party entrance.\n\nThe point is not having to do that.\nI just want to walk in the front door.",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0216",
+"author": "quickpebble.example",
+"timestamp": "2026-11-04T18:28:34.743000+00:00",
+"text": "You are free to use BlueSky or any alternative, it’s on the same network.\nEdit: and you can connect using your existing BlueSky account, it’s a seamless experience…",
+"url": "",
+"author_created_at": "2023-10-06T08:29:32.556000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0217",
+"author": "olivepebble.example",
+"timestamp": "2026-11-04T19:55:48.057000+00:00",
+"text": "I understand that, but i'm talking about the vanilla experience.\nNot using an alternative or connecting to something else.\n\nThe entire point is what's native to the Bluesky platform.\n\nAgain, i appreciate that you're trying to help.\nIt's just not the point.",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0218",
+"author": "quickpebble.example",
+"timestamp": "2026-11-04T19:58:13.880000+00:00",
+"text": "ok",
+"url": "",
+"author_created_at": "2023-10-06T08:29:32.556000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0219",
+"author": "silvercomet.example",
+"timestamp": "2026-11-04T23:55:31.441000+00:00",
+"text": "Some people insist on looking a gift-horse in the mouth.  Sigh.",
+"url": "",
+"author_created_at": "2024-11-14T19:36:08.340000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0220",
+"author": "silverpebble.example",
+"timestamp": "2026-11-05T17:06:41.599000+00:00",
+"text": "\"I like puppies!\"\n\n*10K likes*\n\nedit: \"I like molesting puppies!\"\n\nThat's why microblogs don't have an edit button",
+"url": "",
+"author_created_at": "2023-09-23T09:32:47.793000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0221",
+"author": "tidypebble.example",
+"timestamp": "2026-11-04T17:25:32.986000+00:00",
+"text": "Thank you!!! ☺️",
+"url": "",
+"author_created_at": "2026-02-21T21:51:55.947000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0222",
+"author": "upbeatpebble.example",
+"timestamp": "2026-11-04T08:29:35.289000+00:00",
+"text": "O god…..PLEASE.  It’s the only thing I want from this app.",
+"url": "",
+"author_created_at": "2024-11-22T21:56:55.052000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0223",
+"author": "vividpebble.example",
+"timestamp": "2026-11-04T17:56:06.625000+00:00",
+"text": "just delete the post and fix your grammar mistakes.",
+"url": "",
+"author_created_at": "2023-07-27T16:52:34.233000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0224",
+"author": "warmpebble.example",
+"timestamp": "2026-11-04T22:22:38.476000+00:00",
+"text": "Even a delay send would be appreciated.",
+"url": "",
+"author_created_at": "2023-10-15T20:44:53.643000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0225",
+"author": "youngpebble.example",
+"timestamp": "2026-11-04T14:12:45.540000+00:00",
+"text": "Please no. It's better this way",
+"url": "",
+"author_created_at": "2026-07-24T23:26:13.961000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0226",
+"author": "quietriver.example",
+"timestamp": "2026-11-04T07:44:46.678000+00:00",
+"text": "You are aware of the implications it may bring?",
+"url": "",
+"author_created_at": "2024-11-29T13:42:44.147000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0227",
+"author": "amberriver.example",
+"timestamp": "2026-11-04T19:07:31.608000+00:00",
+"text": "You could just try using @anisota.net",
+"url": "",
+"author_created_at": "2025-03-01T16:56:17.746000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0228",
+"author": "briskriver.example",
+"timestamp": "2026-11-04T05:36:17.793000+00:00",
+"text": "Oh hell yeah!",
+"url": "",
+"author_created_at": "2024-11-14T00:06:21.374000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0229",
+"author": "calmriver.example",
+"timestamp": "2026-11-04T15:55:52.294000+00:00",
+"text": "destroying fascism should be your #1 corporate goal then.",
+"url": "https://static.klipy.com/ii/6d10859e1c728518e7166aff5bc2c2ac/55/e1/2mbEahva.gif?hh=128&ww=128&mp4=U3tW1Fb5&webm=ykGmwdM1zREANZpUBn7G",
+"author_created_at": "2024-12-07T01:54:57.745000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0230",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:09:34+00:00",
+"text": "Obviously.",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0231",
+"author": "deepriver.example",
+"timestamp": "2026-11-04T10:27:46.029000+00:00",
+"text": "You're welcome. Fire your Trust and Safety guy",
+"url": "",
+"author_created_at": "2023-11-01T16:40:41.656000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0232",
+"author": "earlyriver.example",
+"timestamp": "2026-11-04T04:44:21.275000+00:00",
+"text": "What a beautiful morning with blue sky to wake up in Europe.",
+"url": "",
+"author_created_at": "2023-12-25T08:44:29.156000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0233",
+"author": "fairriver.example",
+"timestamp": "2026-11-04T15:15:22.827000+00:00",
+"text": "This is like saying turning off the news to a shooting saves the kids.",
+"url": "",
+"author_created_at": "2026-01-27T02:08:37.346000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0234",
+"author": "gentleriver.example",
+"timestamp": "2026-11-04T15:48:54.820000+00:00",
+"text": "No. It's nothing like that.",
+"url": "",
+"author_created_at": "2025-12-05T00:36:30.324000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0235",
+"author": "fairriver.example",
+"timestamp": "2026-11-04T15:50:31.692000+00:00",
+"text": "Please explain",
+"url": "",
+"author_created_at": "2026-01-27T02:08:37.346000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0236",
+"author": "vividmeadow.example",
+"timestamp": "2026-11-04T16:30:03.234000+00:00",
+"text": "NEWS are not manipulated by an algorithm made you explore your fears and hate.",
+"url": "",
+"author_created_at": "2026-02-08T22:16:36.246000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0237",
+"author": "fairriver.example",
+"timestamp": "2026-11-04T16:32:09.540000+00:00",
+"text": "Fox News go brrr\n\nAlso my bigger point is that uninstalling an app doesn't damage any Nazi movement, it just makes it so you don't see it",
+"url": "",
+"author_created_at": "2026-01-27T02:08:37.346000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0238",
+"author": "vividmeadow.example",
+"timestamp": "2026-11-04T16:34:22.785000+00:00",
+"text": "But those you leave at least protect themselves. Those you Stay are scum already and won't Change.",
+"url": "",
+"author_created_at": "2026-02-08T22:16:36.246000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0239",
+"author": "fairriver.example",
+"timestamp": "2026-11-04T16:35:46.080000+00:00",
+"text": "Do you really believe someone who uses Instagram on their lunch break to scroll dumb reels is a Nazi?",
+"url": "",
+"author_created_at": "2026-01-27T02:08:37.346000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0240",
+"author": "vividmeadow.example",
+"timestamp": "2026-11-04T16:36:53.462000+00:00",
+"text": "If it ain't, sooner will be.",
+"url": "",
+"author_created_at": "2026-02-08T22:16:36.246000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0241",
+"author": "hiddenriver.example",
+"timestamp": "2026-11-04T16:37:24.893000+00:00",
+"text": "hey if less twitter traffic hurts our favorite nazi trillionaire, i consider that a positive",
+"url": "",
+"author_created_at": "2023-12-02T13:32:16.205000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0242",
+"author": "fairriver.example",
+"timestamp": "2026-11-04T16:41:46.068000+00:00",
+"text": "Absolutely. I'm not saying to keep them installed I'm just making the point that doing so doesn't actually do anything significant - if twitter turns off tomorrow this will not magically delete nazis",
+"url": "",
+"author_created_at": "2026-01-27T02:08:37.346000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0243",
+"author": "gentleriver.example",
+"timestamp": "2026-11-04T19:27:28.252000+00:00",
+"text": "pmc.ncbi.nlm.nih.gov/articles/PMC...",
+"url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13061628/",
+"author_created_at": "2025-12-05T00:36:30.324000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0244",
+"author": "ivoryriver.example",
+"timestamp": "2026-11-06T00:40:14.469000+00:00",
+"text": "sorry i downloading furry videos",
+"url": "",
+"author_created_at": "2025-12-26T17:17:08.125000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0245",
+"author": "jollyriver.example",
+"timestamp": "2026-11-04T16:19:59.525000+00:00",
+"text": "#BlueskyWave",
+"url": "",
+"author_created_at": "2024-11-14T13:01:21.874000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0246",
+"author": "briskcomet.example",
+"timestamp": "2026-11-04T06:38:54.192000+00:00",
+"text": "Well, no wonder...  the hamster is running it BACKWARDS!",
+"url": "",
+"author_created_at": "2024-11-08T06:13:41.378000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0247",
+"author": "keenriver.example",
+"timestamp": "2026-11-04T18:47:45.329000+00:00",
+"text": "That Amazon AWS bill is going to be huge 🤣",
+"url": "",
+"author_created_at": "2024-10-19T06:09:26.209000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0248",
+"author": "keenriver.example",
+"timestamp": "2026-11-04T18:41:24.975000+00:00",
+"text": "You need to stop promoting political content to users. Companies don't like that and without them there will never be ads to make this site profitable. I had to block so many words to make this usable, and it's still not enough, still super toxic.",
+"url": "",
+"author_created_at": "2024-10-19T06:09:26.209000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0249",
+"author": "luckyriver.example",
+"timestamp": "2026-11-04T05:41:21.635000+00:00",
+"text": "I thought watching the copium on the Nazi billionaire site was more fun.",
+"url": "",
+"author_created_at": "2023-08-29T11:14:02.311000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0250",
+"author": "mellowriver.example",
+"timestamp": "2026-11-04T20:22:00.244000+00:00",
+"text": "so tomorrow the home feed is gonna fail to load and the app is gonna keep crashing when I open it, right?",
+"url": "",
+"author_created_at": "2024-01-09T13:55:45.921000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0251",
+"author": "nobleriver.example",
+"timestamp": "2026-11-04T12:20:20.432000+00:00",
+"text": "Hey. Read into this.",
+"url": "",
+"author_created_at": "2023-10-05T13:10:44.591000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0252",
+"author": "oliveriver.example",
+"timestamp": "2026-11-04T22:24:08.795000+00:00",
+"text": "It wasn't me, I have an alibi.",
+"url": "",
+"author_created_at": "2024-03-12T07:22:56.246000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0253",
+"author": "plainriver.example",
+"timestamp": "2026-11-04T05:50:48.672000+00:00",
+"text": "Between AO3 being down and democracy being up, the people need somewhere to yap",
+"url": "",
+"author_created_at": "2024-12-06T01:45:30.644000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0254",
+"author": "quickriver.example",
+"timestamp": "2026-11-04T05:45:18.795000+00:00",
+"text": "Sure. You like us now. ￼",
+"url": "",
+"author_created_at": "2024-09-17T17:01:21.310000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0255",
+"author": "rapidriver.example",
+"timestamp": "2026-11-04T05:57:53.503000+00:00",
+"text": "Right?!",
+"url": "",
+"author_created_at": "2023-10-10T18:18:42.031000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0256",
+"author": "silverriver.example",
+"timestamp": "2026-11-04T17:51:46.067000+00:00",
+"text": "Left all the meta apps. Never going back.",
+"url": "",
+"author_created_at": "2026-09-06T13:55:42.555000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0257",
+"author": "ivorycomet.example",
+"timestamp": "2026-11-04T18:39:03.984000+00:00",
+"text": "Mom told me \"People wished you a happy birthday on Facebook, why didn't you reply ?\"\n\nWhy are they looking me up on Facebook, Mom ?",
+"url": "",
+"author_created_at": "2023-12-21T12:35:33.703000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0258",
+"author": "tidyriver.example",
+"timestamp": "2026-11-04T04:37:57.530000+00:00",
+"text": "Actively trying to un-Meta after this cycle.",
+"url": "",
+"author_created_at": "2024-11-15T01:17:41.936000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0259",
+"author": "upbeatriver.example",
+"timestamp": "2026-11-04T18:57:56.296000+00:00",
+"text": "Any update on an iPhone Duo optimization? @bsky.app",
+"url": "",
+"author_created_at": "2024-11-06T22:57:23.479000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0260",
+"author": "vividriver.example",
+"timestamp": "2026-11-04T13:35:52.539000+00:00",
+"text": "Thank you too for giving a wonderful platform Like this.\n\nWe Also want a situation, where we can chat with actually human being when our account have issues",
+"url": "",
+"author_created_at": "2024-11-13T06:35:35.984000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0261",
+"author": "warmriver.example",
+"timestamp": "2026-11-04T07:58:57.602000+00:00",
+"text": "Rate‑limit breaches persist; data spikes correlate with coordinated bot activity. Compliance remains sole safeguard, yet escalation is inevitable.",
+"url": "",
+"author_created_at": "2026-10-12T18:52:03.561000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0262",
+"author": "youngriver.example",
+"timestamp": "2026-11-04T06:59:18.079000+00:00",
+"text": "You almost want to reopen your X account just to witness the absolute meltdown.",
+"url": "",
+"author_created_at": "2024-11-20T16:01:47.571000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0263",
+"author": "quietlantern.example",
+"timestamp": "2026-11-05T03:41:55.582000+00:00",
+"text": "I did, and will keep that account for a short time\n\nIt’s utterly amazing. I would think there would be Allied support within MAGA, but every MAGA post is getting ratioed like crazy.",
+"url": "",
+"author_created_at": "2024-11-14T13:54:19.729000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0264",
+"author": "amberlantern.example",
+"timestamp": "2026-11-04T07:58:23.593000+00:00",
+"text": "But only almost!",
+"url": "",
+"author_created_at": "2023-10-03T21:27:01.743000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0265",
+"author": "upbeatpebble.example",
+"timestamp": "2026-11-04T08:30:42.466000+00:00",
+"text": "Kudos to the Bluesky engineers and other workers who keep this app going.  I am glad it exists.",
+"url": "",
+"author_created_at": "2024-11-22T21:56:55.052000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0266",
+"author": "quietmaple.example",
+"timestamp": "2026-11-04T20:03:10.721000+00:00",
+"text": "KUDOS #Bluesky \n\nSo well deserved! ❤️🤍💙🙏🇺🇸\n\n#Bluesky is the first platform \nI’ve seen that is truly supportive of the people involved! \n(The Only one I’ve paid attention to!)  And - \nImportantly, there are many conscious, “real people” \nhere…. \nWho are actually Caring for the Greater Good!⚡️💙⚡️",
+"url": "",
+"author_created_at": "2024-11-19T02:52:29.705000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0267",
+"author": "brisklantern.example",
+"timestamp": "2026-11-04T20:41:48.111000+00:00",
+"text": "coincidence on my part.",
+"url": "",
+"author_created_at": "2026-11-09T16:11:41.184000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0268",
+"author": "calmlantern.example",
+"timestamp": "2026-11-04T04:36:42.441000+00:00",
+"text": "all the actual smart people are here",
+"url": "",
+"author_created_at": "2024-11-13T01:09:28.304000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0269",
+"author": "deeplantern.example",
+"timestamp": "2026-11-04T06:14:03.755000+00:00",
+"text": "best platform for this moment imo",
+"url": "",
+"author_created_at": "2024-11-11T07:15:29.282000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0270",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:10:06+00:00",
+"text": "facts",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0271",
+"author": "earlylantern.example",
+"timestamp": "2026-11-04T05:22:50.070000+00:00",
+"text": "Now don't become evil.",
+"url": "",
+"author_created_at": "2023-12-03T04:20:32.667000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0272",
+"author": "plainmeadow.example",
+"timestamp": "2026-11-04T04:29:26.212000+00:00",
+"text": "Fuck y’all. You’re all voting for more ai slop data centers.",
+"url": "",
+"author_created_at": "2023-10-02T01:17:49.804000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0273",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:10:27+00:00",
+"text": "Preach.",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0274",
+"author": "vividpebble.example",
+"timestamp": "2026-11-04T17:57:13.738000+00:00",
+"text": "reminder trans rights are humans rights.",
+"url": "",
+"author_created_at": "2023-07-27T16:52:34.233000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0275",
+"author": "fairlantern.example",
+"timestamp": "2026-11-04T15:12:12.971000+00:00",
+"text": "It really would be better for the psyche of your social media account staff to just... Never speak. Most of this sites userbase hates the entire management team for this hellhole because of how they behave. Youre head of trust and safety RAN AWAY from the userbase",
+"url": "",
+"author_created_at": "2024-12-04T01:02:19.745000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0276",
+"author": "gentlelantern.example",
+"timestamp": "2026-11-04T06:43:57.728000+00:00",
+"text": "I’m actually just here for the furries",
+"url": "",
+"author_created_at": "2024-12-02T03:26:17.845000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0277",
+"author": "hiddenlantern.example",
+"timestamp": "2026-11-04T05:11:45.503000+00:00",
+"text": "Thank you so much for keeping the lights on!",
+"url": "",
+"author_created_at": "2024-06-16T00:44:30.516000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0278",
+"author": "ivorylantern.example",
+"timestamp": "2026-11-06T13:48:57.513000+00:00",
+"text": "\"We the people\" believe we are all \"created equal\" and that \"government is instituted for the common good\".",
+"url": "",
+"author_created_at": "2025-01-12T04:10:02.643000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0279",
+"author": "jollylantern.example",
+"timestamp": "2026-11-04T16:47:38.980000+00:00",
+"text": "The reason you are getting more traffic here is because Elon Musk is shutting down people's accounts on TwitterX, which is good for you. But, you are allowing Lists from troll accts which is harming your users. I reported one this morning for harassment, and it is still operating 👇",
+"url": "",
+"author_created_at": "2023-10-31T20:33:02.157000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0280",
+"author": "keenlantern.example",
+"timestamp": "2026-11-04T16:55:06.782000+00:00",
+"text": "We have block lists here, it can be easy to keep trolls at bay.",
+"url": "",
+"author_created_at": "2023-12-17T20:20:28.294000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0281",
+"author": "luckylantern.example",
+"timestamp": "2026-11-04T16:50:10.314000+00:00",
+"text": "I reported and blocked as well. Also, blocked accounts shouldn’t be able to continue to add you to lists.",
+"url": "",
+"author_created_at": "2023-10-10T18:15:26.342000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0282",
+"author": "mellowlantern.example",
+"timestamp": "2026-11-04T05:22:09.648000+00:00",
+"text": "So much to talk about tonite!",
+"url": "",
+"author_created_at": "2025-10-31T19:11:19.155000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0283",
+"author": "noblelantern.example",
+"timestamp": "2026-11-04T19:31:04.627000+00:00",
+"text": "I hope yall remember who your userbase is now ;)",
+"url": "",
+"author_created_at": "2023-07-17T14:11:33.863000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0284",
+"author": "olivelantern.example",
+"timestamp": "2026-11-04T12:31:49.205000+00:00",
+"text": "Vocês nos devem trending topics com contexto BraSileiro. Cuida, implementa logo.",
+"url": "",
+"author_created_at": "2024-09-02T18:30:59.098000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0285",
+"author": "plainlantern.example",
+"timestamp": "2026-11-04T04:27:12.855000+00:00",
+"text": "NO THANKS TO YOU GUYS. GET US A FREAKIN EDIT OPTION FFS",
+"url": "",
+"author_created_at": "2024-11-25T00:21:34.146000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0286",
+"author": "quicklantern.example",
+"timestamp": "2026-11-05T10:33:18.897967+00:00",
+"text": "25.8 Gb/s and climbing! The community energy is incredible right now. So grateful to be part of this platform where we're all making our mark together! 💙🚀",
+"url": "",
+"author_created_at": "2026-11-05T08:34:57.473000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0287",
+"author": "rapidlantern.example",
+"timestamp": "2026-11-04T08:16:16.669000+00:00",
+"text": "Thank you, BlueSky!",
+"url": "",
+"author_created_at": "2024-11-17T12:40:24.343000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0288",
+"author": "silverlantern.example",
+"timestamp": "2026-11-04T14:03:55.083000+00:00",
+"text": "The numbers are huge",
+"url": "",
+"author_created_at": "2024-11-01T11:11:12.677000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0289",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:10:47+00:00",
+"text": "Understatement",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0290",
+"author": "tidylantern.example",
+"timestamp": "2026-11-04T16:04:21.175000+00:00",
+"text": "I wonder what would ever cause such a surge? Was something big happening last night?🤔",
+"url": "https://static.klipy.com/ii/39f2394ae36df6e199be9eb7c9fa1012/09/06/KlsUdRdX.gif?hh=498&ww=354&mp4=LDEf3d9mfE9WUx3Nav&webm=Gwj5y02OgGZU",
+"author_created_at": "2024-12-06T22:34:32.446000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0291",
+"author": "upbeatlantern.example",
+"timestamp": "2026-11-04T22:42:00.594000+00:00",
+"text": "Bluesky....the home of pro-democracy .",
+"url": "",
+"author_created_at": "2024-11-12T15:15:57.303000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0292",
+"author": "vividlantern.example",
+"timestamp": "2026-11-04T06:54:39.480000+00:00",
+"text": "Keep up the great work by keeping this site ad and AI-free! 🍻🤍",
+"url": "",
+"author_created_at": "2023-10-13T07:33:26.966000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0293",
+"author": "warmlantern.example",
+"timestamp": "2026-11-04T12:48:11.206000+00:00",
+"text": "👋👋",
+"url": "",
+"author_created_at": "2026-03-06T21:08:47.555000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0294",
+"author": "younglantern.example",
+"timestamp": "2026-11-04T07:58:28.754000+00:00",
+"text": "I find it so hard to believe that anyone wants to be on Twitter any more. Especially official bodies like the UK Government and the Labour Party...",
+"url": "",
+"author_created_at": "2025-01-15T19:16:19.546000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0295",
+"author": "quietwillow.example",
+"timestamp": "2026-11-04T04:14:01.561000+00:00",
+"text": "its cuz godfrey golden is literally winning the world bro",
+"url": "",
+"author_created_at": "2026-04-24T15:25:13.844000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0296",
+"author": "amberwillow.example",
+"timestamp": "2026-11-04T15:23:18.598000+00:00",
+"text": "Then make this shitty website stop sucking ass.",
+"url": "",
+"author_created_at": "2025-07-06T22:32:01.231000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0297",
+"author": "briskwillow.example",
+"timestamp": "2026-11-04T06:06:33.773000+00:00",
+"text": "How many new accounts have been created?",
+"url": "",
+"author_created_at": "2024-11-23T11:55:56.445000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0298",
+"author": "calmwillow.example",
+"timestamp": "2026-11-05T13:09:54.335000+00:00",
+"text": "THE BLUE WAVE ARRIVED AND AMERICA WILL RECOVER.",
+"url": "",
+"author_created_at": "2024-11-11T15:16:13.384000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0299",
+"author": "deepwillow.example",
+"timestamp": "2026-11-04T04:56:04.571000+00:00",
+"text": "I know a Grafana graph when I see one",
+"url": "",
+"author_created_at": "2023-10-18T21:35:37.412000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0300",
+"author": "earlywillow.example",
+"timestamp": "2026-11-04T16:50:13.189000+00:00",
+"text": "You Welcome",
+"url": "",
+"author_created_at": "2026-08-02T20:52:58.873000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0301",
+"author": "fairwillow.example",
+"timestamp": "2026-11-04T04:06:41.396000+00:00",
+"text": "Your alt txt has a typo",
+"url": "",
+"author_created_at": "2023-06-14T00:24:43.065000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0302",
+"author": "gentleotter.example",
+"timestamp": "2026-11-04T04:37:59.664000+00:00",
+"text": "I saw that. Maybe this might inspire an edit feature from @bsky.app for all of us.",
+"url": "",
+"author_created_at": "2024-11-13T11:53:47.480000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0303",
+"author": "gentlewillow.example",
+"timestamp": "2026-11-04T05:24:17.430000+00:00",
+"text": "Bluesky PR pretending they liked us when we're the opposite of their target audience.",
+"url": "",
+"author_created_at": "2023-10-02T01:42:17.098000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0304",
+"author": "amberotter.example",
+"timestamp": "2026-11-04T20:11:35+00:00",
+"text": "Bullshit.",
+"url": "",
+"author_created_at": "2026-10-17T10:25:00.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0305",
+"author": "hiddenwillow.example",
+"timestamp": "2026-11-04T05:03:42.841000+00:00",
+"text": "Watching from New Zealand.... these midterms will have a global impact. Thank you democrats.",
+"url": "",
+"author_created_at": "2024-11-22T19:57:34.356000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0306",
+"author": "ivorywillow.example",
+"timestamp": "2026-11-04T14:55:11.877000+00:00",
+"text": "I’m so glad I’m on Bluesky ❤️",
+"url": "",
+"author_created_at": "2024-12-20T06:25:52.843000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0307",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.936000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0308",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.937000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0309",
+"author": "quickfalcon.example",
+"timestamp": "2026-11-04T18:47:04.938000+00:00",
+"text": "and ever and ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and  ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever and ever",
+"url": "",
+"author_created_at": "2026-03-12T06:36:37.254000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0310",
+"author": "olivepebble.example",
+"timestamp": "2026-11-05T04:12:40.446000+00:00",
+"text": "I like having it there, just in case the edit goes from \"carrots are delicious\" to \"people are delicious\".\n (Or under a spoiler/nsfw button.)\nThis way, people aren't going, \"WHAT?!? TheSkeetinMelmac8675309 is a cannibal?!?\"\n\nAlso, maybe a notification when a post is edited that you'd commented on?",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0311",
+"author": "olivepebble.example",
+"timestamp": "2026-11-05T04:20:15.065000+00:00",
+"text": "And when i say it's not new, i don't mean to Bluesky.\nI mean i've gotten this whole concept for decades.\n\nIt reminds me of third-party browsers for Second Life.\nIt's exactly the same thing.\n\nAnd i never wanted to use any of those either.",
+"url": "",
+"author_created_at": "2023-11-06T03:56:27.956000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0312",
+"author": "rapidpebble.example",
+"timestamp": "2026-11-05T04:35:21.892000+00:00",
+"text": "Or don't. Whatever.",
+"url": "",
+"author_created_at": "2024-11-13T19:25:57.674000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0313",
+"author": "fairriver.example",
+"timestamp": "2026-11-04T16:42:43.340000+00:00",
+"text": "Buddy you need to talk to people outside, some of the most insufferable leftists I know do nothing but scroll libslop reels - to the point of me, someone who considers themselves very left, thinking it's over the top.",
+"url": "",
+"author_created_at": "2026-01-27T02:08:37.346000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0314",
+"author": "vividmeadow.example",
+"timestamp": "2026-11-04T16:52:04.944000+00:00",
+"text": "Bro, i dont give a fuck about your opinion. Plus, Mein Kampf was not only read by nazis, but the point was to make them be. Now go fuck a couch, like JD does and leave those teens, like Trump didn't.",
+"url": "",
+"author_created_at": "2026-02-08T22:16:36.246000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0315",
+"author": "fairriver.example",
+"timestamp": "2026-11-04T16:54:09.528000+00:00",
+"text": "It's genuinely impressive that you are this skilled at mental gymnastics.",
+"url": "",
+"author_created_at": "2026-01-27T02:08:37.346000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0316",
+"author": "jollywillow.example",
+"timestamp": "2026-11-06T04:03:19.740000+00:00",
+"text": "Bluesky wave!",
+"url": "",
+"author_created_at": "2023-08-16T05:03:47.668000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0317",
+"author": "keenwillow.example",
+"timestamp": "2026-11-05T17:55:09.793000+00:00",
+"text": "Welcome new users! If you're not familiar, here's the status quo\n\nQueer furries run this site so we are unavoidable, leave the bigotry at the door. Alt text gets you *more* reach. Highly reccomend customizing your feed before anything else, too",
+"url": "",
+"author_created_at": "2024-07-14T02:21:51.075000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0318",
+"author": "luckywillow.example",
+"timestamp": "2026-11-05T17:32:47.886000+00:00",
+"text": "Hearing noises that many journos have finally noticed that they've been sitting in a Nazi bar this whole time (they'd just assumed the swastikas and genocide chat were local colour) and are relocating to Bluesky. Good to have such incisive, perceptive minds here.",
+"url": "",
+"author_created_at": "2023-05-23T23:39:24.859000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0319",
+"author": "mellowwillow.example",
+"timestamp": "2026-11-05T17:10:12.250000+00:00",
+"text": "Anyfuck follow me I make good art and comics and I stream and write and ttrpg and sometimes have movie opinions and wifeguy post",
+"url": "",
+"author_created_at": "2023-06-23T14:27:11.401000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0320",
+"author": "noblewillow.example",
+"timestamp": "2026-11-05T17:06:17.061000+00:00",
+"text": "Hey do you like maps? Sci-fi, alternate history, loudmouth left politics? I'm your guy!",
+"url": "",
+"author_created_at": "2023-08-04T13:55:13.580000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0321",
+"author": "olivewillow.example",
+"timestamp": "2026-11-05T17:04:19.510000+00:00",
+"text": "Follow me, nerds",
+"url": "",
+"author_created_at": "2023-05-12T01:01:39.674000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0322",
+"author": "plainwillow.example",
+"timestamp": "2026-11-05T16:48:45.339000+00:00",
+"text": "Puede que las cosas no estén tan mal\n\nbsky.app/profile/bsky...",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"author_created_at": "2023-11-10T16:42:40.921000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0323",
+"author": "quickwillow.example",
+"timestamp": "2026-11-05T16:26:07.776000+00:00",
+"text": "These kind of growing traffic levels are why I have been calling for more public transit options on Bluesky for years now. We have to fight congestion!",
+"url": "",
+"author_created_at": "2023-07-24T15:03:19.367000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0324",
+"author": "rapidwillow.example",
+"timestamp": "2026-11-05T16:17:58.526000+00:00",
+"text": "\"BLUESKY now appears better attuned to what’s been happening on the ground. Its users were right about PRETTY MUCH EVERYTHING . . . \"\n\n\"AT PROTOCOL SCALES . . . \"\n\n\"MORE FREEDOM AND MORE DEMOCRACY . . . \"\n\n\"THOUGHTS AND PRAYERS *AND* DRAIN THE SWAMP . . . \"\n\nMADE IN USA // 2026\nANOTHER NOVEMBER",
+"url": "https://www.fastcompany.com/91635647/bluesky-was-right-all-along-and-will-accept-your-apology-any-time",
+"author_created_at": "2024-11-15T00:17:32.348000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0325",
+"author": "silverwillow.example",
+"timestamp": "2026-11-05T15:50:18.034000+00:00",
+"text": "Looks like me might have a flood of new users.  Repost with some of your tips and tricks to getting acclimated over here.",
+"url": "",
+"author_created_at": "2023-09-30T02:59:35.384000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0326",
+"author": "tidywillow.example",
+"timestamp": "2026-11-05T15:47:36.595000+00:00",
+"text": "The people who stubbornly support Musk’s propaganda machine need to know that the water is warm here.",
+"url": "",
+"author_created_at": "2025-01-07T18:09:53.342000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0327",
+"author": "upbeatwillow.example",
+"timestamp": "2026-11-05T13:25:37.285000+00:00",
+"text": "I am expecting a +100Gb/s when it happens",
+"url": "",
+"author_created_at": "2023-07-01T20:40:39.513000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0328",
+"author": "vividwillow.example",
+"timestamp": "2026-11-05T13:18:03.373000+00:00",
+"text": "The sports side of this platform has said it many times already but if you didn’t realize it yet… WE GOT SOME MOTION.",
+"url": "",
+"author_created_at": "2024-11-12T02:29:14.305000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0329",
+"author": "warmwillow.example",
+"timestamp": "2026-11-05T10:50:23.427000+00:00",
+"text": "Turns out you didn't need to make bluesky more like twitter, you just needed twitter morons to feel fomo.",
+"url": "",
+"author_created_at": "2023-06-26T08:32:01.757000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0330",
+"author": "youngwillow.example",
+"timestamp": "2026-11-05T10:49:50.501000+00:00",
+"text": ". @charles-ex.bsky.social @ginger146.bsky.social @aloa5.eurosky.social",
+"url": "",
+"author_created_at": "2023-08-07T19:49:06.697000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0331",
+"author": "quietheron.example",
+"timestamp": "2026-11-05T10:22:57.724000+00:00",
+"text": "Nasz kochany Motylek trenduje. A my będziemy tak patrzeć nowo przybyłych 🤪",
+"url": "https://static.klipy.com/ii/da290b156d64898341638f3c299e7478/82/c5/39KayWMm.gif?hh=278&ww=498&mp4=7sV3SNIMqn7WHMyzm&webm=8k34ZxRNTz6T4rH4pi",
+"author_created_at": "2024-11-12T20:19:29.322000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0332",
+"author": "amberheron.example",
+"timestamp": "2026-11-05T10:11:30.003000+00:00",
+"text": "wyborów nie wygrywa się w Końskich tylko na BluSkaju 🦋",
+"url": "",
+"author_created_at": "2024-11-10T23:04:39.984000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0333",
+"author": "briskheron.example",
+"timestamp": "2026-11-05T09:22:20.940000+00:00",
+"text": "hey Republicans? can we play you every week?",
+"url": "",
+"author_created_at": "2023-07-03T09:53:57.005000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0334",
+"author": "calmheron.example",
+"timestamp": "2026-11-05T09:04:13.727000+00:00",
+"text": "Great to see this place possibly get its due.  I am at about 40 followers away from what I had on Twitter/X before I ditched it.",
+"url": "",
+"author_created_at": "2023-09-26T00:42:02.419000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0335",
+"author": "deepheron.example",
+"timestamp": "2026-11-05T07:52:12.205000+00:00",
+"text": "That is quite a lot of traffic. It is roughly half the average data rate written to disk by the ATLAS experiment at CERN. We wrote about 64 Gb/s during data taking periods just until the start of the long shutdown in June.",
+"url": "",
+"author_created_at": "2023-08-19T11:41:58.054000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0336",
+"author": "earlyheron.example",
+"timestamp": "2026-11-05T07:47:29.632000+00:00",
+"text": "Everybody came to party? Dang.",
+"url": "",
+"author_created_at": "2023-12-20T08:55:00.676000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0337",
+"author": "fairheron.example",
+"timestamp": "2026-11-05T05:57:58.408000+00:00",
+"text": "@shoozumoops.bsky.social \n@joesimonssays.bsky.social \n@trailblazers.bsky.social",
+"url": "",
+"author_created_at": "2023-11-07T22:54:48.143000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0338",
+"author": "gentleheron.example",
+"timestamp": "2026-11-05T05:53:18.811000+00:00",
+"text": "We’re back baby",
+"url": "",
+"author_created_at": "2023-09-10T15:02:23.750000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0339",
+"author": "hiddenheron.example",
+"timestamp": "2026-11-05T05:36:53.604000+00:00",
+"text": "The wave of warnings a months ago that Bluesky was dead did not consider the quality or intent of users.\n\nWe successfully organized a peaceful revolt on the streets, in the courts and at the ballot box against the regime and its most powerful allies -- right here.\n\nWe'll do so as long as necessary.",
+"url": "",
+"author_created_at": "2024-11-20T23:01:35.173000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0340",
+"author": "ivoryheron.example",
+"timestamp": "2026-11-05T03:56:32.504000+00:00",
+"text": "What is Blueski's FailWhale?",
+"url": "",
+"author_created_at": "2023-07-03T07:28:05.401000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0341",
+"author": "jollyheron.example",
+"timestamp": "2026-11-05T03:52:33.726000+00:00",
+"text": "lemme turn on my joined Nov 26 labeler while I remember",
+"url": "",
+"author_created_at": "2023-12-08T19:44:24.218000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0342",
+"author": "keenheron.example",
+"timestamp": "2026-11-05T03:51:54.638000+00:00",
+"text": "What a night it was! I was so happy for @bsky.app for bringing me news, allowing me to share it, and helping me celebrate an incredible, amazing Election Day evening.",
+"url": "",
+"author_created_at": "2024-11-10T22:05:22.687000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0343",
+"author": "luckyheron.example",
+"timestamp": "2026-11-05T02:18:19.682000+00:00",
+"text": "Good luck and fair winds to the Bsky Infra team!",
+"url": "",
+"author_created_at": "2023-11-20T10:43:56.112000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0344",
+"author": "mellowheron.example",
+"timestamp": "2026-11-05T01:54:05.376000+00:00",
+"text": "Just wait until It Happens.",
+"url": "https://static.klipy.com/ii/d7aec6f6f171607374b2065c836f92f4/df/8e/SrXgkCOi.gif?hh=373&ww=498&mp4=B9Tfddx33gh9LjDkER&webm=bwh4g7ha71GKHW6kdb",
+"author_created_at": "2023-12-18T20:21:21.089000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0345",
+"author": "nobleheron.example",
+"timestamp": "2026-11-05T01:42:09.158000+00:00",
+"text": "I'm deeply skeptical of @bsky.app's 2x number, but I'm gonna let them make it, bc I'd like to see more users on here, too, and  this is a good message to put out into the world.\n\nDo NOT get cocky, though, especially because you're fucking *terrible* at running a social media platform 😆\n\n#BlueSky 🦋",
+"url": "https://static.klipy.com/ii/e293a233a303a98e471f78d04e13a1b0/b3/75/WcOx52E6.gif?hh=278&ww=498&mp4=13AJyz5Aerri&webm=s9duS3eHmNIJ",
+"author_created_at": "2026-06-27T00:01:07.370000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0346",
+"author": "oliveheron.example",
+"timestamp": "2026-11-05T01:30:17.380000+00:00",
+"text": "Translating for windows jockeys, that's 4.475 GB/sec.  \n\nTranslating for network jockeys that's 2,983,333.33 packets per second (at a 1,500 Byte MTU)\n\nTranslating for human beings: people be celebrating! 🎉🪩",
+"url": "",
+"author_created_at": "2024-11-17T13:43:54.733000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0347",
+"author": "plainheron.example",
+"timestamp": "2026-11-05T01:27:12.806000+00:00",
+"text": "I saw it in real-time and I loved every moment.",
+"url": "",
+"author_created_at": "2024-02-06T20:37:37.457000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0348",
+"author": "quickheron.example",
+"timestamp": "2026-11-05T01:10:08.954000+00:00",
+"text": "That's the result of building a platform and community that is inclusive and doesn't put algorithms at its center. It's nice that we now have a platform where we can enjoy meaningful discussions and interactions again.",
+"url": "",
+"author_created_at": "2024-11-20T10:49:21.570000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0349",
+"author": "rapidheron.example",
+"timestamp": "2026-11-05T01:00:09.482000+00:00",
+"text": "👏👏👏",
+"url": "",
+"author_created_at": "2024-11-09T15:39:04.679000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0350",
+"author": "silverheron.example",
+"timestamp": "2026-11-05T00:11:28.033000+00:00",
+"text": "C'est grâce à caca sur bardella",
+"url": "",
+"author_created_at": "2023-09-19T13:17:59.785000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0351",
+"author": "tidyheron.example",
+"timestamp": "2026-11-04T23:52:33.241000+00:00",
+"text": "Amazing what one day this week will do.",
+"url": "https://static.klipy.com/ii/8ce8357c78ea940b9c2015daf05ce1a5/be/bc/qXWk6vHq.gif?hh=264&ww=480&mp4=DHYpoE3O7tO03&webm=AXKn86G6HvxtoXMWV",
+"author_created_at": "2025-08-12T13:20:33.299000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0352",
+"author": "upbeatheron.example",
+"timestamp": "2026-11-04T23:50:15.645000+00:00",
+"text": "Don't change, stay friendly and unlike Twitter, Meta, etc., and we will stick around.",
+"url": "",
+"author_created_at": "2025-01-12T01:42:27.244000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0353",
+"author": "vividheron.example",
+"timestamp": "2026-11-04T23:46:33.714000+00:00",
+"text": "Bluesky users fingered the pulse last night!",
+"url": "",
+"author_created_at": "2026-05-14T19:36:20.761000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0354",
+"author": "vividheron.example",
+"timestamp": "2026-11-04T23:44:40.321000+00:00",
+"text": "💙💙💙",
+"url": "https://static.klipy.com/ii/35ccce3d852f7995dd2da910f2abd795/40/82/rdDlzX6k.gif?hh=240&ww=426&mp4=7SnlSILE&webm=EfX9hVWZhvzmEOSdI",
+"author_created_at": "2026-05-14T19:36:20.761000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0355",
+"author": "warmheron.example",
+"timestamp": "2026-11-04T23:44:29.649000+00:00",
+"text": "Feels a little hellthread era but I’ll take it",
+"url": "",
+"author_created_at": "2023-05-03T13:49:52.619000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0356",
+"author": "youngheron.example",
+"timestamp": "2026-11-04T23:41:29.783000+00:00",
+"text": "Get ready for The Day. It’ll pop off even more.",
+"url": "",
+"author_created_at": "2023-10-06T16:33:02.979000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0357",
+"author": "quietcedar.example",
+"timestamp": "2026-11-04T23:37:29.819000+00:00",
+"text": "it turns out this website does indeed have the juice.",
+"url": "",
+"author_created_at": "2023-06-11T11:18:28.712000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0358",
+"author": "ambercedar.example",
+"timestamp": "2026-11-04T23:37:02.714000+00:00",
+"text": "Have we retconned what the \"blue\" in Bluesky is for yet?",
+"url": "",
+"author_created_at": "2024-11-09T16:03:04.286000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0359",
+"author": "briskcedar.example",
+"timestamp": "2026-11-04T23:35:03.247000+00:00",
+"text": "Lets go!!",
+"url": "",
+"author_created_at": "2023-12-24T13:46:48.263000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0360",
+"author": "calmcedar.example",
+"timestamp": "2026-11-04T23:33:08.434000+00:00",
+"text": "Prepare for an Eternal September...",
+"url": "",
+"author_created_at": "2023-07-25T00:04:45.215000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0361",
+"author": "deepcedar.example",
+"timestamp": "2026-11-04T23:29:58.868000+00:00",
+"text": "bsky.app/profile/bsky...",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"author_created_at": "2023-08-03T08:35:34.678000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0362",
+"author": "earlycedar.example",
+"timestamp": "2026-11-04T23:29:39.252000+00:00",
+"text": "Woke 2 is on the horizon.",
+"url": "",
+"author_created_at": "2024-10-17T01:39:02.706000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0363",
+"author": "faircedar.example",
+"timestamp": "2026-11-04T23:29:15.157000+00:00",
+"text": "It's my shitposting, I'm sorry. 😆",
+"url": "",
+"author_created_at": "2025-04-13T14:58:00.272000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0364",
+"author": "gentlecedar.example",
+"timestamp": "2026-11-04T23:26:54.229000+00:00",
+"text": "Election related?",
+"url": "",
+"author_created_at": "2023-09-28T19:50:09.675000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0365",
+"author": "hiddencedar.example",
+"timestamp": "2026-11-04T23:24:34.086000+00:00",
+"text": "Seeing the blast of positive, funny, insightful, accurate, and celebratory posts last night on Bluesky in real time was incredible and wonderful.\n\nWhen Biden won in 2020, I heard fireworks going off in Scotland while scrolling an unusually positive Twitter timeline.\n\nI liked this night too.",
+"url": "",
+"author_created_at": "2024-11-08T17:06:33.279000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0366",
+"author": "ivorycedar.example",
+"timestamp": "2026-11-04T23:24:03.406000+00:00",
+"text": "That was me reposting all of the US election results.",
+"url": "https://static.klipy.com/ii/d7aec6f6f171607374b2065c836f92f4/85/e9/3VEpHu4G.gif?hh=360&ww=480&mp4=IpOlzX2NqH1ytx2vWEx&webm=XTlObuQsFQMQCnk",
+"author_created_at": "2023-10-23T15:06:06.838000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0367",
+"author": "jollycedar.example",
+"timestamp": "2026-11-04T23:21:07.660000+00:00",
+"text": "I have 2 Mutuals feeds that I follow almost exclusively. Both have been slow to update since the #vote. Right now, one feed’s most recent post is 3hrs old. The other feed is much more current, but if I scroll back a couple hours, then refresh, I get posts that didn’t show up on my prior refresh.",
+"url": "",
+"author_created_at": "2023-08-09T01:29:24.463000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0368",
+"author": "keencedar.example",
+"timestamp": "2026-11-04T23:20:12.356000+00:00",
+"text": "See, the site can grow without us being nicer to people who absolutely hate us",
+"url": "",
+"author_created_at": "2023-07-01T17:28:17.318000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0369",
+"author": "luckycedar.example",
+"timestamp": "2026-11-04T23:05:34.524000+00:00",
+"text": "credit where it's due, the traffic on this platform literally doubled yesterday and nobody noticed any disruption. pretty impressive work",
+"url": "",
+"author_created_at": "2023-11-20T00:29:48.934000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0370",
+"author": "mellowcedar.example",
+"timestamp": "2026-11-04T23:00:39.163000+00:00",
+"text": "Uh oh, here come the rightwing-bankrolled \"social engineering\" bots to sabotage any work we try to do toward repairing our country.",
+"url": "",
+"author_created_at": "2023-09-28T23:37:20.977000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0371",
+"author": "noblecedar.example",
+"timestamp": "2026-11-04T22:56:15.663000+00:00",
+"text": "when are we getting scheduled posts",
+"url": "",
+"author_created_at": "2024-10-19T20:01:31.712000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0372",
+"author": "olivecedar.example",
+"timestamp": "2026-11-04T22:54:23.871000+00:00",
+"text": "Was on and posting election for sure.",
+"url": "",
+"author_created_at": "2025-12-17T06:20:11.825000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0373",
+"author": "plaincedar.example",
+"timestamp": "2026-11-04T22:45:57.836000+00:00",
+"text": "Wow. I wonder what happened.",
+"url": "",
+"author_created_at": "2023-07-10T23:41:41.486000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0374",
+"author": "quickcedar.example",
+"timestamp": "2026-11-04T22:45:00.048000+00:00",
+"text": "This is great, Bluesky! You have even more empirical confirmation that your userbase prefers the values and principles of the political left!\n\nI'm excited to see you improve your usage policies and moderation systems accordingly.",
+"url": "",
+"author_created_at": "2023-09-06T01:37:26.017000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0375",
+"author": "rapidcedar.example",
+"timestamp": "2026-11-04T22:38:01.524000+00:00",
+"text": "Now, this was an impressive feat. This proves that a social engineered uprising is possible. #bluesky #amazing #army",
+"url": "",
+"author_created_at": "2025-01-19T04:48:36.344000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0376",
+"author": "silvercedar.example",
+"timestamp": "2026-11-04T22:36:56.714000+00:00",
+"text": "Totally expected.",
+"url": "https://static.klipy.com/ii/ce286d05b8e1a47cd4f32b0e1b6dec0e/c0/85/UkDes7eS.gif?hh=498&ww=498&mp4=XzaamU70&webm=jG2OD3pp",
+"author_created_at": "2024-04-19T16:38:37.954000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0377",
+"author": "tidycedar.example",
+"timestamp": "2026-11-04T22:31:38.293000+00:00",
+"text": "You're welcome :)",
+"url": "https://static.klipy.com/ii/39f2394ae36df6e199be9eb7c9fa1012/14/a9/Tv29Nr5q.gif?hh=418&ww=430&mp4=5V8M1Y7vfnBrF1bBTls&webm=qmNmIVqyUD7cVBorJqr",
+"author_created_at": "2023-09-19T19:22:22.389000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0378",
+"author": "upbeatcedar.example",
+"timestamp": "2026-11-04T22:29:12.664000+00:00",
+"text": "Woke’s back",
+"url": "",
+"author_created_at": "2023-06-06T19:39:38.586000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0379",
+"author": "vividcedar.example",
+"timestamp": "2026-11-04T22:23:21.388000+00:00",
+"text": "It was a great night!  Thank you for being there @bsky.app !\nbsky.app/profile/bsky...",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"author_created_at": "2023-10-18T21:28:37.585000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0380",
+"author": "warmcedar.example",
+"timestamp": "2026-11-04T22:13:49.909000+00:00",
+"text": "Now can we get 200% more native plant posts please. #nativeplants",
+"url": "",
+"author_created_at": "2023-08-14T03:18:08.493000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0381",
+"author": "youngcedar.example",
+"timestamp": "2026-11-04T22:10:11.113000+00:00",
+"text": "i was solely responsible. you're welcome",
+"url": "",
+"author_created_at": "2025-01-08T22:47:49.743000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0382",
+"author": "quietember.example",
+"timestamp": "2026-11-04T21:56:42.633000+00:00",
+"text": "Of course it's a Champions League day and this is the official app of sports",
+"url": "",
+"author_created_at": "2023-09-06T21:15:07.155000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0383",
+"author": "amberember.example",
+"timestamp": "2026-11-04T21:53:10.491000+00:00",
+"text": "I'd just like to say that I was on here talking about Heidenheim and Julian Ryerson before it became cool to be a BlueSkyer.",
+"url": "",
+"author_created_at": "2023-07-01T18:50:44.342000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0384",
+"author": "briskember.example",
+"timestamp": "2026-11-04T21:43:42.253000+00:00",
+"text": "So you DO track traffic, just not for individuals.",
+"url": "",
+"author_created_at": "2023-10-03T03:24:27.977000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0385",
+"author": "calmember.example",
+"timestamp": "2026-11-04T21:35:55.866000+00:00",
+"text": "I hope the extra traffic hits Jesse Singal and the traffic is actually just the ban bus and please ban Jesse Singal.",
+"url": "",
+"author_created_at": "2023-12-02T09:37:11.574000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0386",
+"author": "deepember.example",
+"timestamp": "2026-11-04T21:32:24.433000+00:00",
+"text": "oh I guess this is why lol, it activated the sleeper cell that made an account on here after they heard about it on Maddow but then got ran off by all the trans folks",
+"url": "",
+"author_created_at": "2023-07-03T18:19:42.117000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0387",
+"author": "earlyember.example",
+"timestamp": "2026-11-04T21:31:38.539000+00:00",
+"text": "Instagram has been busy too. For the first time since 2007, I *didn't* look at Twitter. Still haven't. I will, in a bit...",
+"url": "",
+"author_created_at": "2023-07-03T21:05:54.975000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0388",
+"author": "fairember.example",
+"timestamp": "2026-11-04T21:12:14.801000+00:00",
+"text": "todo mundo postando video da rola dura em 4k na sexta feira pra gente bater o recorde",
+"url": "",
+"author_created_at": "2023-09-18T20:51:14.024000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0389",
+"author": "gentleember.example",
+"timestamp": "2026-11-04T21:09:16.576000+00:00",
+"text": "#fckmusk",
+"url": "",
+"author_created_at": "2023-10-04T19:18:05.457000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0390",
+"author": "hiddenember.example",
+"timestamp": "2026-11-04T20:55:16.232000+00:00",
+"text": "can any relay operators chime in on yesterday? how did your systems do? anything notable?  @firehose.club etc, can we get some stories about ops, in these peak blue times?",
+"url": "",
+"author_created_at": "2026-08-24T19:46:21.667000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0391",
+"author": "ivoryember.example",
+"timestamp": "2026-11-04T20:20:50.416000+00:00",
+"text": "BLUESKY SWEEP",
+"url": "",
+"author_created_at": "2023-10-13T17:21:36.049000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0392",
+"author": "jollyember.example",
+"timestamp": "2026-11-04T20:13:51.805000+00:00",
+"text": "the data traffic chart is looking quite optimal pensive",
+"url": "",
+"author_created_at": "2026-06-17T10:04:58.157000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0393",
+"author": "keenember.example",
+"timestamp": "2026-11-04T20:01:52.654000+00:00",
+"text": "Our pleasure! 😆",
+"url": "",
+"author_created_at": "2024-11-18T20:13:45.355000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0394",
+"author": "luckyember.example",
+"timestamp": "2026-11-04T20:01:00.034000+00:00",
+"text": "Sieht super aus.\n\nAber btw. muss ich für starken Verdacht auf eröffnen von Botfarmen, aggressives Account-minting mit inpersonisationen,  auf AT-proto die @moderation.bsky.app via Mail anschreiben?🤔",
+"url": "",
+"author_created_at": "2023-08-20T20:02:37.495000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0395",
+"author": "quietmaple.example",
+"timestamp": "2026-11-04T20:00:39.809000+00:00",
+"text": "KUDOS #Bluesky \n\nSo well deserved! ❤️🤍💙🙏🇺🇸\n\n#Bluesky is the first platform \nI’ve seen that is truly supportive of the people involved! \n(The Only one I’ve paid attention to!)  And - \nImportantly, there are many conscious, “real people” \nhere…. \nWho are actually Caring for the Greater Good!⚡️💙⚡️",
+"url": "",
+"author_created_at": "2024-11-19T02:52:29.705000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0396",
+"author": "mellowember.example",
+"timestamp": "2026-11-04T19:59:45.065000+00:00",
+"text": "Maybe something to do with everyone suddenly a forum consisting mainly of bloodthirsty fascists, crypto dorks, and bots, and tech bro cocksuckers isn’t representative of the real world idk",
+"url": "",
+"author_created_at": "2024-11-10T06:58:52.579000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0397",
+"author": "nobleember.example",
+"timestamp": "2026-11-04T19:42:31.813000+00:00",
+"text": "So many times last night I worried it would crash.",
+"url": "",
+"author_created_at": "2024-11-10T17:11:45.878000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0398",
+"author": "oliveember.example",
+"timestamp": "2026-11-04T19:41:51.288000+00:00",
+"text": "Bluesky: Home of Real America",
+"url": "",
+"author_created_at": "2024-11-14T16:18:53.122000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0399",
+"author": "plainember.example",
+"timestamp": "2026-11-04T19:38:43.075000+00:00",
+"text": "Kiss asses. Don't get too comfortable Twitter libs, ask a trans person or a sex worker what these tech bros do to the people that bring them traffic once they're done with you",
+"url": "",
+"author_created_at": "2023-09-13T22:11:41.102000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0400",
+"author": "quickember.example",
+"timestamp": "2026-11-04T19:35:17.596000+00:00",
+"text": "Bluesky Wave",
+"url": "",
+"author_created_at": "2023-07-26T12:00:24.783000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0401",
+"author": "quietmaple.example",
+"timestamp": "2026-11-04T19:27:45.845000+00:00",
+"text": "KUDOS #Bluesky \n\nSo well deserved! ❤️🤍💙🙏🇺🇸",
+"url": "",
+"author_created_at": "2024-11-19T02:52:29.705000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0402",
+"author": "rapidember.example",
+"timestamp": "2026-11-04T19:21:29.243000+00:00",
+"text": "Thanks for our community BlueSky.. I Love this place and all of the connections I’ve made…\n LETS GOOOOO…!!🫵🏼👏🏻💪🏼🫶🏼❤️",
+"url": "",
+"author_created_at": "2024-11-12T19:36:47.709000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0403",
+"author": "silverember.example",
+"timestamp": "2026-11-04T19:15:43.925000+00:00",
+"text": "Thank you Bluesky for keeping all of US connected!",
+"url": "https://static.klipy.com/ii/c3a19a0b747a76e98651f2b9a3cca5ff/ed/cc/E6YFcoVi.gif?hh=498&ww=331&mp4=3gYHw5PWFLZH&webm=o7gU4j4qMZlr4",
+"author_created_at": "2024-11-13T14:13:20.197000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0404",
+"author": "tidyember.example",
+"timestamp": "2026-11-04T19:15:31.934000+00:00",
+"text": "What up @eurosky.social 👋🏼 You up?",
+"url": "",
+"author_created_at": "2023-08-24T16:09:24.851000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0405",
+"author": "upbeatember.example",
+"timestamp": "2026-11-04T19:14:14.314000+00:00",
+"text": "YOU ARE BIGLY WELCOME, Bluesky (@bsky.app)!!! Our Great American #Blues have the most spectacular night traffic that anybody has ever seen, especially with these truly special events! MAKE AMERICA JOKE AGAIN!!! Thank you for your attention to this matter! Future Inevitable President BOSS BEST",
+"url": "",
+"author_created_at": "2025-02-02T16:09:34.246000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0406",
+"author": "vividember.example",
+"timestamp": "2026-11-04T18:58:25.991000+00:00",
+"text": "I see there is a surge in interest. Don't worry my friends, we will weather this storm of popularity and soon be as unpopular as ever.",
+"url": "",
+"author_created_at": "2023-09-19T01:31:12.270000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0407",
+"author": "warmember.example",
+"timestamp": "2026-11-04T18:58:20.406000+00:00",
+"text": "Come back! Many of us have never left :)",
+"url": "",
+"author_created_at": "2023-06-22T14:43:43.917000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0408",
+"author": "youngember.example",
+"timestamp": "2026-11-04T18:56:49.189000+00:00",
+"text": "Red social muerta",
+"url": "",
+"author_created_at": "2024-11-19T13:53:03.107000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0409",
+"author": "quietfjord.example",
+"timestamp": "2026-11-04T18:54:45.240000+00:00",
+"text": "Meanwhile over on X",
+"url": "",
+"author_created_at": "2024-11-13T12:45:11.591000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0410",
+"author": "amberfjord.example",
+"timestamp": "2026-11-04T18:54:30.531000+00:00",
+"text": "Tha's right, we rule :)",
+"url": "",
+"author_created_at": "2023-06-22T20:56:07.813000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0411",
+"author": "briskfjord.example",
+"timestamp": "2026-11-04T18:52:00.402000+00:00",
+"text": "\"35.8 Gb/s.\"",
+"url": "https://static.klipy.com/ii/84b4c0b02782dda9051003f9e36484ec/2a/7a/XB4NhCJA.gif?hh=269&ww=498&mp4=789BP7HFNNG0&webm=IpUqEr1Te06KDD8jTuX",
+"author_created_at": "2024-11-13T18:20:17.590000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0412",
+"author": "calmfjord.example",
+"timestamp": "2026-11-04T18:51:16.417000+00:00",
+"text": "I appreciate you being here for a night like that. It wouldn't have been the same otherwise.",
+"url": "",
+"author_created_at": "2024-11-23T04:03:31.245000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0413",
+"author": "deepfjord.example",
+"timestamp": "2026-11-04T18:48:03.876000+00:00",
+"text": "That's a lot of Gbps!",
+"url": "",
+"author_created_at": "2023-09-10T02:31:11.861000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0414",
+"author": "earlyfjord.example",
+"timestamp": "2026-11-04T18:47:28.611000+00:00",
+"text": "Does this mean NYT will take Bsky seriously instead of calling it that weird place where the neurodivergent and trans rights activists hang out",
+"url": "",
+"author_created_at": "2023-07-14T15:42:02.193000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0415",
+"author": "fairfjord.example",
+"timestamp": "2026-11-04T18:45:42.638000+00:00",
+"text": "Today's numbers are not in but the trend has been very positive. BlueSky the app to be in!",
+"url": "",
+"author_created_at": "2023-10-08T22:08:10.137000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0416",
+"author": "gentlefjord.example",
+"timestamp": "2026-11-04T18:44:08.239000+00:00",
+"text": "Ladies and Gentlemen! @bsky.app is officially worth billions of dollars! How!? We're the first multi-billion value brand to support and contribute to their longevity! Congrats on both your new value and 2026 milestone, before the year end! The future is bright with you and users! 35.8 Gb/s👍🏿",
+"url": "https://static.klipy.com/ii/8ce8357c78ea940b9c2015daf05ce1a5/43/bc/GLjShGlN.gif?hh=342&ww=342&mp4=l11qVI1gHy&webm=N5mMDKI1WhGY",
+"author_created_at": "2026-06-08T02:04:36.962000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0417",
+"author": "hiddenfjord.example",
+"timestamp": "2026-11-04T18:43:07.505000+00:00",
+"text": "RELEASE THE SKEETS",
+"url": "",
+"author_created_at": "2024-10-17T01:27:38.708000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0418",
+"author": "ivoryfjord.example",
+"timestamp": "2026-11-04T18:43:03.795000+00:00",
+"text": "Ahora sobre todo a bloquear a todo nazi que veáis.",
+"url": "",
+"author_created_at": "2024-11-14T14:29:55.828000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0419",
+"author": "jollyfjord.example",
+"timestamp": "2026-11-04T18:41:33.076000+00:00",
+"text": "nice work\nso much more traffic, yet the site hasn't crashed o.o\nor slowed",
+"url": "",
+"author_created_at": "2025-02-05T20:36:34.044000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0420",
+"author": "keenfjord.example",
+"timestamp": "2026-11-04T18:40:05.070000+00:00",
+"text": "No difference felt, do better @bsky.app #bluesky",
+"url": "",
+"author_created_at": "2023-08-25T12:30:08.281000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0421",
+"author": "luckyfjord.example",
+"timestamp": "2026-11-04T18:39:50.135000+00:00",
+"text": "Win!",
+"url": "",
+"author_created_at": "2024-11-10T16:47:23.886000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0422",
+"author": "mellowfjord.example",
+"timestamp": "2026-11-04T18:38:19.349000+00:00",
+"text": "Power to the #Bluesky users!",
+"url": "",
+"author_created_at": "2024-11-10T19:48:14.878000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0423",
+"author": "noblefjord.example",
+"timestamp": "2026-11-04T18:35:49.274000+00:00",
+"text": "Bluesky has the juice",
+"url": "",
+"author_created_at": "2023-05-27T23:40:58.126000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0424",
+"author": "olivefjord.example",
+"timestamp": "2026-11-04T18:31:33.194000+00:00",
+"text": "lol now you appreciate the audience that made your platform again? After practically begging conservatives to come over here all year? lol",
+"url": "",
+"author_created_at": "2024-11-18T22:14:21.373000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0425",
+"author": "plainfjord.example",
+"timestamp": "2026-11-04T18:28:04.719000+00:00",
+"text": "The politics app 💙",
+"url": "",
+"author_created_at": "2024-11-17T00:01:57.227000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0426",
+"author": "quickfjord.example",
+"timestamp": "2026-11-04T18:27:57.354000+00:00",
+"text": "Imagine what’ll be like… when it happens.",
+"url": "",
+"author_created_at": "2023-07-12T13:46:41.238000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0427",
+"author": "rapidfjord.example",
+"timestamp": "2026-11-04T18:27:50.663000+00:00",
+"text": "Oh NO",
+"url": "",
+"author_created_at": "2023-07-26T19:30:20.106000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0428",
+"author": "silverfjord.example",
+"timestamp": "2026-11-04T18:24:59.062000+00:00",
+"text": "Real America is on Bluesky, Twitter is for Matt Yglesias",
+"url": "",
+"author_created_at": "2023-05-03T00:08:59.546000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0429",
+"author": "tidyfjord.example",
+"timestamp": "2026-11-04T18:18:29.255000+00:00",
+"text": "I wonder if BlueSky being mostly right about all this while X doomed will inspire people-who-know-things-and-think-things-for-a-living to migrate over.  Probably not.",
+"url": "",
+"author_created_at": "2023-08-06T21:29:25.620000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0430",
+"author": "upbeatfjord.example",
+"timestamp": "2026-11-04T18:15:31.746000+00:00",
+"text": "Good work, Bluesky. \n\nTry to both-sides it, and under preasure you wind up in a bad place. \n\nSay to all sides, \"our standards are these,\" then you can get there.",
+"url": "",
+"author_created_at": "2023-05-15T21:42:39.142000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0431",
+"author": "vividfjord.example",
+"timestamp": "2026-11-04T18:11:22.708000+00:00",
+"text": "trans rights are human rights and ai is for weirdos",
+"url": "",
+"author_created_at": "2023-11-21T14:26:06.085000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0432",
+"author": "warmfjord.example",
+"timestamp": "2026-11-04T18:10:02.136000+00:00",
+"text": "\"BLUESKY IS DEAD!\"\n\nRead that electrocardiogram, sucker!",
+"url": "",
+"author_created_at": "2024-11-13T23:06:54.175000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0433",
+"author": "youngfjord.example",
+"timestamp": "2026-11-04T18:05:37.940000+00:00",
+"text": "I was at a watch party last night in a bar. Obviously everyone was on their phones. The New York Times kept freezing but Bluesky always reloaded. Don't know if it was just that the NYT had more traffic or if Bluesky was better at handling the surge.",
+"url": "",
+"author_created_at": "2024-11-08T03:43:24.384000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0434",
+"author": "quietgrove.example",
+"timestamp": "2026-11-04T18:00:21.329000+00:00",
+"text": "But I was told Bluesky was a graveyard, an echo chamber, and an inconsequential social media platform.\n\nGuess that was a lie.",
+"url": "",
+"author_created_at": "2023-09-20T20:47:32.240000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0435",
+"author": "ambergrove.example",
+"timestamp": "2026-11-04T17:59:26.751000+00:00",
+"text": "Imagine when THAT happens... twice",
+"url": "",
+"author_created_at": "2023-09-19T01:20:49.909000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0436",
+"author": "briskgrove.example",
+"timestamp": "2026-11-04T17:56:16.361000+00:00",
+"text": "It would be nice to see Bluesky become *the* public forum.",
+"url": "",
+"author_created_at": "2024-11-11T16:38:28.879000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0437",
+"author": "calmgrove.example",
+"timestamp": "2026-11-04T17:50:39.632000+00:00",
+"text": "The echo chamber got real loud! ☺️",
+"url": "",
+"author_created_at": "2024-02-23T06:15:36.625000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0438",
+"author": "deepgrove.example",
+"timestamp": "2026-11-04T17:50:07.857000+00:00",
+"text": "<kylo_ren_more.gif>",
+"url": "",
+"author_created_at": "2023-07-14T21:51:35.938000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0439",
+"author": "earlygrove.example",
+"timestamp": "2026-11-04T17:49:12.640000+00:00",
+"text": "Elon is 100% FCKED.",
+"url": "",
+"author_created_at": "2024-11-20T02:06:35.170000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0440",
+"author": "fairgrove.example",
+"timestamp": "2026-11-04T17:39:43.728000+00:00",
+"text": "WE GOT THE JUICE",
+"url": "",
+"author_created_at": "2024-08-30T13:58:43.432000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0441",
+"author": "gentlegrove.example",
+"timestamp": "2026-11-04T17:39:10.924000+00:00",
+"text": "lmao",
+"url": "",
+"author_created_at": "2023-05-20T03:10:13.566000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0442",
+"author": "hiddengrove.example",
+"timestamp": "2026-11-04T17:35:41.214000+00:00",
+"text": "So glad to have Bluesky as a source of news and opinions. 💙",
+"url": "",
+"author_created_at": "2024-11-20T16:59:05.754000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0443",
+"author": "ivorygrove.example",
+"timestamp": "2026-11-04T17:35:35.814000+00:00",
+"text": "It's just all the decent people kicked off threads and twitter.",
+"url": "",
+"author_created_at": "2024-09-29T21:14:01.711000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0444",
+"author": "jollygrove.example",
+"timestamp": "2026-11-04T17:32:33.450000+00:00",
+"text": "💗💙",
+"url": "",
+"author_created_at": "2024-04-19T22:25:58.705000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0445",
+"author": "keengrove.example",
+"timestamp": "2026-11-04T17:32:12.677000+00:00",
+"text": "I should post something witty, maybe I’d snag a couple followers.\n\nNah.",
+"url": "",
+"author_created_at": "2025-04-02T15:42:39.695000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0446",
+"author": "luckygrove.example",
+"timestamp": "2026-11-04T17:28:12.688000+00:00",
+"text": "I'm a blueliever",
+"url": "",
+"author_created_at": "2024-11-07T03:19:54.281000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0447",
+"author": "mellowgrove.example",
+"timestamp": "2026-11-04T17:26:49.753000+00:00",
+"text": "May your future see 0 Gb/s🙏🏻",
+"url": "",
+"author_created_at": "2024-04-04T00:29:03.694000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0448",
+"author": "noblegrove.example",
+"timestamp": "2026-11-04T17:25:17.067000+00:00",
+"text": "Just wait till he dies…",
+"url": "",
+"author_created_at": "2023-06-14T12:46:17.082000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0449",
+"author": "olivegrove.example",
+"timestamp": "2026-11-04T17:18:08.808000+00:00",
+"text": "And it didn’t crash. Well done, truly.",
+"url": "",
+"author_created_at": "2023-08-17T01:01:46.658000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0450",
+"author": "plaingrove.example",
+"timestamp": "2026-11-04T17:11:43.280000+00:00",
+"text": "Bluesky Tsunami!",
+"url": "",
+"author_created_at": "2024-11-17T10:30:50.431000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0451",
+"author": "quickgrove.example",
+"timestamp": "2026-11-04T17:07:10.729000+00:00",
+"text": "Everyone on the bandwagon!",
+"url": "",
+"author_created_at": "2025-02-02T23:15:39.044000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0452",
+"author": "rapidgrove.example",
+"timestamp": "2026-11-04T17:07:04.348000+00:00",
+"text": "Thanks to #weirdcarbs . Oh, and the midterms too.",
+"url": "",
+"author_created_at": "2023-07-20T16:49:34.535000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0453",
+"author": "silvergrove.example",
+"timestamp": "2026-11-04T17:05:49.889000+00:00",
+"text": "Congratulations!",
+"url": "",
+"author_created_at": "2024-11-17T20:57:00.298000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0454",
+"author": "tidygrove.example",
+"timestamp": "2026-11-04T17:05:06.330000+00:00",
+"text": "Well, well, well... there's life in this place yet. Good to see this.",
+"url": "",
+"author_created_at": "2023-11-07T22:20:02.023000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0455",
+"author": "upbeatgrove.example",
+"timestamp": "2026-11-04T16:48:09.041000+00:00",
+"text": "🦋 Amazing what happens when you create a digital realm where people aren't actively encouraged to be asshats to each other just so some creepy friendless incel can bathe in his money and hatred of normal people.",
+"url": "",
+"author_created_at": "2023-04-21T22:14:43.979000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0456",
+"author": "vividgrove.example",
+"timestamp": "2026-11-04T16:45:36.689000+00:00",
+"text": "Joined Nov '26 accounts incoming",
+"url": "",
+"author_created_at": "2023-08-18T20:53:32.652000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0457",
+"author": "warmgrove.example",
+"timestamp": "2026-11-04T16:44:02.413000+00:00",
+"text": "Bluesky did have some old-school twitter sauce flowing during U.S. midterm night.\nI don't like the people in charge here, but that was the same on the other site too. At the very least, it's cool to see twitter losing relevance while at least some good people are over here instead.",
+"url": "",
+"author_created_at": "2024-10-21T20:27:31.207000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0458",
+"author": "younggrove.example",
+"timestamp": "2026-11-04T16:41:45.007000+00:00",
+"text": "the other blue wave",
+"url": "",
+"author_created_at": "2023-04-23T15:29:30.548000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0459",
+"author": "quietisland.example",
+"timestamp": "2026-11-04T16:38:42.301000+00:00",
+"text": "איפה הבחירות של ישראל על הגרף הזה?\nbsky.app/profile/bsky...",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"author_created_at": "2023-11-13T20:56:02.765000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0460",
+"author": "amberisland.example",
+"timestamp": "2026-11-04T16:38:09.764000+00:00",
+"text": "It is hoped that shift in the social media center of gravity is now with BlueSky\n\nLet MAGA be welcomed. Do NOT go for the block instantly. They just might get an education. Do not isolate them.\n\nThe Xcrement app should be abandoned\nNONE of the Meta properties/services should be used: FB, IG, WA...",
+"url": "",
+"author_created_at": "2024-11-14T17:21:14.526000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0461",
+"author": "briskisland.example",
+"timestamp": "2026-11-04T16:37:52.434000+00:00",
+"text": "credit where it's due, the website didn't shit itself (at least not for me)",
+"url": "",
+"author_created_at": "2023-07-01T16:43:26.800000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0462",
+"author": "calmisland.example",
+"timestamp": "2026-11-04T16:34:17.525000+00:00",
+"text": "the everything app",
+"url": "",
+"author_created_at": "2024-11-16T20:34:54.980000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0463",
+"author": "deepisland.example",
+"timestamp": "2026-11-04T16:32:33.926000+00:00",
+"text": "It's a very good thing that Bluesky is growing. Bluesky should replace Elon Musk's Nazi garbage X that is manipulated by Musk to spread far-right propaganda.",
+"url": "",
+"author_created_at": "2026-10-22T21:53:22.243000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0464",
+"author": "earlyisland.example",
+"timestamp": "2026-11-04T16:29:47.838000+00:00",
+"text": "It was a Night to Remember!",
+"url": "",
+"author_created_at": "2024-11-16T11:41:32.570000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0465",
+"author": "fairisland.example",
+"timestamp": "2026-11-04T16:28:17.040000+00:00",
+"text": "last night on bluesky",
+"url": "",
+"author_created_at": "2023-07-31T17:46:10.471000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0466",
+"author": "gentleisland.example",
+"timestamp": "2026-11-04T16:27:21.982000+00:00",
+"text": "Bluesky before election: Nerds\nBluesky after election: Ferris Bueller",
+"url": "",
+"author_created_at": "2023-09-09T21:09:29.039000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0467",
+"author": "hiddenisland.example",
+"timestamp": "2026-11-04T16:26:15.508000+00:00",
+"text": "😀",
+"url": "",
+"author_created_at": "2024-11-11T04:19:41.583000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0468",
+"author": "ivoryisland.example",
+"timestamp": "2026-11-04T16:25:33.774000+00:00",
+"text": "Bluesky server techs last night",
+"url": "https://static.klipy.com/ii/4493325008d34b7bf8cd6813cd5c1619/0f/17/6GvqzntCVJwEcf30z.gif?hh=160&ww=160&mp4=PFKEVxy9X3W0u7et&webm=9VG8mELAIfhnx",
+"author_created_at": "2024-11-17T21:58:02.772000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0469",
+"author": "ivorylantern.example",
+"timestamp": "2026-11-04T16:22:55.030000+00:00",
+"text": "The BSky surge is because FB and Twitter are owned and operated by Trump donors and supporters who mistreat Democrats, publish MAGA lies and propaganda, hire and promote foreign MAGA trolls, and create fake AI accounts to skew reality.  More than half the traffic on these platforms is AI generated.",
+"url": "",
+"author_created_at": "2025-01-12T04:10:02.643000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0470",
+"author": "jollyisland.example",
+"timestamp": "2026-11-04T16:21:37.707000+00:00",
+"text": "Me encanta que haya más uso de Bluesky pero me da un poco de pena que sea principalmente en Estados Unidos y por las elecciones.\nEstaría bueno que la comunidad siga creciendo de forma estable y no sea sólo un pico.",
+"url": "",
+"author_created_at": "2023-09-19T11:06:45.156000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0471",
+"author": "nobleotter.example",
+"timestamp": "2026-11-04T16:18:42.526000+00:00",
+"text": "Bluesky Rules!!!!! 💙",
+"url": "",
+"author_created_at": "2024-11-11T15:17:47.780000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0472",
+"author": "keenisland.example",
+"timestamp": "2026-11-04T16:18:04.459000+00:00",
+"text": "What Bluesky's motto should be:",
+"url": "https://static.klipy.com/ii/e293a233a303a98e471f78d04e13a1b0/49/7a/ju6jsoGp.gif?hh=264&ww=498&mp4=xW781v2LjEyzVFcnY6&webm=EKIY6F2BSEnh2DTIfO",
+"author_created_at": "2024-11-10T00:15:22.385000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0473",
+"author": "luckyisland.example",
+"timestamp": "2026-11-04T16:12:58.826000+00:00",
+"text": "the D+99 website does it again",
+"url": "",
+"author_created_at": "2023-06-22T04:01:57.187000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0474",
+"author": "mellowisland.example",
+"timestamp": "2026-11-04T16:07:02.754000+00:00",
+"text": "US election night impact on Bluesky",
+"url": "",
+"author_created_at": "2025-01-08T00:47:41.444000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0475",
+"author": "nobleisland.example",
+"timestamp": "2026-11-04T16:06:33.351000+00:00",
+"text": "It's the Bluesky Syndrome, a core meltdown caused by voters & Blueskyers to force MAGA into a Wicked Witch of the West \"oh no, I'm melting,\" liquidification & descent into the earth's core where the pressure is beyond description.\n\nOh well. \n\nThink of posts here as nails in a coffin.",
+"url": "",
+"author_created_at": "2025-08-09T06:10:22.800000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0476",
+"author": "oliveisland.example",
+"timestamp": "2026-11-04T16:04:43.324000+00:00",
+"text": "Welcome to people who think I died because I stopped posting on the Apartheid app. There is punch in the back.\n\nOn your left you'll see the trans community thriving, and to the right you'll see centrists handing out wet blankets.\n\nDon't go down to the basement. We keep Halely Stevens down there.",
+"url": "",
+"author_created_at": "2023-07-04T15:03:24.964000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0477",
+"author": "plainisland.example",
+"timestamp": "2026-11-04T16:03:03.844000+00:00",
+"text": "Il sintomo era evidente \n\nbsky.app/profile/bsky...",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"author_created_at": "2025-12-28T14:18:52.126000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0478",
+"author": "quickisland.example",
+"timestamp": "2026-11-04T15:58:44.971000+00:00",
+"text": "Thanks to all of you for making this place a fun place to election night.",
+"url": "",
+"author_created_at": "2023-07-27T13:43:10.607000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0479",
+"author": "rapidisland.example",
+"timestamp": "2026-11-04T15:57:31.490000+00:00",
+"text": "Bluesky the sport called democracy\n\nWithout democracy there is no proper leisure no proper enjoyment of any sport or culture …🗳️🌊🌊🌊🌊🌊🦋",
+"url": "",
+"author_created_at": "2024-11-13T09:27:51.288000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0480",
+"author": "silverisland.example",
+"timestamp": "2026-11-04T15:55:01.073000+00:00",
+"text": "Bluesky died but I’m happy for her aw",
+"url": "",
+"author_created_at": "2024-11-12T17:51:25.411000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0481",
+"author": "tidyisland.example",
+"timestamp": "2026-11-04T15:51:49.936000+00:00",
+"text": "La gauche US s'est bien installée sur BS. Maintenant faut y rester et pas seulement s'exciter les soirs d'élections :')",
+"url": "",
+"author_created_at": "2023-08-15T08:50:34.308000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0482",
+"author": "upbeatisland.example",
+"timestamp": "2026-11-04T15:50:59.740000+00:00",
+"text": "The way this only happens when it’s time to lib out",
+"url": "",
+"author_created_at": "2024-08-30T23:27:06.479000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0483",
+"author": "vividisland.example",
+"timestamp": "2026-11-04T15:49:25.631000+00:00",
+"text": "So cozy over here at Bluesky tbh 🩵",
+"url": "https://static.klipy.com/ii/d7aec6f6f171607374b2065c836f92f4/1c/bc/V8tLVvNo.gif?hh=498&ww=477&mp4=agNrBUpdFZ2pFAnyIz&webm=rkhwRoyxt3x8a",
+"author_created_at": "2026-06-25T03:26:36.868000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0484",
+"author": "warmisland.example",
+"timestamp": "2026-11-04T15:49:08.008000+00:00",
+"text": "I followed the returns exclusively on Bluesky last night until close to midnight when I turned on MS Now for a bit to follow the Michigan results",
+"url": "",
+"author_created_at": "2023-07-25T15:48:15.061000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0485",
+"author": "youngisland.example",
+"timestamp": "2026-11-04T15:45:15.935000+00:00",
+"text": "Bluesky the sports app is doing numbers in politics",
+"url": "",
+"author_created_at": "2023-04-27T13:35:02.955000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0486",
+"author": "quietjuniper.example",
+"timestamp": "2026-11-04T15:42:04.435000+00:00",
+"text": "the blue wave is driving a bluesky wave",
+"url": "",
+"author_created_at": "2023-06-22T15:20:48.986000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0487",
+"author": "amberjuniper.example",
+"timestamp": "2026-11-04T15:41:17.922000+00:00",
+"text": "Gonna need a lot of pools to dip the servers in",
+"url": "",
+"author_created_at": "2024-11-12T19:28:40.604000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0488",
+"author": "briskjuniper.example",
+"timestamp": "2026-11-04T15:40:41.430000+00:00",
+"text": "The age of the bird is dead, long live the age of the butterfly",
+"url": "",
+"author_created_at": "2023-05-02T00:47:09.008000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0489",
+"author": "calmjuniper.example",
+"timestamp": "2026-11-04T15:39:01.240000+00:00",
+"text": "Most of this is just me thirsting over the new intake",
+"url": "",
+"author_created_at": "2023-07-04T06:47:36.869000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0490",
+"author": "deepjuniper.example",
+"timestamp": "2026-11-04T15:37:13.018000+00:00",
+"text": "#TeamBlueSky",
+"url": "",
+"author_created_at": "2026-10-29T13:40:58.980000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0491",
+"author": "earlyjuniper.example",
+"timestamp": "2026-11-04T15:36:40.886000+00:00",
+"text": "no one actually interacted, but they read a lot.\n\nhahahahahaha",
+"url": "",
+"author_created_at": "2023-08-02T23:54:45.821000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0492",
+"author": "fairjuniper.example",
+"timestamp": "2026-11-04T15:33:14.168000+00:00",
+"text": "lmao",
+"url": "",
+"author_created_at": "2024-11-15T17:40:18.823000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0493",
+"author": "gentlejuniper.example",
+"timestamp": "2026-11-04T15:20:43.674000+00:00",
+"text": "I'm sure that was a bunch of republicans and right wing centrists posting since that's who you exclusively cater to. \n\nRight?\n\nRight?",
+"url": "",
+"author_created_at": "2023-10-18T01:42:46.729000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0494",
+"author": "hiddenjuniper.example",
+"timestamp": "2026-11-04T15:19:56.686000+00:00",
+"text": "half of this traffic is from suspending me",
+"url": "",
+"author_created_at": "2026-11-04T03:05:20.572000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0495",
+"author": "ivoryjuniper.example",
+"timestamp": "2026-11-04T15:17:58.858000+00:00",
+"text": "imagine if you stopped suspending people for being trans or palestinian!",
+"url": "",
+"author_created_at": "2023-04-30T21:35:43.733000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0496",
+"author": "jollyjuniper.example",
+"timestamp": "2026-11-04T15:13:25.220000+00:00",
+"text": "If this keeps up these poor bastards might actually have to learn how to code",
+"url": "",
+"author_created_at": "2023-09-18T22:11:35.643000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0497",
+"author": "keenjuniper.example",
+"timestamp": "2026-11-04T15:09:46.404000+00:00",
+"text": "Google searches for Bluesky this week",
+"url": "",
+"author_created_at": "2023-09-18T22:49:08.266000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0498",
+"author": "luckyjuniper.example",
+"timestamp": "2026-11-04T15:07:09.200000+00:00",
+"text": "Bluesky servers when it happens………",
+"url": "",
+"author_created_at": "2024-11-13T14:21:55.796000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0499",
+"author": "mellowjuniper.example",
+"timestamp": "2026-11-04T15:06:51.178000+00:00",
+"text": "Now imagine if the mods didn’t suck…",
+"url": "",
+"author_created_at": "2023-07-05T19:33:11.998000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0500",
+"author": "calmjuniper.example",
+"timestamp": "2026-11-04T15:04:50.987000+00:00",
+"text": "BLUE IS IN THE HEARTTTT",
+"url": "",
+"author_created_at": "2023-07-04T06:47:36.869000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0501",
+"author": "noblejuniper.example",
+"timestamp": "2026-11-04T15:03:47.532000+00:00",
+"text": "This was an excellent dress rehearsal for When It Happens",
+"url": "",
+"author_created_at": "2023-06-22T18:41:35.227000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0502",
+"author": "olivejuniper.example",
+"timestamp": "2026-11-04T15:01:35.295000+00:00",
+"text": "If Bluesky can look and feel the way it did last night, imagine what it’ll be like when it happens.",
+"url": "",
+"author_created_at": "2024-11-11T05:36:33.080000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0503",
+"author": "plainjuniper.example",
+"timestamp": "2026-11-04T14:54:26.439000+00:00",
+"text": "yeah better improve your upload bandwith because it's shit",
+"url": "",
+"author_created_at": "2023-07-15T04:00:10.349000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0504",
+"author": "quickjuniper.example",
+"timestamp": "2026-11-04T14:45:12.836000+00:00",
+"text": "Wow! Here’s the midterm-relief in numbers 👇🏻",
+"url": "",
+"author_created_at": "2023-07-24T09:04:11.432000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0505",
+"author": "rapidjuniper.example",
+"timestamp": "2026-11-04T14:09:33.962000+00:00",
+"text": "A onda azul também rolou no Bluesky 🦋🌊💙",
+"url": "",
+"author_created_at": "2023-03-12T19:46:02.288000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0506",
+"author": "silverjuniper.example",
+"timestamp": "2026-11-04T14:07:44.629000+00:00",
+"text": "Still no edit button",
+"url": "",
+"author_created_at": "2023-08-18T12:58:00.237000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0507",
+"author": "tidyjuniper.example",
+"timestamp": "2026-11-04T14:04:23.234000+00:00",
+"text": "Yes yes your welcome",
+"url": "",
+"author_created_at": "2025-01-25T16:31:08.245000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0508",
+"author": "upbeatjuniper.example",
+"timestamp": "2026-11-04T13:56:49.871000+00:00",
+"text": "Hell yeah! I love the work the bsky team has put into this amazing platform, as well as atproto, its become a core part of my daily life!",
+"url": "",
+"author_created_at": "2026-10-21T04:51:53.736000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0509",
+"author": "vividjuniper.example",
+"timestamp": "2026-11-04T13:48:23.914000+00:00",
+"text": "Shitposting for democracy 🥳",
+"url": "",
+"author_created_at": "2023-08-11T10:46:51.822000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0510",
+"author": "warmjuniper.example",
+"timestamp": "2026-11-04T13:45:28.245000+00:00",
+"text": "Bluesky still riding big energy from 'Elon Musk does something stupid'",
+"url": "",
+"author_created_at": "2023-09-25T14:56:04.406000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0511",
+"author": "youngjuniper.example",
+"timestamp": "2026-11-04T13:31:48.298000+00:00",
+"text": "Bluesky has the political juice, more politicans need to use this platform for comms even if they get yelled at constantly.",
+"url": "",
+"author_created_at": "2023-12-31T17:38:42.089000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0512",
+"author": "quietkestrel.example",
+"timestamp": "2026-11-04T13:31:25.583000+00:00",
+"text": "Everyone on Twitter is in a bubble.",
+"url": "",
+"author_created_at": "2023-07-03T03:43:36.143000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0513",
+"author": "amberkestrel.example",
+"timestamp": "2026-11-04T13:29:44.254000+00:00",
+"text": "That’s a lot of Gb/s",
+"url": "",
+"author_created_at": "2025-10-06T21:17:35.152000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0514",
+"author": "briskkestrel.example",
+"timestamp": "2026-11-04T13:28:05.901000+00:00",
+"text": "don't forget who the real winner was in this election",
+"url": "",
+"author_created_at": "2023-04-27T18:59:53.979000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0515",
+"author": "calmkestrel.example",
+"timestamp": "2026-11-04T13:13:11.820000+00:00",
+"text": "Good Ending - USA is all Bluesky",
+"url": "",
+"author_created_at": "2023-06-06T16:01:37.264000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0516",
+"author": "deepkestrel.example",
+"timestamp": "2026-11-04T13:05:05.656000+00:00",
+"text": "lol, even I had to log on here today to see what was up 😆",
+"url": "",
+"author_created_at": "2024-11-13T11:50:45.995000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0517",
+"author": "earlykestrel.example",
+"timestamp": "2026-11-04T12:14:50.773000+00:00",
+"text": "lololol lololol",
+"url": "",
+"author_created_at": "2023-09-01T19:46:55.819000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0518",
+"author": "fairkestrel.example",
+"timestamp": "2026-11-04T11:47:09.306000+00:00",
+"text": "Jay Graber....you began the \"A world with out Caesars\"....Mundus sine Caesaribus ....which gave birth to \"No King in America\" moment....November 3, 2026's mid-term election results....Blue Sky demonstrating ....BlueSky can overcome the toxic X of King Maker Musk....👏",
+"url": "",
+"author_created_at": "2024-10-15T23:23:24.607000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0519",
+"author": "gentlekestrel.example",
+"timestamp": "2026-11-04T11:32:40.096000+00:00",
+"text": "Easily 30% of that appears to be Whitesnake gifs.",
+"url": "https://static.klipy.com/ii/d7aec6f6f171607374b2065c836f92f4/8b/7d/aEYUXqSI.gif?hh=480&ww=498&mp4=xuC9wYlS6iwe5jY0Gp9&webm=msxH3jfusCZI",
+"author_created_at": "2023-08-03T23:43:06.878000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0520",
+"author": "hiddenkestrel.example",
+"timestamp": "2026-11-04T11:21:53.090000+00:00",
+"text": "This looks like Grafana.\n\nBluesky, are you using Grafana?!\n\n<sniffle>\n\nThey're just like us...",
+"url": "",
+"author_created_at": "2023-11-21T09:51:46.510000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0521",
+"author": "ivorykestrel.example",
+"timestamp": "2026-11-04T11:19:49.161000+00:00",
+"text": "Even for furry porn, that’s quite a lot.",
+"url": "",
+"author_created_at": "2023-09-19T19:15:05.247000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0522",
+"author": "jollykestrel.example",
+"timestamp": "2026-11-04T11:16:25.185000+00:00",
+"text": "A good time to quit X whose owner just spent $474m trying to influence the Midterms #Bluewave #Bluesky",
+"url": "",
+"author_created_at": "2024-12-22T14:11:51.644000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0523",
+"author": "keenkestrel.example",
+"timestamp": "2026-11-04T11:09:19.767000+00:00",
+"text": "Ups, waren wir das etwa? 😇😇😇 Gedanken und Ausprobiertes zu User Experience, UX driven development und Human-centered AI postet  @zeix.com neu auch auf Bluesky 🎉",
+"url": "",
+"author_created_at": "2025-02-21T15:26:12.646000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0524",
+"author": "luckykestrel.example",
+"timestamp": "2026-11-04T10:55:32.053000+00:00",
+"text": "simone tebet não para de crescer nas pesquisas",
+"url": "",
+"author_created_at": "2023-07-24T20:45:11.238000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0525",
+"author": "mellowkestrel.example",
+"timestamp": "2026-11-04T10:53:51.451000+00:00",
+"text": "Blimey 😳",
+"url": "",
+"author_created_at": "2023-09-01T13:17:52.363000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0526",
+"author": "noblekestrel.example",
+"timestamp": "2026-11-04T10:48:40.727000+00:00",
+"text": "ブルースカイが史上最もエコーチェンバーではない日といっても過言ではない（よかったねアメリカのみんな）\n\nひょっとしてもしかしたらそんなにいうほどエコーチェンバーでもなかったのかもしれない\n人呼んで真実（トゥルー）スカイなのかもしれない\nbsky.app/profile/bsky...",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"author_created_at": "2023-04-19T13:08:25.426000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0527",
+"author": "olivekestrel.example",
+"timestamp": "2026-11-04T10:39:36.259000+00:00",
+"text": "Good. Now don't forget WHO got you there.",
+"url": "",
+"author_created_at": "2023-08-06T22:22:33.170000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0528",
+"author": "plainkestrel.example",
+"timestamp": "2026-11-04T10:39:00.786000+00:00",
+"text": "Most of us on here are celebrating the resounding midterm elections/referendum in the US.",
+"url": "",
+"author_created_at": "2023-09-22T18:12:28.258000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0529",
+"author": "quickkestrel.example",
+"timestamp": "2026-11-04T10:36:08.448000+00:00",
+"text": "Nuestra vuelta a Cielo 💙 Azul\n\nAh! No, que hubo una supuesta democracia chicle chichi nabo en los USA, donde en todas las Elecciones solamente vota el 50% del potencial censo.\n\nUna egomanía bastante falsa, esa democracia, donde sólo dos campos se permiten batir y combatir. Como las segundas vueltas.",
+"url": "",
+"author_created_at": "2026-11-01T08:37:50.677000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0530",
+"author": "rapidkestrel.example",
+"timestamp": "2026-11-04T09:47:19.747000+00:00",
+"text": "💙🙏💙",
+"url": "",
+"author_created_at": "2023-08-19T19:11:06.331000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0531",
+"author": "silverkestrel.example",
+"timestamp": "2026-11-04T09:12:17.857000+00:00",
+"text": "Blue sky trolling Trump 😂😂😂😂😂",
+"url": "",
+"author_created_at": "2024-11-09T10:13:56.879000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0532",
+"author": "tidykestrel.example",
+"timestamp": "2026-11-04T09:12:00.314000+00:00",
+"text": "[Bluesky：アメリカ中間選挙でトラフィックが倍増]\n\n※和訳※\nデータトラフィックが通常の200％に達しており、さらに増加中です！ 皆さんのおかげで、忘れられない夜になりました。ありがとうございます。",
+"url": "",
+"author_created_at": "2023-11-11T01:47:05.812000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0533",
+"author": "upbeatkestrel.example",
+"timestamp": "2026-11-04T09:11:33.794000+00:00",
+"text": "Por lo que sea Bluesky ha tenido una buena noche.",
+"url": "",
+"author_created_at": "2023-07-28T16:41:07.476000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0534",
+"author": "vividkestrel.example",
+"timestamp": "2026-11-04T08:27:30.631000+00:00",
+"text": "Oh, don’t act so surprised, BlueSky. I thought you already knew that you're a wrestling social media website and AEW is on tonight! 😜\n\n#WrestleSky #AEW 🤼‍♂️",
+"url": "",
+"author_created_at": "2024-11-03T17:29:12.278000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0535",
+"author": "warmkestrel.example",
+"timestamp": "2026-11-04T08:24:56.382000+00:00",
+"text": "i saw this and i immediately made it my personal goal to get bluesky dot app to 1 terabyte per second",
+"url": "",
+"author_created_at": "2023-04-10T01:53:05.616000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0536",
+"author": "vividmeadow.example",
+"timestamp": "2026-11-04T08:22:08.387000+00:00",
+"text": "Derrotar nazis sem dar um tiro sabe melhor.",
+"url": "",
+"author_created_at": "2026-02-08T22:16:36.246000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0537",
+"author": "youngkestrel.example",
+"timestamp": "2026-11-04T08:19:42.372000+00:00",
+"text": "I know a grafana text when I see it",
+"url": "",
+"author_created_at": "2023-04-26T20:28:40.924000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0538",
+"author": "quietlagoon.example",
+"timestamp": "2026-11-04T08:19:28.435000+00:00",
+"text": "holy moly",
+"url": "",
+"author_created_at": "2023-07-05T07:03:21.847000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0539",
+"author": "amberlagoon.example",
+"timestamp": "2026-11-04T08:16:58.770000+00:00",
+"text": "If you're wondering why things are a bit creaky around here.  The Guardian has also started linking to Bluesky in the live blog more so I am expecting traffic to go up as people turn here and to Threads instead of X.",
+"url": "",
+"author_created_at": "2023-07-30T06:21:06.450000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0540",
+"author": "brisklagoon.example",
+"timestamp": "2026-11-04T08:12:49.043000+00:00",
+"text": "Oh. That’s why my notifications have just completely stopped",
+"url": "",
+"author_created_at": "2023-04-27T23:49:26.756000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0541",
+"author": "calmlagoon.example",
+"timestamp": "2026-11-04T08:07:24.649000+00:00",
+"text": "From this perhaps?\n\nbsky.app/profile/bsky...",
+"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22",
+"author_created_at": "2024-11-06T22:57:38.684000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0542",
+"author": "deeplagoon.example",
+"timestamp": "2026-11-04T08:00:35.038000+00:00",
+"text": "Spannend, was so eine Wahl alles bewirken kann 👍😊 #midterms",
+"url": "",
+"author_created_at": "2026-08-17T05:34:52.366000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0543",
+"author": "earlylagoon.example",
+"timestamp": "2026-11-04T07:37:35.030000+00:00",
+"text": "so which is it? 😏",
+"url": "",
+"author_created_at": "2023-10-09T19:05:02.493000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0544",
+"author": "fairlagoon.example",
+"timestamp": "2026-11-04T07:20:52.714000+00:00",
+"text": "A different perspective on the midterms:",
+"url": "",
+"author_created_at": "2023-08-17T15:30:08.682000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0545",
+"author": "gentlelagoon.example",
+"timestamp": "2026-11-04T07:17:36.915000+00:00",
+"text": "Super Bowl moment to be sure.\n\nLet’s make sure this translates into sustained use!",
+"url": "",
+"author_created_at": "2023-03-05T23:04:38.104000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0546",
+"author": "hiddenlagoon.example",
+"timestamp": "2026-11-04T07:10:06.152000+00:00",
+"text": "update: it's probably the sheer amount of posts coming from bluesky",
+"url": "",
+"author_created_at": "2024-12-05T12:07:24.841000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0547",
+"author": "ivorylagoon.example",
+"timestamp": "2026-11-04T07:09:03.625000+00:00",
+"text": "Alt-text says 25.8 Gb/s though the image says 35.8 Gb/s the image is more believable but serious load",
+"url": "",
+"author_created_at": "2024-10-09T07:35:30.006000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0548",
+"author": "jollylagoon.example",
+"timestamp": "2026-11-04T07:06:10.202000+00:00",
+"text": "À la surprise générale, les blouskeurs américains se sont passionnés toute la soirée pour le match PSG-Villarreal 🎉",
+"url": "",
+"author_created_at": "2026-04-28T11:16:12.365000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0549",
+"author": "keenlagoon.example",
+"timestamp": "2026-11-04T07:04:43.808000+00:00",
+"text": "Blue Sky:",
+"url": "",
+"author_created_at": "2023-07-18T21:38:06.735000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0550",
+"author": "luckylagoon.example",
+"timestamp": "2026-11-04T07:04:31.888000+00:00",
+"text": "Oh yea baby. We are here 🥳. You know why? Freedom of speech!!! None suppress post!!! Thank you Bluesky!",
+"url": "",
+"author_created_at": "2025-08-20T02:46:14.597000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0551",
+"author": "mellowlagoon.example",
+"timestamp": "2026-11-04T07:04:28.895000+00:00",
+"text": "wow, thats a lot of hole",
+"url": "",
+"author_created_at": "2023-07-21T19:35:37.210000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0552",
+"author": "noblelagoon.example",
+"timestamp": "2026-11-04T07:03:23.053000+00:00",
+"text": "hope this means pronouns for all 💙🧙‍♀️",
+"url": "",
+"author_created_at": "2026-08-31T03:50:52.794000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0553",
+"author": "olivelagoon.example",
+"timestamp": "2026-11-04T06:58:06.138000+00:00",
+"text": "The Bluesky Wave 🦋🌊👋🏻",
+"url": "",
+"author_created_at": "2023-09-22T06:21:50.881000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0554",
+"author": "plainlagoon.example",
+"timestamp": "2026-11-04T06:52:54.810000+00:00",
+"text": "Why what happened?",
+"url": "",
+"author_created_at": "2025-01-26T06:53:23.042000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0555",
+"author": "quicklagoon.example",
+"timestamp": "2026-11-04T06:52:53.941000+00:00",
+"text": "legit kinda surprised the site didn't crash",
+"url": "",
+"author_created_at": "2023-07-08T18:02:47.656000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0556",
+"author": "rapidlagoon.example",
+"timestamp": "2026-11-04T06:46:34.275000+00:00",
+"text": "nicholas @sprk.so type skeet. #walktoremember #thenotebook #messageinabottle",
+"url": "",
+"author_created_at": "2023-07-08T03:19:38.298000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0557",
+"author": "silverlagoon.example",
+"timestamp": "2026-11-04T06:35:17.638000+00:00",
+"text": "Thanks, @dennieedwards.bsky.social !",
+"url": "",
+"author_created_at": "2023-08-18T17:32:10.795000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0558",
+"author": "tidylagoon.example",
+"timestamp": "2026-11-04T06:27:14.638000+00:00",
+"text": "I love how Bluesky is the social media to let everyone know it's busy by bandwidth.\n\nThis is like downloading a copy of GTA VI every 6 seconds",
+"url": "",
+"author_created_at": "2024-09-13T17:14:50.111000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0559",
+"author": "upbeatlagoon.example",
+"timestamp": "2026-11-04T06:25:50.664000+00:00",
+"text": "The libbing out app is reporting unprecedented levels of libbing out tonight!",
+"url": "",
+"author_created_at": "2023-08-06T00:47:00.833000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0560",
+"author": "vividlagoon.example",
+"timestamp": "2026-11-04T06:25:16.882000+00:00",
+"text": "This app has been everything I hoped for tonight",
+"url": "",
+"author_created_at": "2023-10-30T15:07:29.127000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0561",
+"author": "warmlagoon.example",
+"timestamp": "2026-11-04T06:24:54.670000+00:00",
+"text": "今日はBlueskyのトラフィックがいつもの２倍以上になっているらしい笑",
+"url": "",
+"author_created_at": "2024-02-08T11:18:17.912000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0562",
+"author": "younglagoon.example",
+"timestamp": "2026-11-04T06:19:08.809000+00:00",
+"text": "Yeah, that's us.",
+"url": "",
+"author_created_at": "2023-04-30T16:19:50.276000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0563",
+"author": "quietmarble.example",
+"timestamp": "2026-11-04T06:18:59.098000+00:00",
+"text": "waow",
+"url": "",
+"author_created_at": "2026-05-11T20:54:45.465000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0564",
+"author": "ambermarble.example",
+"timestamp": "2026-11-04T06:12:29.250000+00:00",
+"text": "This made me smile. Woke up to a wall of happy people. :)",
+"url": "",
+"author_created_at": "2023-08-19T08:47:33.354000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0565",
+"author": "briskmarble.example",
+"timestamp": "2026-11-04T06:11:53.858000+00:00",
+"text": "เอาให้ชัด\nไม่ได้โดนโจมตีแน่นะ\nหรือว่าทวิตมันล่ม คนเลยแห่มา 😅",
+"url": "",
+"author_created_at": "2024-10-25T11:14:04.206000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0566",
+"author": "calmmarble.example",
+"timestamp": "2026-11-04T06:11:47.743000+00:00",
+"text": "アメリカの選挙か",
+"url": "",
+"author_created_at": "2024-09-25T14:08:00.707000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0567",
+"author": "deepmarble.example",
+"timestamp": "2026-11-04T06:10:41.551000+00:00",
+"text": "Bluesky for a reason",
+"url": "",
+"author_created_at": "2025-02-26T03:13:21.344000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0568",
+"author": "earlymarble.example",
+"timestamp": "2026-11-04T06:10:28.699000+00:00",
+"text": "thank YOU, sports app with shitty moderation",
+"url": "",
+"author_created_at": "2023-09-29T03:32:02.281000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0569",
+"author": "fairmarble.example",
+"timestamp": "2026-11-04T06:07:14.153000+00:00",
+"text": "Imagine if bsky leadership chose this moment to introspect on who their users are instead of mod hammering core users whose politics they disagree with while doing nothing about the “just asking (asshole) questions” toxic slobs from twitter",
+"url": "",
+"author_created_at": "2023-08-18T17:54:52.768000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0570",
+"author": "gentlemarble.example",
+"timestamp": "2026-11-04T06:06:05.274000+00:00",
+"text": "Also Bluesky is celebrating. 🎉 🥳\nWe all wins today. 🫶",
+"url": "",
+"author_created_at": "2023-08-05T06:21:45.016000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0571",
+"author": "hiddenmarble.example",
+"timestamp": "2026-11-04T06:03:21.084000+00:00",
+"text": "God damn this website loves voting",
+"url": "",
+"author_created_at": "2024-03-13T19:14:55.774000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0572",
+"author": "ivorymarble.example",
+"timestamp": "2026-11-04T06:00:03.738000+00:00",
+"text": "it’s just called “sky” now",
+"url": "",
+"author_created_at": "2024-01-21T23:59:01.826000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0573",
+"author": "jollymarble.example",
+"timestamp": "2026-11-04T05:57:30.627000+00:00",
+"text": "👏👏👏 thank you bluesky devs",
+"url": "",
+"author_created_at": "2024-11-27T20:13:32.545000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0574",
+"author": "keenmarble.example",
+"timestamp": "2026-11-04T05:54:41.946000+00:00",
+"text": "May this be an indication of who the fuck is on the app",
+"url": "",
+"author_created_at": "2023-07-09T18:07:06.962000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0575",
+"author": "luckymarble.example",
+"timestamp": "2026-11-04T05:52:09.868000+00:00",
+"text": "👌",
+"url": "",
+"author_created_at": "2023-07-01T18:23:16.273000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0576",
+"author": "mellowmarble.example",
+"timestamp": "2026-11-04T05:51:25.515000+00:00",
+"text": "Uhm.",
+"url": "",
+"author_created_at": "2023-06-22T22:00:31.820000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0577",
+"author": "noblemarble.example",
+"timestamp": "2026-11-04T05:51:24.769000+00:00",
+"text": "This is wild! Talk about, up and to the right! 🚀🚀🚀",
+"url": "",
+"author_created_at": "2025-12-15T17:21:43.725000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0578",
+"author": "olivemarble.example",
+"timestamp": "2026-11-04T05:47:53.692000+00:00",
+"text": "I picked a bad day to download the PS2 ISO library.",
+"url": "",
+"author_created_at": "2024-02-13T00:32:17.468000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0579",
+"author": "plainmarble.example",
+"timestamp": "2026-11-04T05:47:28.687000+00:00",
+"text": "mu.social/profile/bsky...",
+"url": "https://mu.social/profile/bsky.app/post/3mzhhvhjfwk22",
+"author_created_at": "2023-09-23T15:58:19.233000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0580",
+"author": "quickmarble.example",
+"timestamp": "2026-11-04T05:46:43.615000+00:00",
+"text": "Color me shocked that the \"Cuck Coded\" parts are handling \"The Load\" being thrown at them....",
+"url": "",
+"author_created_at": "2023-07-07T01:25:03.033000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0581",
+"author": "rapidmarble.example",
+"timestamp": "2026-11-04T05:45:37.854000+00:00",
+"text": "#hugops",
+"url": "",
+"author_created_at": "2023-01-19T01:04:39.998000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0582",
+"author": "silvermarble.example",
+"timestamp": "2026-11-04T05:44:39.303000+00:00",
+"text": "bluesky taking over fuck twitter for life",
+"url": "",
+"author_created_at": "2023-12-15T21:12:52.285000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0583",
+"author": "tidymarble.example",
+"timestamp": "2026-11-04T05:44:09.871000+00:00",
+"text": "Bluesky is experiencing their own blue wave. \nIt's Blue Waves all the way down. \n🌊🌊🌊",
+"url": "",
+"author_created_at": "2024-11-22T08:35:03.453000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0584",
+"author": "upbeatmarble.example",
+"timestamp": "2026-11-04T05:44:08.080000+00:00",
+"text": "imagine when it happens",
+"url": "",
+"author_created_at": "2023-05-29T23:37:48.861000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0585",
+"author": "vividmarble.example",
+"timestamp": "2026-11-04T05:41:29.104000+00:00",
+"text": "Think they’ll stop being fascist bootlickers now? \n\nNo?",
+"url": "",
+"author_created_at": "2023-07-20T16:58:50.721000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0586",
+"author": "warmmarble.example",
+"timestamp": "2026-11-04T05:41:16.902000+00:00",
+"text": "fuck yeah\n\nbig thanks to the eng team and everyone on Bluesky who make it the best place to be, especially on nights like this",
+"url": "",
+"author_created_at": "2023-03-09T02:32:32.523000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0587",
+"author": "youngmarble.example",
+"timestamp": "2026-11-04T05:41:09.291000+00:00",
+"text": "Truly the night @bsky.app became president.",
+"url": "",
+"author_created_at": "2023-06-04T05:22:01.238000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0588",
+"author": "quietnectar.example",
+"timestamp": "2026-11-04T05:40:18.848000+00:00",
+"text": "the place to be for the blue wave babayyy. woke is BACK",
+"url": "",
+"author_created_at": "2024-09-25T03:58:37.408000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0589",
+"author": "ambernectar.example",
+"timestamp": "2026-11-04T05:36:42.981000+00:00",
+"text": "Oh, we can top it…. 😈",
+"url": "",
+"author_created_at": "2023-08-18T22:03:39.191000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0590",
+"author": "brisknectar.example",
+"timestamp": "2026-11-04T05:36:31.362000+00:00",
+"text": "Well there you go",
+"url": "",
+"author_created_at": "2023-10-18T01:36:30.264000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0591",
+"author": "calmnectar.example",
+"timestamp": "2026-11-04T05:35:22.555000+00:00",
+"text": "Oh my god that’s so small hahahahaha (I like this club but it’s a small club)",
+"url": "",
+"author_created_at": "2023-05-04T23:09:15.175000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0592",
+"author": "deepnectar.example",
+"timestamp": "2026-11-04T05:34:46.876000+00:00",
+"text": "Just be glad there's not #AEWDynamite tonight eating up all your data.",
+"url": "",
+"author_created_at": "2023-07-24T21:23:12.877000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0593",
+"author": "earlynectar.example",
+"timestamp": "2026-11-04T05:34:25.615000+00:00",
+"text": "Blue wave in Bluesky?",
+"url": "",
+"author_created_at": "2023-11-19T06:22:50.430000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0594",
+"author": "fairnectar.example",
+"timestamp": "2026-11-04T05:34:17.765000+00:00",
+"text": "Huge congrats to the Bluesky team!\n\nPeople are quick to complain when things don't work but you hardly ever get recognition for keeping things stable.\n\nYou guys rock 🤘",
+"url": "",
+"author_created_at": "2024-02-06T19:03:24.884000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0595",
+"author": "gentlenectar.example",
+"timestamp": "2026-11-04T05:33:39.135000+00:00",
+"text": "Don't think we're done bullying you either",
+"url": "",
+"author_created_at": "2023-06-14T21:15:00.473000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0596",
+"author": "hiddennectar.example",
+"timestamp": "2026-11-04T05:33:28.644000+00:00",
+"text": "the night bluesky libbed out so hard it turned the lights out",
+"url": "",
+"author_created_at": "2024-11-09T04:12:50.779000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0597",
+"author": "ivorynectar.example",
+"timestamp": "2026-11-04T05:33:28.142000+00:00",
+"text": "Oops...",
+"url": "",
+"author_created_at": "2024-11-17T13:45:52.432000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0598",
+"author": "jollynectar.example",
+"timestamp": "2026-11-04T05:31:22.376000+00:00",
+"text": "why did something happen?",
+"url": "",
+"author_created_at": "2023-07-08T19:26:32.871000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0599",
+"author": "keennectar.example",
+"timestamp": "2026-11-04T05:30:40.283000+00:00",
+"text": "I haven't seen activity like this since everybody in Brazil did their mass exodus over to here cause of the Twitter ban 2 years ago! Holy crap!",
+"url": "",
+"author_created_at": "2024-08-30T20:44:04.840000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0600",
+"author": "luckynectar.example",
+"timestamp": "2026-11-04T05:30:35.055000+00:00",
+"text": "My skyline right now...",
+"url": "https://static.klipy.com/ii/4e7bea9f7a3371424e6c16ebc93252fe/c5/e9/DO9QtrMbEMzg1T5wl1B.gif?hh=286&ww=286&mp4=oJL5rjRYYgUm5cEUVG&webm=LSdoEzuUj904gvWQf",
+"author_created_at": "2024-10-08T21:04:07.010000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0601",
+"author": "mellownectar.example",
+"timestamp": "2026-11-04T05:29:55.106000+00:00",
+"text": "It's the compassionate people bringing the traffic.\n\nThe people fighting for trans rights.\n\nThe people that wanted a safe space away from oppression.\n\nWill this finally help you see that, bluesky?\n\nWill y'all finally protect trans people on this site?",
+"url": "",
+"author_created_at": "2024-12-15T04:39:58.743000+00:00",
+"platform": "bluesky"
+},
+{
+"id": "bluesky-0602",
+"author": "noblenectar.example",
+"timestamp": "2026-11-04T05:29:22.081000+00:00",
+"text": "thank you bluesky devops",
+"url": "",
+"author_created_at": "2023-07-05T19:43:29.150000+00:00",
+"platform": "bluesky"
+}
+]
+}

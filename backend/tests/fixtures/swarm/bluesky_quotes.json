@@ -1,0 +1,59 @@
+{
+ "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001",
+ "posts": [
+  {
+   "uri": "at://did:plc:user0060/app.bsky.feed.post/3quote00000",
+   "cid": "bafyreigxgnjg4l5mzzhstvwbtm2przjfhuocnuekamld6bztzmcytgpyp4",
+   "author": {
+    "did": "did:plc:user0060",
+    "handle": "quoter0.bsky.social",
+    "displayName": "User 60",
+    "avatar": "https://cdn.example/avatar/60.jpg",
+    "labels": [],
+    "createdAt": "2023-05-01T10:00:00.000Z"
+   },
+   "record": {
+    "$type": "app.bsky.feed.post",
+    "createdAt": "2026-11-04T11:00:00.000Z",
+    "text": "Quoting this because the growth tonight is wild.",
+    "langs": [
+     "en"
+    ]
+   },
+   "bookmarkCount": 0,
+   "replyCount": 0,
+   "repostCount": 0,
+   "likeCount": 0,
+   "quoteCount": 0,
+   "indexedAt": "2026-11-06T04:03:20.777Z",
+   "labels": []
+  },
+  {
+   "uri": "at://did:plc:user0061/app.bsky.feed.post/3quote00001",
+   "cid": "bafyreigxgnjg4l5mzzhstvwbtm2przjfhuocnuekamld6bztzmcytgpyp4",
+   "author": {
+    "did": "did:plc:user0061",
+    "handle": "quoter1.bsky.social",
+    "displayName": "User 61",
+    "avatar": "https://cdn.example/avatar/61.jpg",
+    "labels": [],
+    "createdAt": "2023-05-01T10:00:00.000Z"
+   },
+   "record": {
+    "$type": "app.bsky.feed.post",
+    "createdAt": "2026-11-04T11:01:00.000Z",
+    "text": "Big night for the open social web.",
+    "langs": [
+     "en"
+    ]
+   },
+   "bookmarkCount": 0,
+   "replyCount": 0,
+   "repostCount": 0,
+   "likeCount": 0,
+   "quoteCount": 0,
+   "indexedAt": "2026-11-06T04:03:20.777Z",
+   "labels": []
+  }
+ ]
+}

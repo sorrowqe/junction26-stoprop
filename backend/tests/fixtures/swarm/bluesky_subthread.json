@@ -1,0 +1,126 @@
+{
+ "thread": {
+  "post": {
+   "uri": "at://did:plc:user0040/app.bsky.feed.post/3reply000040",
+   "cid": "bafyfixture000040",
+   "author": {
+    "did": "did:plc:user0040",
+    "handle": "deepthread.bsky.social",
+    "displayName": "User 40",
+    "avatar": "https://cdn.example/avatar/40.jpg",
+    "labels": [],
+    "createdAt": "2023-05-01T10:00:00.000Z"
+   },
+   "record": {
+    "$type": "app.bsky.feed.post",
+    "createdAt": "2026-11-04T10:00:00.000Z",
+    "langs": [
+     "en"
+    ],
+    "reply": {
+     "parent": {
+      "cid": "bafyroot",
+      "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+     },
+     "root": {
+      "cid": "bafyroot",
+      "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+     }
+    },
+    "text": "This thread is going to get long, so I am starting a branch here."
+   },
+   "bookmarkCount": 0,
+   "replyCount": 2,
+   "repostCount": 0,
+   "likeCount": 2,
+   "quoteCount": 0,
+   "indexedAt": "2026-11-04T10:00:00.000Z",
+   "labels": []
+  },
+  "$type": "app.bsky.feed.defs#threadViewPost",
+  "replies": [
+   {
+    "post": {
+     "uri": "at://did:plc:user0041/app.bsky.feed.post/3reply000041",
+     "cid": "bafyfixture000041",
+     "author": {
+      "did": "did:plc:user0041",
+      "handle": "branchreply1.bsky.social",
+      "displayName": "User 41",
+      "avatar": "https://cdn.example/avatar/41.jpg",
+      "labels": [],
+      "createdAt": "2023-05-01T10:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T10:05:00.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "Replying in the branch: the feeds are back for me now, all good."
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T10:05:00.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0042/app.bsky.feed.post/3reply000042",
+     "cid": "bafyfixture000042",
+     "author": {
+      "did": "did:plc:user0042",
+      "handle": "branchreply2.bsky.social",
+      "displayName": "User 42",
+      "avatar": "https://cdn.example/avatar/42.jpg",
+      "labels": [],
+      "createdAt": "2023-05-01T10:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T10:09:00.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "Still seeing a delay on notifications here, maybe ten minutes."
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T10:09:00.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   }
+  ]
+ }
+}

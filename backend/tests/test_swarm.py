@@ -360,5 +360,10 @@ def test_api_deep_with_fake_embeddings(monkeypatch):
 
 def test_swarm_page_and_sample_served():
     page = client.get("/swarm").text
-    assert "Load sample dataset" in page and "/static/swarm.js" in page
+    assert "Paste a link" in page and "Try an example" in page and "/static/swarm.js" in page
     assert client.get("/static/swarm_sample.csv").text.startswith("id,author,timestamp,text")
+    snap = client.get("/static/examples/bluesky_thread.json").json()
+    assert snap["source"]["platform"] == "bluesky" and "pseudonyms" in snap["source"]["note"]
+    assert all(p["text"].strip() for p in snap["posts"])
+    out = client.post("/api/swarm", json={"data": json.dumps(snap)}).json()
+    assert out["summary"]["rejected"] == 0 and out["summary"]["posts"] == len(snap["posts"])

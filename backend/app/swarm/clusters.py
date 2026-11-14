@@ -133,6 +133,96 @@ def event_hashtag(cluster: dict, tag_index: dict[str, list[tuple[float, str]]], 
     return None
 
 
+# ------------------------------------------------------------- campaigns
+
+CAMPAIGN_JACCARD = 0.5
+
+
+def _strength(c: dict) -> tuple:
+    return (VERDICT_ORDER.index(c["verdict"]), -c["author_count"], c["_start"])
+
+
+def merge_campaigns(items: list[dict]) -> list[dict]:
+    """Clusters whose author sets overlap strongly (Jaccard >= 0.5) are one campaign posting several
+    messages: shown as one card with its message variants. Verdicts are not recomputed: the campaign
+    shows its strongest variant's verdict, and each variant keeps its own evidence."""
+    sets = [{a["author"].lower() for a in c["authors"]} for c in items]
+    parent = list(range(len(items)))
+
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+    for i in range(len(items)):
+        for j in range(i + 1, len(items)):
+            union = sets[i] | sets[j]
+            if union and len(sets[i] & sets[j]) / len(union) >= CAMPAIGN_JACCARD:
+                parent[find(i)] = find(j)
+    groups: dict[int, list[int]] = {}
+    for i in range(len(items)):
+        groups.setdefault(find(i), []).append(i)
+    out = []
+    for members in groups.values():
+        if len(members) == 1:
+            c = items[members[0]]
+            c["kind"], c["variants"] = "cluster", []
+            out.append(c)
+            continue
+        vs = sorted((items[i] for i in members), key=_strength)
+        top = vs[0]
+        authors: dict[str, dict] = {}
+        for v in vs:
+            for a in v["authors"]:
+                row = authors.setdefault(a["author"].lower(), {**a, "posts_in_cluster": 0})
+                row["posts_in_cluster"] += a["posts_in_cluster"]
+                row["first_post"] = min(row["first_post"], a["first_post"])
+                row["name_pattern"] = row["name_pattern"] or a["name_pattern"]
+        rows = sorted(authors.values(), key=lambda r: r["first_post"])
+        for k, r in enumerate(rows):
+            r["role"] = "first poster" if k == 0 else "amplifier"
+        start, end = min(v["_start"] for v in vs), max(v["_end"] for v in vs)
+        n_posts = sum(v["post_count"] for v in vs)
+        counts: dict[str, int] = {}
+        for v in vs:
+            for line in v["evidence_for"] + v["evidence_against"]:
+                counts[line] = counts.get(line, 0) + 1
+
+        def merged(key):
+            lines, seen = [], set()
+            for n, v in enumerate(vs, start=1):
+                for line in v[key]:
+                    if line.startswith("The same accounts also posted"):
+                        continue
+                    text = line if counts[line] > 1 else f"Message {n}: {line}"
+                    if text not in seen:
+                        seen.add(text)
+                        lines.append(text)
+            return lines
+        fams = [f for f in ("T", "S", "A", "M") if any(f in v["families"] for v in vs)]
+        camp = {
+            **{k: top[k] for k in ("_posts", "_tags", "_rep_norm", "_wc", "signals", "representative_text")},
+            "_start": start, "_end": end, "kind": "campaign",
+            "verdict": top["verdict"], "verdict_before_innocent_check": min(
+                (v["verdict_before_innocent_check"] for v in vs), key=VERDICT_ORDER.index),
+            "families": fams, "author_count": len(rows), "post_count": n_posts, "authors": rows,
+            "time_span": {"start": start, "end": end, "seconds": round(end - start, 1)},
+            "headline": f"{len(rows)} accounts posted {len(vs)} different messages, each repeated across accounts: "
+                        f"{n_posts} posts within {explain.duration(end - start)}.",
+            "evidence_for": merged("evidence_for"), "evidence_against": merged("evidence_against"),
+            "innocent_patterns": sorted({p for v in vs for p in v["innocent_patterns"]}),
+            "innocent_explanations": list(dict.fromkeys(e for v in vs for e in v["innocent_explanations"])),
+            "timeline": sorted(({**pt, "variant": n} for n, v in enumerate(vs, start=1) for pt in v["timeline"]),
+                               key=lambda pt: pt["t"])[:MAX_TIMELINE],
+            "variants": [{"headline": v["headline"], "verdict": v["verdict"], "families": v["families"],
+                          "representative_text": v["representative_text"], "post_count": v["post_count"],
+                          "author_count": v["author_count"], "time_span": v["time_span"],
+                          "innocent_patterns": v["innocent_patterns"]} for v in vs],
+        }
+        out.append(camp)
+    return out
+
+
 # ------------------------------------------------------------------ main
 
 async def analyze_batch(batch: Batch, *, deep: bool = False, tag_clusters: bool = False,
@@ -246,10 +336,12 @@ async def analyze_batch(batch: Batch, *, deep: bool = False, tag_clusters: bool 
             c["evidence_against"].append("The text match is only meaning-level (paraphrase), which is weaker evidence "
                                          "than copied text.")
 
+    n_message_clusters = len(clusters)
+    clusters = merge_campaigns(clusters)
     clusters.sort(key=lambda c: (VERDICT_ORDER.index(c["verdict"]), -c["author_count"], c["_start"]))
     for n, c in enumerate(clusters, start=1):
         c["id"] = f"c{n}"
-    # the same accounts behind several message clusters (context only, not a signal family)
+    # partial overlaps below the campaign threshold (context only, not a signal family)
     author_sets = [{a["author"].lower() for a in c["authors"]} for c in clusters]
     for i, c in enumerate(clusters):
         shared = [{"cluster": clusters[j]["id"], "authors": len(author_sets[i] & author_sets[j])}
@@ -285,6 +377,8 @@ async def analyze_batch(batch: Batch, *, deep: bool = False, tag_clusters: bool 
         "id": "s_" + uuid.uuid4().hex[:10],
         "summary": {"posts": len(posts), "authors": len(posts_per_author), "rows": batch.rows_total,
                     "rejected": batch.rejected_total, "eligible_posts": eligible, "clusters": len(clusters),
+                    "message_clusters": n_message_clusters,
+                    "campaigns": sum(c["kind"] == "campaign" for c in clusters),
                     "by_verdict": {v: by_verdict.get(v, 0) for v in VERDICT_ORDER},
                     "time_span": {"start": min(ts), "end": max(ts)} if ts else None},
         "clusters": out_clusters,

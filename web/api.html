@@ -41,7 +41,15 @@
   -H 'Content-Type: text/csv' --data-binary @posts.csv
 
 curl -s -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/json' \
-  -d '{"data": "id,author,timestamp,text\n1,alice,2026-11-14T10:00:00Z,Hello", "deep": false}'</code></pre>
+  -d '{"data": "id,author,timestamp,text\n1,alice,2026-11-14T10:00:00Z,Hello", "deep": false}'
+
+# a public post link: the post and its replies (Bluesky, Mastodon, YouTube)
+curl -s -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/json' \
+  -d '{"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22"}'
+
+# up to 50 links, one post each; "stream": true sends NDJSON progress lines, then {"result": ...}
+curl -s -N -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/json' \
+  -d '{"urls": ["https://bsky.app/profile/…/post/…", "https://mastodon.social/@…/…"], "stream": true}'</code></pre>
     <p>Columns <code>id, author, timestamp, text</code> (optional <code>url, author_created_at, platform</code>), CSV or
       JSON, max 2000 posts / 2 MB, processed in memory and never stored. Returns <code>clusters</code> (groups of
       accounts posting the same or near-identical text), each with a <code>verdict</code>

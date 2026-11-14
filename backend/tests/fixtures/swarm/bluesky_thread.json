@@ -1,0 +1,633 @@
+{
+ "thread": {
+  "post": {
+   "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001",
+   "cid": "bafyreibycve3lc6jukekmugpbv7obg25rdl7cifs7ixjiq3cueurgbd7xi",
+   "author": {
+    "did": "did:plc:rootaccount0000000000000",
+    "handle": "newsdesk.example.social",
+    "displayName": "User 0",
+    "avatar": "https://cdn.example/avatar/0.jpg",
+    "labels": [],
+    "createdAt": "2023-04-12T04:53:57.057Z"
+   },
+   "record": {
+    "$type": "app.bsky.feed.post",
+    "createdAt": "2026-11-04T04:03:40.249Z",
+    "embed": {
+     "$type": "app.bsky.embed.images",
+     "images": [
+      {
+       "alt": "Steeply climbing chart with the number 25.8 Gb/s superimposed.",
+       "aspectRatio": {
+        "height": 1570,
+        "width": 2328
+       },
+       "image": {
+        "$type": "blob",
+        "ref": {
+         "$link": "bafkreiczrhhklt4wsquxzgudjxd7w4rch4tcbb7fkedhg56h3bfvsla2v4"
+        },
+        "mimeType": "image/jpeg",
+        "size": 324306
+       }
+      }
+     ]
+    },
+    "langs": [
+     "en"
+    ],
+    "text": "We are seeing record traffic tonight. Thanks for being here!"
+   },
+   "bookmarkCount": 176,
+   "replyCount": 11,
+   "repostCount": 1241,
+   "likeCount": 15608,
+   "quoteCount": 2,
+   "indexedAt": "2026-11-04T04:03:42.322Z",
+   "labels": []
+  },
+  "replies": [
+   {
+    "post": {
+     "uri": "at://did:plc:user0001/app.bsky.feed.post/3reply000001",
+     "cid": "bafyfixture000001",
+     "author": {
+      "did": "did:plc:user0001",
+      "handle": "levywatch101.bsky.social",
+      "displayName": "User 1",
+      "avatar": "https://cdn.example/avatar/1.jpg",
+      "labels": [],
+      "createdAt": "2026-10-20T12:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T08:00:10.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "The energy levy is a scam to fund the council's friends and nobody will tell you. Share before they delete it! levy-truth.example/proof #StopTheLevy",
+      "facets": [
+       {
+        "features": [
+         {
+          "$type": "app.bsky.richtext.facet#link",
+          "uri": "https://levy-truth.example/proof"
+         }
+        ],
+        "index": {
+         "byteStart": 0,
+         "byteEnd": 10
+        }
+       }
+      ]
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T08:00:10.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0002/app.bsky.feed.post/3reply000002",
+     "cid": "bafyfixture000002",
+     "author": {
+      "did": "did:plc:user0002",
+      "handle": "levywatch138.bsky.social",
+      "displayName": "User 2",
+      "avatar": "https://cdn.example/avatar/2.jpg",
+      "labels": [],
+      "createdAt": "2026-10-21T12:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T08:01:11.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "The energy levy is a scam to fund the council's friends and nobody will tell you. Share before they delete it! levy-truth.example/proof #StopTheLevy",
+      "facets": [
+       {
+        "features": [
+         {
+          "$type": "app.bsky.richtext.facet#link",
+          "uri": "https://levy-truth.example/proof"
+         }
+        ],
+        "index": {
+         "byteStart": 0,
+         "byteEnd": 10
+        }
+       }
+      ]
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T08:01:11.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0003/app.bsky.feed.post/3reply000003",
+     "cid": "bafyfixture000003",
+     "author": {
+      "did": "did:plc:user0003",
+      "handle": "levywatch175.bsky.social",
+      "displayName": "User 3",
+      "avatar": "https://cdn.example/avatar/3.jpg",
+      "labels": [],
+      "createdAt": "2026-10-22T12:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T08:02:12.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "The energy levy is a scam to fund the council's friends and nobody will tell you. Share before they delete it! levy-truth.example/proof #StopTheLevy",
+      "facets": [
+       {
+        "features": [
+         {
+          "$type": "app.bsky.richtext.facet#link",
+          "uri": "https://levy-truth.example/proof"
+         }
+        ],
+        "index": {
+         "byteStart": 0,
+         "byteEnd": 10
+        }
+       }
+      ]
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T08:02:12.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0004/app.bsky.feed.post/3reply000004",
+     "cid": "bafyfixture000004",
+     "author": {
+      "did": "did:plc:user0004",
+      "handle": "levywatch212.bsky.social",
+      "displayName": "User 4",
+      "avatar": "https://cdn.example/avatar/4.jpg",
+      "labels": [],
+      "createdAt": "2026-10-20T12:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T08:03:13.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "The energy levy is a scam to fund the council's friends and nobody will tell you. Share before they delete it! levy-truth.example/proof #StopTheLevy",
+      "facets": [
+       {
+        "features": [
+         {
+          "$type": "app.bsky.richtext.facet#link",
+          "uri": "https://levy-truth.example/proof"
+         }
+        ],
+        "index": {
+         "byteStart": 0,
+         "byteEnd": 10
+        }
+       }
+      ]
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T08:03:13.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0005/app.bsky.feed.post/3reply000005",
+     "cid": "bafyfixture000005",
+     "author": {
+      "did": "did:plc:user0005",
+      "handle": "levywatch249.bsky.social",
+      "displayName": "User 5",
+      "avatar": "https://cdn.example/avatar/5.jpg",
+      "labels": [],
+      "createdAt": "2026-10-21T12:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T08:04:14.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "The energy levy is a scam to fund the council's friends and nobody will tell you. Share before they delete it! levy-truth.example/proof #StopTheLevy",
+      "facets": [
+       {
+        "features": [
+         {
+          "$type": "app.bsky.richtext.facet#link",
+          "uri": "https://levy-truth.example/proof"
+         }
+        ],
+        "index": {
+         "byteStart": 0,
+         "byteEnd": 10
+        }
+       }
+      ]
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T08:04:14.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0006/app.bsky.feed.post/3reply000006",
+     "cid": "bafyfixture000006",
+     "author": {
+      "did": "did:plc:user0006",
+      "handle": "levywatch286.bsky.social",
+      "displayName": "User 6",
+      "avatar": "https://cdn.example/avatar/6.jpg",
+      "labels": [],
+      "createdAt": "2026-10-22T12:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T08:05:15.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "The energy levy is a scam to fund the council's friends and nobody will tell you. Share before they delete it! levy-truth.example/proof #StopTheLevy",
+      "facets": [
+       {
+        "features": [
+         {
+          "$type": "app.bsky.richtext.facet#link",
+          "uri": "https://levy-truth.example/proof"
+         }
+        ],
+        "index": {
+         "byteStart": 0,
+         "byteEnd": 10
+        }
+       }
+      ]
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T08:05:15.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0020/app.bsky.feed.post/3reply000020",
+     "cid": "bafyfixture000020",
+     "author": {
+      "did": "did:plc:user0020",
+      "handle": "person20.bsky.social",
+      "displayName": "User 20",
+      "avatar": "https://cdn.example/avatar/20.jpg",
+      "labels": [],
+      "createdAt": "2023-05-01T10:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T05:12:00.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "Congrats on the traffic, the app has been fast for me all evening."
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T05:12:00.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0021/app.bsky.feed.post/3reply000021",
+     "cid": "bafyfixture000021",
+     "author": {
+      "did": "did:plc:user0021",
+      "handle": "person21.bsky.social",
+      "displayName": "User 21",
+      "avatar": "https://cdn.example/avatar/21.jpg",
+      "labels": [],
+      "createdAt": "2023-05-01T10:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T06:12:00.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "Is the custom feed outage related to this or something else entirely?"
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T06:12:00.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0022/app.bsky.feed.post/3reply000022",
+     "cid": "bafyfixture000022",
+     "author": {
+      "did": "did:plc:user0022",
+      "handle": "person22.bsky.social",
+      "displayName": "User 22",
+      "avatar": "https://cdn.example/avatar/22.jpg",
+      "labels": [],
+      "createdAt": "2023-05-01T10:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T07:12:00.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "Welcome to all the new folks, the science community here is great."
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T07:12:00.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0023/app.bsky.feed.post/3reply000023",
+     "cid": "bafyfixture000023",
+     "author": {
+      "did": "did:plc:user0023",
+      "handle": "person23.bsky.social",
+      "displayName": "User 23",
+      "avatar": "https://cdn.example/avatar/23.jpg",
+      "labels": [],
+      "createdAt": "2023-05-01T10:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T08:12:00.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "Night to remember indeed. My timeline finally feels alive again."
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T08:12:00.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0030/app.bsky.feed.post/3reply000030",
+     "cid": "bafyfixture000030",
+     "author": {
+      "did": "did:plc:user0030",
+      "handle": "nodate.bsky.social",
+      "displayName": "User 30",
+      "avatar": "https://cdn.example/avatar/30.jpg",
+      "labels": []
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T09:30:00.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "Does anyone know if the API limits changed tonight for third-party apps?"
+     },
+     "bookmarkCount": 0,
+     "replyCount": 0,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T09:30:00.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost",
+    "replies": []
+   },
+   {
+    "post": {
+     "uri": "at://did:plc:user0040/app.bsky.feed.post/3reply000040",
+     "cid": "bafyfixture000040",
+     "author": {
+      "did": "did:plc:user0040",
+      "handle": "deepthread.bsky.social",
+      "displayName": "User 40",
+      "avatar": "https://cdn.example/avatar/40.jpg",
+      "labels": [],
+      "createdAt": "2023-05-01T10:00:00.000Z"
+     },
+     "record": {
+      "$type": "app.bsky.feed.post",
+      "createdAt": "2026-11-04T10:00:00.000Z",
+      "langs": [
+       "en"
+      ],
+      "reply": {
+       "parent": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       },
+       "root": {
+        "cid": "bafyroot",
+        "uri": "at://did:plc:rootaccount0000000000000/app.bsky.feed.post/3rootpost0001"
+       }
+      },
+      "text": "This thread is going to get long, so I am starting a branch here."
+     },
+     "bookmarkCount": 0,
+     "replyCount": 2,
+     "repostCount": 0,
+     "likeCount": 2,
+     "quoteCount": 0,
+     "indexedAt": "2026-11-04T10:00:00.000Z",
+     "labels": []
+    },
+    "$type": "app.bsky.feed.defs#threadViewPost"
+   },
+   {
+    "$type": "app.bsky.feed.defs#notFoundPost",
+    "uri": "at://did:plc:gone/app.bsky.feed.post/3gone",
+    "notFound": true
+   }
+  ],
+  "$type": "app.bsky.feed.defs#threadViewPost"
+ }
+}
