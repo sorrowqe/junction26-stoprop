@@ -88,6 +88,42 @@ async def chat(messages: list[dict], *, model: str, max_tokens: int = 2000, kind
     raise LLMError(type(last).__name__ if last else "unknown")
 
 
+EMBED_BATCH = 256
+
+
+async def embed(texts: list[str], *, model: str) -> tuple[list[list[float]], dict]:
+    """Embeddings in batches (swarm deep mode). Same retry + usage logging as chat (kind "embed").
+    Returns (vectors in input order, {"input_tokens", "credits", "calls"})."""
+    if not (config.router_api_key() and config.router_base_url()):
+        raise LLMError("LLM not configured")
+    store = get_store()
+    vectors: list[list[float]] = []
+    meta = {"input_tokens": 0, "credits": 0.0, "calls": 0}
+    async with _client() as client:
+        for start in range(0, len(texts), EMBED_BATCH):
+            batch = texts[start:start + EMBED_BATCH]
+            for attempt in range(RETRIES + 1):
+                t0 = time.monotonic()
+                try:
+                    resp = await client.embeddings.create(model=model, input=batch)
+                except Exception as exc:  # noqa: BLE001 - classified below
+                    store.log_usage("embed", model, 0, 0, int((time.monotonic() - t0) * 1000), ok=False,
+                                    error=type(exc).__name__)
+                    if attempt < RETRIES and _retryable(exc):
+                        continue
+                    raise LLMError(type(exc).__name__) from exc
+                usage = resp.usage
+                tin = getattr(usage, "prompt_tokens", 0) or getattr(usage, "total_tokens", 0) or 0
+                credits = credits_charged(usage)
+                store.log_usage("embed", model, tin, 0, int((time.monotonic() - t0) * 1000), ok=True, credits=credits)
+                meta["input_tokens"] += tin
+                meta["credits"] += credits
+                meta["calls"] += 1
+                vectors.extend(d.embedding for d in sorted(resp.data, key=lambda d: d.index))
+                break
+    return vectors, meta
+
+
 def credits_charged(usage) -> float:
     """The Hostinger router reports billing as usage.credits_charged (an extra field on the usage object)."""
     value = getattr(usage, "credits_charged", None)

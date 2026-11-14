@@ -28,6 +28,7 @@ def _isolated(monkeypatch):
         raise AssertionError("real LLM call attempted in a test")
 
     monkeypatch.setattr(llm_client, "chat", _no_network)
+    monkeypatch.setattr(llm_client, "embed", _no_network)
 
     async def _no_dns(host, port):
         raise RealNetworkInTest(f"real DNS lookup attempted in a test: {host}")

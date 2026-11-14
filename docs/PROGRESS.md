@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-14 (M4 in progress: English-only eval tooling built; AI review first batch pending OK)_
+_Last updated: 2026-11-14 (M4 deployed + verified; M5 Part A (swarm detector + UI) done, Part B next)_
 
 Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 
@@ -41,7 +41,7 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   `eval/make_synthetic.py` (seeded specs, gpt-5.5-eu, dry run by default), `eval/semeval_sample.py`
   (Zenodo download, md5 check, label mapping) -> `eval/data/raw/semeval_sample.csv` (100 paragraphs, 112 spans).
 
-## In progress (M4)
+## M4 (deployed + verified by Aleksandr)
 - Scope change: evaluation is **English only** (ET/RU kept in the CSVs, excluded). Built: `config/languages.yaml` +
   `app/languages.py` (language_evaluated, strict default, UI note), indirect reported speech (validate.py, prompt,
   CLAUDE.md §1.3), `eval/ai_review.py` (Gemini + Mistral consensus), `eval/sheet_to_jsonl.py`, `eval/run_eval.py`,
@@ -90,17 +90,36 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   (bandwagon, questionable_authority, unsupported_claim, loaded_language, name_calling).
 - Observation: quotes are often whole sentences instead of the shortest passage -> tune in M4 with eval data.
 
+## M5 Part A DONE (swarm detector + UI, not yet deployed)
+- `backend/app/swarm/`: `ingest.py` (CSV/JSON, aliases, ISO/unix s/ms, row-level reasons, 2000 posts / 2 MB),
+  `textreuse.py` (T: normalize + lowercase, URLs/@mentions stripped, char 5-gram MinHash LSH via datasketch,
+  exact Jaccard >= 0.6 decides, >= 8 words, different authors; deep: embeddings >= 12 words, cosine >= 0.92,
+  max 2000, "paraphrase"), `timing.py` (S: tightest window with 60% of posts vs batch rate, Poisson sf p < 0.001,
+  >= 3 authors; cadence CV < 0.2 over >= 5 posts as supporting evidence), `accounts.py` (A: name stem + digits,
+  Levenshtein <= 2/1/0 by stem length; creation within 7 days; single-purpose >= 3 posts with >= 70% in cluster),
+  `amplification.py` (M: same non-mainstream URL / hashtag / mention by >= 5 authors; outlets.yaml never counts),
+  `clusters.py` (components, verdicts, innocent patterns, shared-accounts note, optional tagging max 10),
+  `explain.py` (behaviour wording, evidence for/against).
+- `POST /api/swarm` (JSON {data|posts, deep, tag_clusters} or raw text/csv; 10/h, invalid uploads not counted),
+  `llm/client.embed()` (MODEL_EMBED, usage + credits logged as kind "embed").
+- `/swarm` page: paste/upload/sample, options (deep + tag off by default, cost noted), cluster cards sorted by verdict,
+  inline SVG timeline, evidence for/against, innocent explanations, account table, JSON download.
+- Sample: `scripts/make_swarm_sample.py` (seeded) -> `web/static/swarm_sample.csv` (264 posts, 127 accounts):
+  copy-paste campaign (3 message clusters, T+S+A+M, likely), template campaign (T+M, likely), headline sharing
+  (T+S, downgraded to worth watching), generic phrase (organic), event-hashtag cheers (organic). ~130 ms.
+- Tests: 496 passed (40 swarm tests incl. 2000 posts < 20 s, every signal + innocent pattern, API, rate limit).
+
 ## Next
-- M4: `sheet_to_jsonl.py` (drop rows with ok=n, keep `source`), `run_eval.py` reporting every metric PER SOURCE
-  (synthetic / semeval / human) + reported-speech rows excluded from FPR, `/metrics` showing sources separately,
-  SemEval reported as **strict** (our reported_speech spans don't count) AND **lenient** (they do, SemEval's
-  definition) with a one-sentence explanation on /metrics,
-  small bake-off (announce calls), gating; prompt tuning for shorter quotes.
-- Later: "Report a wrong label" (`POST /api/feedback`, 30/h) and "Share result" (`/r/{id}`) - not in M2 scope.
+- M5 Part B: benchmark generator + run_swarm_eval.py + /metrics swarm section (announce calls/credits first).
+- Later: "Report a wrong label" (`POST /api/feedback`, 30/h) and "Share result" (`/r/{id}`).
+- Sunday morning: `run_eval.py --final` (announce calls).
 
 ## Known issues / limits
-- Every technique is experimental (hidden by default) until M4 measures precision -> the UI says so and
-  offers "Show experimental labels".
+- Only exaggeration_minimisation is shown by default (measured precision >= 0.70 with >= 5 predictions); the rest
+  are experimental (UI offers "Show experimental labels").
+- Swarm: headline sharing within an hour also fires the timing signal, so it is downgraded to "worth watching",
+  not "looks organic" (spec: organic_looking only without S/A). Clusters are per message: one campaign posting
+  three different messages shows as three clusters, linked by "the same accounts also posted ...".
 - Rate limits are in memory: they reset on every deploy.
 - Genre/language detection are simple rules; Finnish may be detected as Estonian.
 - The model tends to quote whole sentences (inflates flagged_share); prompt tuning planned for M4.

@@ -18,6 +18,7 @@ from app.pipeline import extract
 from app.receipts import service as receipts_service
 from app.receipts.domain import DomainError, normalize_host
 from app.store import get_store
+from app.swarm import clusters as swarm_clusters, ingest as swarm_ingest
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
@@ -154,6 +155,60 @@ async def receipts(req: ReceiptsRequest, request: Request) -> dict:
         return await receipts_service.get_receipts(target, title=req.title, refresh=req.refresh)
     except DomainError as exc:
         raise HTTPException(400, str(exc)) from None
+
+
+_SWARM_BODY = {"requestBody": {"content": {
+    "application/json": {"schema": {"type": "object", "properties": {
+        "data": {"type": "string", "description": "CSV or JSON text (id, author, timestamp, text; optional url, "
+                                                  "author_created_at, platform)"},
+        "posts": {"type": "array", "items": {"type": "object"}},
+        "deep": {"type": "boolean", "default": False, "description": "embedding paraphrase detection (costs credits)"},
+        "tag_clusters": {"type": "boolean", "default": False, "description": "technique tags, max 10 LLM calls"}}}},
+    "text/csv": {"schema": {"type": "string"}}}}}
+
+
+async def _tag_text(text: str) -> tuple[list[str], dict]:
+    r = await analyze_text(text, sensitivity="strict", private=True, count_seen=False)
+    labels = sorted({s["label"] for s in r["spans"] if s.get("color") in ("red", "amber") and not s.get("reported_speech")})
+    return labels, r["cost"]
+
+
+@app.post("/api/swarm", openapi_extra=_SWARM_BODY)
+async def swarm(request: Request, deep: bool = False, tag_clusters: bool = False) -> dict:
+    """Coordinated-behaviour analysis of a batch of posts (max 2000 posts / 2 MB), in memory only.
+    JSON body {"data": "<csv or json text>"} or {"posts": [...]}, or a raw CSV body (Content-Type: text/csv;
+    options as query parameters)."""
+    body = await request.body()
+    if len(body) > swarm_ingest.MAX_BYTES + 65536:
+        raise HTTPException(413, "The upload is larger than 2 MB.")
+    try:
+        if "json" in request.headers.get("content-type", ""):
+            try:
+                payload = json.loads(body or b"null")
+            except json.JSONDecodeError:
+                raise HTTPException(400, "The request body is not valid JSON.") from None
+            if isinstance(payload, dict) and ("data" in payload or "posts" in payload):
+                deep = bool(payload.get("deep", deep))
+                tag_clusters = bool(payload.get("tag_clusters", tag_clusters))
+                batch = (swarm_ingest.parse_text(payload["data"]) if isinstance(payload.get("data"), str)
+                         else swarm_ingest.from_json(payload.get("posts")))
+            else:
+                batch = swarm_ingest.from_json(payload)
+        else:
+            batch = swarm_ingest.parse_text(body.decode("utf-8", errors="replace"))
+    except swarm_ingest.IngestError as exc:
+        raise HTTPException(413 if "limit" in str(exc) or "2 MB" in str(exc) else 400, str(exc)) from None
+    if not batch.posts:
+        first = "; ".join(f"row {r['row']}: {r['reason']}" for r in batch.rejected[:3])
+        raise HTTPException(400, f"No valid posts found ({batch.rejected_total} rows rejected{': ' + first if first else ''}).")
+    ratelimit.enforce("swarm", request)
+    llm_ok = budget.llm_available()[0]
+    embed = None
+    if deep and llm_ok:
+        from app.llm import client as llm
+        embed = lambda texts: llm.embed(texts, model=config.model_embed())  # noqa: E731
+    return await swarm_clusters.analyze_batch(batch, deep=deep, tag_clusters=tag_clusters, embed=embed,
+                                              tagger=_tag_text if (tag_clusters and llm_ok) else None)
 
 
 def _page(name: str) -> FileResponse:

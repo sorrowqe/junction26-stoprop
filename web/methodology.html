@@ -32,6 +32,14 @@
       targets at most 5% of clean news paragraphs flagged with a technique, <em>balanced</em> at most 15%, and
       <em>broad</em> shows every label the AI proposes. The measured trade-off for each level, with confidence
       intervals, is on the <a href="/metrics">Metrics</a> page.</p>
+    <p><strong>Swarm mode</strong> looks at a batch of posts, never a single one. Four independent signal families:
+      <em>text reuse</em> (character 5-gram MinHash, ≥ 60% overlap, posts of at least 8 words, different accounts only),
+      <em>timing</em> (60% of a group's posts in a window far tighter than the batch's normal pace, Poisson p &lt; 0.001,
+      at least 3 accounts), <em>accounts</em> (shared name pattern, creation dates within 7 days, single-purpose
+      accounts) and <em>amplification</em> (the same non-mainstream link, hashtag or mention pushed by at least 5 accounts).
+      “Likely coordinated” needs text reuse plus one other family; text reuse alone is “worth watching”. Shared news
+      headlines, generic phrases, quoted statements and event hashtags lower the verdict and are shown as innocent
+      explanations. Verdicts describe groups and behaviour, never individual people.</p>
     <p class="muted">No AI-generated-text detection: such detectors are unreliable and known to be biased against non-native writers.</p>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>

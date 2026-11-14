@@ -36,13 +36,27 @@
       <code>not_checked</code> | <code>error</code>), <code>flag</code> (<code>ok</code> | <code>warning</code> |
       <code>neutral</code>), plain-English <code>text</code>, <code>evidence_url</code>, <code>checked_at</code>.
       Add <code>"refresh": true</code> to re-check items older than 15 minutes.</p>
+    <h2>Swarm mode (coordinated behaviour)</h2>
+    <pre><code>curl -s -X POST https://stoprop.tech/api/swarm \
+  -H 'Content-Type: text/csv' --data-binary @posts.csv
+
+curl -s -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/json' \
+  -d '{"data": "id,author,timestamp,text\n1,alice,2026-11-14T10:00:00Z,Hello", "deep": false}'</code></pre>
+    <p>Columns <code>id, author, timestamp, text</code> (optional <code>url, author_created_at, platform</code>), CSV or
+      JSON, max 2000 posts / 2 MB, processed in memory and never stored. Returns <code>clusters</code> (groups of
+      accounts posting the same or near-identical text), each with a <code>verdict</code>
+      (<code>likely_coordinated</code> | <code>worth_watching</code> | <code>organic_looking</code> |
+      <code>insufficient_data</code>), <code>families</code> (T text reuse, S timing, A accounts, M amplification),
+      <code>evidence_for</code>, <code>evidence_against</code>, <code>innocent_explanations</code>, <code>authors</code>
+      and a <code>timeline</code>; plus skipped rows with reasons. <code>deep</code> (embeddings) and
+      <code>tag_clusters</code> (max 10 AI calls) cost credits and are off by default.</p>
     <h2>Taxonomy</h2>
     <pre><code>curl -s https://stoprop.tech/api/techniques</code></pre>
     <h2>Health and AI budget</h2>
     <pre><code>curl -s https://stoprop.tech/api/health</code></pre>
     <h2>Rate limits</h2>
     <p>Per client IP, per hour: analyze 30, receipts 60, swarm 10, feedback 30. Over the limit you get HTTP 429 with a plain message.</p>
-    <p class="muted">Coming: <code>POST /api/swarm</code> (M5), <code>GET /api/metrics</code> (M4).</p>
+    <p>Evaluation results: <code>GET /api/metrics</code>.</p>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
 </body>

@@ -8,3 +8,7 @@ httpx2==2.16.0
 trafilatura==2.3.1
 # registrable domain via the bundled (offline) Public Suffix List
 tld==0.13.2
+# swarm mode: MinHash LSH for near-duplicate text (CLAUDE.md section 5); numpy/scipy are its dependencies, pinned
+datasketch==2.0.0
+numpy==2.5.4
+scipy==1.18.1

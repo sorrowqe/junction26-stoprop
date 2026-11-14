@@ -199,3 +199,33 @@ tbody th { font-weight: 600; }
 
 /* sensitivity select never wider than its container (phones) */
 .controls select { max-width: 100%; }
+
+/* ---------------------------------------------------------------- swarm mode */
+.row-actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-bottom: .75rem; }
+.file-pick { position: relative; display: inline-block; padding: .45rem .8rem; border: 1px solid var(--border);
+  border-radius: 8px; cursor: pointer; background: var(--card); }
+.file-pick input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.file-pick:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+#data { width: 100%; font-family: ui-monospace, Consolas, monospace; font-size: .85rem; box-sizing: border-box; }
+.options { border: 0; padding: 0; margin: .75rem 0; display: grid; gap: .35rem; }
+.cluster { border-left: 5px solid var(--border); }
+.cluster h3 { margin: .4rem 0 .3rem; font-size: 1.05rem; }
+.cluster-head { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.verdict { font-weight: 700; padding: .15rem .55rem; border-radius: 999px; font-size: .9rem; }
+.v-likely { border-left-color: var(--red); } .verdict.v-likely { background: var(--red-bg); color: var(--red); }
+.v-watch { border-left-color: var(--amber); } .verdict.v-watch { background: var(--amber-bg); color: var(--amber); }
+.v-organic { border-left-color: var(--green); } .verdict.v-organic { background: var(--green-bg); color: var(--green); }
+.verdict.v-none { background: var(--border); color: var(--muted); }
+.families { display: flex; flex-wrap: wrap; gap: .4rem; margin: .2rem 0 .6rem; }
+.fam { padding: .1rem .5rem; border-radius: 6px; border: 1px solid var(--border); }
+.fam.on { font-weight: 600; } .fam.off { color: var(--muted); text-decoration: line-through; }
+.rep { margin: 0 0 .6rem; padding: .5rem .8rem; border-left: 3px solid var(--border); color: var(--fg);
+  overflow-wrap: anywhere; font-style: italic; }
+.timeline { width: 100%; height: auto; max-height: 260px; display: block; margin: .3rem 0 .8rem; }
+.timeline .axis { stroke: var(--border); stroke-width: 1; }
+.timeline .dot { fill: var(--fg); fill-opacity: .75; }
+.timeline .tl-label { fill: var(--muted); font-size: 11px; }
+.evidence { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.evidence h4, .cluster .innocent h4 { margin: .2rem 0 .3rem; font-size: .95rem; }
+.evidence ul { margin: 0; padding-left: 1.1rem; }
+@media (max-width: 700px) { .evidence { grid-template-columns: 1fr; } }

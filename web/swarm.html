@@ -10,13 +10,56 @@
 </head>
 <body>
   <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm" aria-current="page">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
-  <main class="wrap page">
+  <main class="wrap page wide">
     <h1>Swarm mode</h1>
     <p class="lede">Upload a batch of posts (author, time, text) and Stoprop looks for coordinated behaviour:
       text reuse, timing synchrony, account similarity and amplification. It never judges a single post or person.
-      A cluster is called “likely coordinated” only when two independent signals agree.</p>
-    <p class="banner">Coming in milestone M5. A sample dataset with real-looking campaigns and look-alike innocent activity will be included.</p>
+      A group is called “likely coordinated” only when copied text <em>and</em> at least one independent signal agree.</p>
+
+    <section class="card" aria-labelledby="h-in">
+      <h2 id="h-in">Your posts</h2>
+      <form id="swarm-form" novalidate>
+        <div class="row-actions">
+          <button type="button" id="load-sample" class="secondary">Load sample dataset</button>
+          <label class="file-pick secondary-like">Upload CSV or JSON<input type="file" id="file" accept=".csv,.json,.txt,text/csv,application/json"></label>
+          <span id="file-info" class="muted small" aria-live="polite"></span>
+        </div>
+        <label for="data" class="field-label">Or paste CSV / JSON</label>
+        <textarea id="data" rows="8" spellcheck="false" placeholder="id,author,timestamp,text&#10;1,alice,2026-11-14T10:00:00Z,Example post text"></textarea>
+        <details class="small">
+          <summary>Format</summary>
+          <p>Columns <code>id, author, timestamp, text</code> (timestamp in ISO 8601 or unix time), optional
+            <code>url, author_created_at, platform</code>. JSON: a list of objects with the same fields.
+            Up to 2000 posts or 2 MB. Rows with problems are skipped and listed.</p>
+        </details>
+        <fieldset class="options">
+          <legend class="sr-only">Options</legend>
+          <label class="inline check"><input type="checkbox" id="deep"> Deep mode: also find paraphrases
+            <span class="muted small">(AI embeddings, costs credits, up to 2000 posts; weaker evidence)</span></label>
+          <label class="inline check"><input type="checkbox" id="tag"> Tag techniques in flagged groups
+            <span class="muted small">(AI, up to 10 calls)</span></label>
+        </fieldset>
+        <p class="muted small">Processed in memory only; nothing you upload is stored.</p>
+        <button type="submit" id="go">Find coordinated groups</button>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="result" hidden aria-labelledby="h-res">
+      <div class="card">
+        <h2 id="h-res">Result</h2>
+        <p id="summary"></p>
+        <ul id="notes" class="notes small"></ul>
+        <details id="rejected-wrap" hidden><summary id="rejected-sum"></summary><ul id="rejected" class="small"></ul></details>
+        <button type="button" id="download" class="secondary">Download JSON</button>
+      </div>
+      <p class="muted small">Verdicts describe behaviour in this batch, never people. “Likely coordinated” needs copied
+        text plus timing, account or amplification evidence. Innocent explanations (shared headlines, generic phrases,
+        quoted statements, event hashtags) lower the verdict and are listed with each group.</p>
+      <div id="clusters"></div>
+    </section>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
+  <script src="/static/swarm.js"></script>
 </body>
 </html>

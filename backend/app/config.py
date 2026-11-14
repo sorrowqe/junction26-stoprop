@@ -32,6 +32,10 @@ def model_tagger() -> str:
     return env("MODEL_TAGGER", "gemini-3.5-flash-lite-eu")
 
 
+def model_embed() -> str:
+    return env("MODEL_EMBED", "text-embedding-3-small-eu")
+
+
 def llm_configured() -> bool:
     return bool(router_api_key() and router_base_url() and model_tagger())
 
