@@ -20,7 +20,7 @@ techniques:
     example: "The council's reckless scheme will gut our neighbourhood."
     enabled: true
     min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: null
+    dev_precision: 0.526
     experimental: true
 
   - label: name_calling
@@ -53,8 +53,8 @@ techniques:
     example: "A few delayed trains have brought the entire country to a standstill."
     enabled: true
     min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: null
-    experimental: true
+    dev_precision: 0.857
+    experimental: false
 
   - label: whataboutism
     name: Whataboutism
@@ -86,8 +86,8 @@ techniques:
     example: "Experts say the new vaccine changes your DNA."
     enabled: true
     min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: null
-    experimental: true
+    dev_precision: 0.8
+    experimental: false
 
   - label: causal_oversimplification
     name: Causal oversimplification
@@ -97,7 +97,7 @@ techniques:
     example: "Prices went up for one reason only: the new mayor."
     enabled: true
     min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: null
+    dev_precision: 0.667
     experimental: true
 
   - label: bandwagon
@@ -119,7 +119,7 @@ techniques:
     example: "Can we really trust a report written by these so-called scientists?"
     enabled: true
     min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: null
+    dev_precision: 0.417
     experimental: true
 
   - label: unsupported_claim
@@ -130,7 +130,7 @@ techniques:
     example: "Crime in the city has doubled since last year."
     enabled: true
     min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: null
+    dev_precision: 0.125
     experimental: true
 
   - label: supported_claim
@@ -141,7 +141,7 @@ techniques:
     example: "Unemployment fell to 6.1% in October, Statistics Estonia said."
     enabled: true
     min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: null
+    dev_precision: 0.375
     experimental: true
 
   - label: balance

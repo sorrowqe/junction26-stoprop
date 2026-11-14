@@ -337,8 +337,9 @@ async def predict(texts: dict[str, str], sensitivity: str, guard_rate: float | N
 
 # -------------------------------------------------------- taxonomy update
 
-def update_dev_precision(per_label: dict, path: Path = TECHNIQUES_YAML) -> dict:
+def update_dev_precision(per_label: dict, path: Path | None = None) -> dict:
     """Write dev_precision / experimental for labels with enough predictions (text edit keeps comments)."""
+    path = path or TECHNIQUES_YAML
     updates = {lbl: s["precision"] for lbl, s in per_label.items()
                if s["predicted"] >= MIN_PRED_FOR_PRECISION and s["precision"] is not None}
     if not updates:
