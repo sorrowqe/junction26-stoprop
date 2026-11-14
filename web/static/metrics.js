@@ -90,7 +90,7 @@
       : "No symmetry pairs in this run.";
     const c = r.cost || {};
     [["Analyses", num(c.analyses)], ["LLM calls", num(c.llm_calls)], ["Mean tokens per analysis", num(c.mean_tokens_per_analysis)],
-      ["Mean latency", `${num(c.mean_latency_s)} s`], ["Validator rejection rate (AI quotes not found verbatim)", pct(r.validator_rejection_rate)],
+      ["Mean latency", `${num(c.mean_latency_s)} s`], ["Credits (router) per analysis", num(c.mean_credits_per_analysis)], ["Validator rejection rate (AI quotes not found verbatim)", pct(r.validator_rejection_rate)],
       ["Abstention rate (nothing flagged)", pct(r.abstention_rate)], ["AI failures (fell back to rules)", num(r.llm_failures)]]
       .forEach((x) => body("cost").append(row(x)));
     if ((r.bakeoff || []).length) {

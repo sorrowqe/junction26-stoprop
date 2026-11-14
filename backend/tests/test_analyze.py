@@ -24,7 +24,7 @@ def test_response_schema():
         assert key in body
     assert body["id"].startswith("r_")
     assert body["mode"] == "heuristics_only"
-    assert body["cost"] == {"input_tokens": 0, "output_tokens": 0, "llm_calls": 0, "cached": False}
+    assert body["cost"] == {"input_tokens": 0, "output_tokens": 0, "llm_calls": 0, "credits": 0.0, "cached": False}
     assert body["mode_reason"] == "no_key"
     for key in ("words", "flagged_share", "density_per_1000", "counts", "summary"):
         assert key in body["profile"]

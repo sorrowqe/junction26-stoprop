@@ -35,6 +35,7 @@ class LLMResult:
     output_tokens: int
     latency_ms: int
     model: str
+    credits: float = 0.0
 
 
 def _client() -> AsyncOpenAI:
@@ -80,9 +81,22 @@ async def chat(messages: list[dict], *, model: str, max_tokens: int = 2000, kind
             tin = getattr(usage, "prompt_tokens", 0) or 0
             tout = getattr(usage, "completion_tokens", 0) or 0
             text = (resp.choices[0].message.content or "") if resp.choices else ""
-            store.log_usage(kind, model, tin, tout, latency, ok=True)
-            return LLMResult(text=text, input_tokens=tin, output_tokens=tout, latency_ms=latency, model=model)
+            credits = credits_charged(usage)
+            store.log_usage(kind, model, tin, tout, latency, ok=True, credits=credits)
+            return LLMResult(text=text, input_tokens=tin, output_tokens=tout, latency_ms=latency, model=model,
+                             credits=credits)
     raise LLMError(type(last).__name__ if last else "unknown")
+
+
+def credits_charged(usage) -> float:
+    """The Hostinger router reports billing as usage.credits_charged (an extra field on the usage object)."""
+    value = getattr(usage, "credits_charged", None)
+    if value is None:
+        value = (getattr(usage, "model_extra", None) or {}).get("credits_charged")
+    try:
+        return float(value or 0)
+    except (TypeError, ValueError):
+        return 0.0
 
 
 # ---------------------------------------------------------------- JSON parsing

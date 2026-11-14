@@ -47,7 +47,7 @@ def test_llm_mode_end_to_end(monkeypatch):
         assert s["source"] == "llm"
         # every technique is experimental until M4 -> amber, hidden by default in the UI
         assert s["experimental"] is True and s["color"] == "amber"
-    assert body["cost"] == {"input_tokens": 800, "output_tokens": 60, "llm_calls": 1, "cached": False}
+    assert body["cost"] == {"input_tokens": 800, "output_tokens": 60, "llm_calls": 1, "credits": 0.0, "cached": False}
     assert body["innocent_explanations"]
     assert body["stats"]["model"] == "test-model"
 

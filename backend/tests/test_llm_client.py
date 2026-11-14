@@ -120,3 +120,28 @@ def test_runtime_code_does_not_import_classic_httpx():
     for path in app_dir.rglob("*.py"):
         for line in path.read_text(encoding="utf-8").splitlines():
             assert not line.strip().startswith(("import httpx ", "from httpx ")) and line.strip() != "import httpx", path
+
+
+def test_credits_charged_logged(monkeypatch, _isolated):
+    body = _completion("[]", 1000, 100)
+    body["usage"]["credits_charged"] = 0.4321
+    _install(monkeypatch, [(200, body)])
+    out = run(real_chat([{"role": "user", "content": "hi"}], model="test-model"))
+    assert out.credits == 0.4321
+    assert _isolated.usage_today()["credits"] == 0.4321
+
+
+def test_store_migrates_old_usage_table(tmp_path):
+    import sqlite3
+    from app.store import Store
+    db = tmp_path / "old.db"
+    con = sqlite3.connect(db)
+    con.execute("CREATE TABLE usage_log (id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT NOT NULL, day TEXT NOT NULL, "
+                "kind TEXT NOT NULL, model TEXT NOT NULL, input_tokens INTEGER NOT NULL DEFAULT 0, output_tokens INTEGER "
+                "NOT NULL DEFAULT 0, latency_ms INTEGER NOT NULL DEFAULT 0, ok INTEGER NOT NULL, error TEXT)")
+    con.commit()
+    con.close()
+    s = Store(db)
+    assert s.persistent
+    s.log_usage("tagger", "m", 1, 2, 3, ok=True, credits=0.5)
+    assert s.usage_today()["credits"] == 0.5

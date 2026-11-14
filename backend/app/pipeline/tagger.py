@@ -100,6 +100,7 @@ class TagResult:
     failed: set[str] = field(default_factory=set)            # paragraph ids that fell back to heuristics
     input_tokens: int = 0
     output_tokens: int = 0
+    credits: float = 0.0
     llm_calls: int = 0
     cached_paragraphs: int = 0
     dropped_items: int = 0                                   # malformed / wrong sentence id
@@ -194,6 +195,7 @@ async def _call_chunk(seg: Segmented, chunk: list[Paragraph], hints: list[dict],
         res.llm_calls += 1
         res.input_tokens += out.input_tokens
         res.output_tokens += out.output_tokens
+        res.credits += getattr(out, "credits", 0.0) or 0.0
         items = llm.extract_json_array(out.text)
         if items is not None:
             per_para, dropped = _split_by_paragraph(items, chunk)

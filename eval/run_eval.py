@@ -177,7 +177,9 @@ def compute_metrics(items, pairs, preds, runs) -> dict:
                  "input_tokens": sum(r["input_tokens"] for r in all_runs),
                  "output_tokens": sum(r["output_tokens"] for r in all_runs),
                  "mean_tokens_per_analysis": round(sum(r["input_tokens"] + r["output_tokens"] for r in all_runs) / n, 1),
-                 "mean_latency_s": round(sum(r["latency"] for r in all_runs) / n, 2)},
+                 "mean_latency_s": round(sum(r["latency"] for r in all_runs) / n, 2),
+                 "credits": round(sum(r.get("credits", 0.0) for r in all_runs), 3),
+                 "mean_credits_per_analysis": round(sum(r.get("credits", 0.0) for r in all_runs) / n, 4)},
         "llm_failures": sum(r["mode"] != "llm" for r in all_runs),
     }
 
@@ -221,7 +223,8 @@ async def predict(texts: dict[str, str], sensitivity: str) -> tuple[dict, dict]:
             r = await analyze_text(text, sensitivity=sensitivity, count_seen=False)
             runs[key] = {"latency": time.monotonic() - t0, "mode": r["mode"], "n_spans": len(r["spans"]),
                          "rejections": r["stats"]["validator_rejections"], "llm_calls": r["cost"]["llm_calls"],
-                         "input_tokens": r["cost"]["input_tokens"], "output_tokens": r["cost"]["output_tokens"]}
+                         "input_tokens": r["cost"]["input_tokens"], "output_tokens": r["cost"]["output_tokens"],
+                         "credits": r["cost"].get("credits", 0.0)}
             preds[key] = r["spans"]
     await asyncio.gather(*(one(k, t) for k, t in texts.items()))
     return preds, runs
@@ -322,7 +325,8 @@ def main(argv=None) -> int:
                         "fpr_semeval_none": metrics["clean_fpr"].get("semeval_none", {}).get("fpr_any"),
                         "mean_tokens_per_analysis": metrics["cost"]["mean_tokens_per_analysis"],
                         "mean_latency_s": metrics["cost"]["mean_latency_s"]})
-        print(f"  {m}: strict micro P={micro['precision']} R={micro['recall']} F1={micro['f1']}")
+        print(f"  {m}: strict micro P={micro['precision']} R={micro['recall']} F1={micro['f1']}  "
+              f"credits={metrics['cost']['credits']} ({metrics['cost']['llm_calls']} calls)")
 
     primary = models[0]
     out = {

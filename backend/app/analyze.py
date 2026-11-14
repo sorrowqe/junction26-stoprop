@@ -53,12 +53,12 @@ async def analyze_text(text: str, sensitivity: str | None = None, lang: str = "a
 
     available, reason = budget.llm_available()
     mode, mode_reason = "heuristics_only", reason
-    usage = {"input_tokens": 0, "output_tokens": 0, "llm_calls": 0}
+    usage = {"input_tokens": 0, "output_tokens": 0, "llm_calls": 0, "credits": 0.0}
     rejections_extra = 0
     if available and seg.paragraphs:
         result = await tagger.tag(seg, hints, private=private)
         usage = {"input_tokens": result.input_tokens, "output_tokens": result.output_tokens,
-                 "llm_calls": result.llm_calls}
+                 "llm_calls": result.llm_calls, "credits": round(result.credits, 4)}
         rejections_extra = result.dropped_items
         failed = result.failed
         ok_paras = len(seg.paragraphs) - len(failed)
@@ -113,6 +113,7 @@ async def analyze_text(text: str, sensitivity: str | None = None, lang: str = "a
             "input_tokens": usage["input_tokens"],
             "output_tokens": usage["output_tokens"],
             "llm_calls": usage["llm_calls"],
+            "credits": usage["credits"],
             "cached": mode == "llm" and usage["llm_calls"] == 0,
         },
         "stats": {

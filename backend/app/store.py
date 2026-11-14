@@ -80,12 +80,21 @@ class Store:
                 self._db = sqlite3.connect(str(path), check_same_thread=False)
                 self._db.execute("PRAGMA journal_mode=WAL")
                 self._db.executescript(SCHEMA)
+                self._migrate()
                 self.persistent = True
             except (sqlite3.Error, OSError) as exc:
                 log.warning("SQLite at %s not usable (%s); using in-memory storage", path, type(exc).__name__)
         if not self.persistent:
             self._db = sqlite3.connect(":memory:", check_same_thread=False)
             self._db.executescript(SCHEMA)
+            self._migrate()
+
+    def _migrate(self) -> None:
+        """Additive schema changes for databases created by older versions."""
+        cols = {row[1] for row in self._db.execute("PRAGMA table_info(usage_log)")}
+        if "credits" not in cols:
+            self._db.execute("ALTER TABLE usage_log ADD COLUMN credits REAL NOT NULL DEFAULT 0")
+            self._db.commit()
 
     @property
     def kind(self) -> str:
@@ -150,23 +159,24 @@ class Store:
 
     # ---------------------------------------------------------- usage
     def log_usage(self, kind: str, model: str, input_tokens: int, output_tokens: int,
-                  latency_ms: int, ok: bool, error: str | None = None) -> None:
+                  latency_ms: int, ok: bool, error: str | None = None, credits: float = 0.0) -> None:
         now = _now()
         self._exec(
-            "INSERT INTO usage_log (ts, day, kind, model, input_tokens, output_tokens, latency_ms, ok, error) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO usage_log (ts, day, kind, model, input_tokens, output_tokens, latency_ms, ok, error, credits) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             (now.isoformat(timespec="seconds"), now.strftime("%Y-%m-%d"), kind, model,
-             int(input_tokens), int(output_tokens), int(latency_ms), 1 if ok else 0, error),
+             int(input_tokens), int(output_tokens), int(latency_ms), 1 if ok else 0, error, float(credits or 0)),
         )
 
     def usage_today(self) -> dict:
         rows = self._exec(
             "SELECT COALESCE(SUM(input_tokens),0), COALESCE(SUM(output_tokens),0), COUNT(*), "
-            "COALESCE(SUM(1-ok),0) FROM usage_log WHERE day = ?",
+            "COALESCE(SUM(1-ok),0), COALESCE(SUM(credits),0) FROM usage_log WHERE day = ?",
             (today(),),
         )
-        i, o, calls, errors = rows[0] if rows else (0, 0, 0, 0)
-        return {"input_tokens": i, "output_tokens": o, "tokens": i + o, "calls": calls, "errors": errors}
+        i, o, calls, errors, credits = rows[0] if rows else (0, 0, 0, 0, 0.0)
+        return {"input_tokens": i, "output_tokens": o, "tokens": i + o, "calls": calls, "errors": errors,
+                "credits": round(credits, 4)}
 
     def usage_log(self) -> list[dict]:
         cols = ("ts", "kind", "model", "input_tokens", "output_tokens", "latency_ms", "ok", "error")

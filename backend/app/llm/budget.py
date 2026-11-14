@@ -23,6 +23,7 @@ def status() -> dict:
         "cap": cap,
         "share": round(share, 4),
         "calls_today": usage["calls"],
+        "credits_today": usage["credits"],
         "errors_today": usage["errors"],
         "day": "UTC",
     }
