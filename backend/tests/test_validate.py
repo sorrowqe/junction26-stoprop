@@ -235,3 +235,51 @@ def test_validate_candidates_tolerates_garbage_fields():
     seg = segment("Some calm sentence.")
     spans, rejections = validate_candidates(seg, [{"quote": None}, {}, {"sentence_id": 5, "quote": 7}])
     assert spans == [] and rejections == 3
+
+
+# ---- only a SPECIFIC, identifiable source makes it reported speech (policy 2026-11-14, rule 3)
+
+@pytest.mark.parametrize("text, quote", [
+    # named person / organisation / outlet, definite role, he/she
+    ("In the debate, Minister Lira Voss framed the choice as either build clean power now or remain chained to old fuels.",
+     "either build clean power now or remain chained to old fuels"),
+    ("Lira Voss argued that the bill is a reckless gamble.", "a reckless gamble"),
+    ("Voss said the bill is a reckless gamble.", "a reckless gamble"),
+    ("The Brindle Fuel Association claimed the bill is a reckless gamble.", "a reckless gamble"),
+    ("The association claimed the bill is a reckless gamble.", "a reckless gamble"),
+    ("The bill is a reckless gamble, said the minister.", "a reckless gamble"),
+    ("The bill is a reckless gamble, a spokesperson for the ministry said.", "a reckless gamble"),
+    ("She also questioned the motives of the Brindle Fuel Association, asking, can voters really trust figures written by that lobby?",
+     "can voters really trust figures written by that lobby?"),
+    ("The Guardian wrote that the plan is a reckless gamble.", "a reckless gamble"),
+])
+def test_specific_source_is_reported(text, quote):
+    assert _reported(text, "p1s1", quote)
+
+
+@pytest.mark.parametrize("text, quote", [
+    # vague / unnamed sources: the vagueness is the technique, the words stay the author's
+    ("Several senior healers say the vaccine is a poison.", "Several senior healers say"),
+    ("Several senior healers say the vaccine is a poison.", "a poison"),
+    ("According to senior policy insiders, the plan is a disaster.", "a disaster"),
+    ("Senior policy insiders say the plan is a disaster.", "a disaster"),
+    ("Many believe the plan is a disaster.", "a disaster"),
+    ("Insiders claim the plan is a disaster.", "a disaster"),
+    ("Supporters also argued that everyone in Northmere knows refugees can become good neighbours.",
+     "everyone in Northmere knows refugees can become good neighbours"),
+    ("Critics warned that the plan is a disaster.", "a disaster"),
+    ("They say the plan is a disaster.", "a disaster"),
+    # the author's own clause after a contrast
+    ("The coal and gas lobby says the grid needs caution, but can we really trust their warnings when their business depends on delay?",
+     "can we really trust their warnings"),
+    ("The anti-immigration group Stone Gate called for the buses to be turned away, but its figures on local costs are hard to trust.",
+     "its figures on local costs are hard to trust"),
+])
+def test_vague_source_or_own_clause_is_not_reported(text, quote):
+    assert not _reported(text, "p1s1", quote)
+
+
+def test_direct_quote_needs_non_vague_source():
+    assert _reported("“This plan is a betrayal,” one resident said.", "p1s1", "a betrayal")
+    assert not _reported("Experts warn: “This plan is a betrayal.”", "p1s1", "a betrayal")
+    assert not _reported("“This plan is a betrayal,” many residents said.", "p1s1", "a betrayal")

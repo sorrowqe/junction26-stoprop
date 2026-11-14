@@ -6,6 +6,7 @@
   python eval/run_eval.py --bakeoff                # plan the bake-off: fixed ~30-paragraph subset, every model
   python eval/run_eval.py --yes --bakeoff [--models a,b,c]   # run it (writes bakeoff.json)
   python eval/run_eval.py --yes --final            # LOCKED test split (announce the call count first)
+  python eval/run_eval.py --cache-only [--limit N]  # re-score stored analyses after a validator change: 0 calls
 
 Metrics, all reported per source (synthetic / semeval / human):
 - span P/R/F1 per label; match = same label and overlap >= 50% of the shorter span.
@@ -371,6 +372,18 @@ def _load_env_local() -> None:
         os.environ.setdefault(k.strip(), v.split(" #", 1)[0].strip().strip("'\""))
 
 
+def _cache_only_mode() -> None:
+    """Serve every analysis from the eval cache. A placeholder key makes the tagger read the cache;
+    any cache miss raises instead of reaching the network."""
+    from app.llm import client as llm
+
+    async def no_calls(*a, **kw):
+        raise llm.LLMError("cache-only mode: no model calls")
+    os.environ["ROUTER_API_KEY"] = "cache-only-no-calls"
+    os.environ["ROUTER_BASE_URL"] = "https://router.invalid/v1"
+    llm.chat = no_calls
+
+
 def git_commit() -> str:
     try:
         return subprocess.run(["git", "rev-parse", "--short=8", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
@@ -391,7 +404,11 @@ def main(argv=None) -> int:
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--bakeoff", action="store_true",
                     help=f"fixed mixed subset ({BAKEOFF_SUBSET.name}); default models: {DEFAULT_BAKEOFF_MODELS}")
+    ap.add_argument("--cache-only", action="store_true",
+                    help="re-score from the eval cache (e.g. after a validator change); refuses if anything is uncached")
     args = ap.parse_args(argv)
+    if args.cache_only and args.yes:
+        ap.error("--cache-only never calls a model; do not combine with --yes")
     if args.bakeoff and (args.final or args.limit):
         ap.error("--bakeoff runs on its fixed dev subset; do not combine with --final or --limit")
 
@@ -428,13 +445,20 @@ def main(argv=None) -> int:
         print(f"  {m}: {len(texts)} analyses -> {calls} uncached LLM calls, ~{calls * EST_IN:,} in / "
               f"~{calls * EST_OUT:,} out tokens, {credit_txt}")
     print(f"Total: {total_calls} LLM calls, ~{total_credits:.1f} credits{' + unknown' if unknown else ''}")
-    if not args.yes:
+    if args.cache_only:
+        if total_calls:
+            print(f"--cache-only: {total_calls} analyses are not cached; refusing (no calls are made in this mode).")
+            return 2
+        _cache_only_mode()
+        guard = {}
+    elif not args.yes:
         print("\nPlan only. Re-run with --yes after the OK.")
         return 0
-    _load_env_local()  # only now: the plan never needs the key
-    if not os.environ.get("ROUTER_API_KEY"):
-        print("ROUTER_API_KEY not set (.env.local missing?)")
-        return 2
+    else:
+        _load_env_local()  # only now: the plan never needs the key
+        if not os.environ.get("ROUTER_API_KEY"):
+            print("ROUTER_API_KEY not set (.env.local missing?)")
+            return 2
 
     from app.pipeline import tagger
     results, bakeoff = {}, []
@@ -448,7 +472,8 @@ def main(argv=None) -> int:
             save_credit_rate(m, partial)
             print(f"STOPPED at {m}: {msg}. Nothing written except the measured credit rate. Ask before continuing.")
             return 3
-        save_credit_rate(m, runs)
+        if not args.cache_only:
+            save_credit_rate(m, runs)
         metrics = compute_metrics(items, pairs, preds, runs)
         results[m] = metrics
         micro = metrics["scores"]["strict"]["all"]["micro"]

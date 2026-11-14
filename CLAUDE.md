@@ -67,8 +67,10 @@ happy-path demo. Must run live on Hostinger (our KVM 2 VPS) with a public URL: h
 3. **Reported speech is not the author's manipulation.** Loaded language attributed to someone
    else is labelled `reported_speech` and does not count against the text. This covers direct
    quotes AND attributed indirect speech ("X said that…", "X called it…", "according to X…",
-   "…, the minister said"). Not reported speech: first-person attribution ("I said that…") and
-   vague attributions that are themselves a technique ("experts say", "sources claim").
+   "…, the minister said"), but ONLY when attributed to a specific, identifiable source (named
+   person, organisation or outlet; "the minister"; he/she). Not reported speech: first-person
+   attribution ("I said that…") and vague/unnamed sources ("experts say", "insiders claim",
+   "many believe", "supporters argued") — that vagueness is the technique.
 4. **Abstain instead of guessing.** "Nothing found", "insufficient data" and "not checked" are
    valid outputs and must be shown honestly.
 5. **Two independent signals before a strong verdict.** A swarm cluster is "likely coordinated"

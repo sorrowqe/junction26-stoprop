@@ -54,6 +54,8 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 - Sample run DONE (`--limit 10`, 14 Haiku calls, dev key): 4.69 credits = **0.335 credits per call**, ~1,750 tokens and
   2.3 s per analysis, 0 failures, 0 validator rejections. Written to eval/results/sample.json (never shown, never gates).
   Measured rates per model are kept in eval/results/credit_rates.json; every plan projects credits from them.
+- Reported-speech fix (validate.py, specific-source rule, contrast clauses, more reporting verbs): sample re-scored
+  from cache (`--cache-only`, 0 calls): synthetic strict now equals lenient (P=R=1.0 on 7 / 10 spans). Tests: 449 passed.
 - Bake-off = FIXED subset eval/data/bakeoff_subset.json (seeded quota: 10 SemEval technique + 8 synthetic technique
   + 6 SemEval "none" + 2 synthetic hard negatives + 2 symmetry pairs = 30 analyses per model, same for every model).
   `run_eval.py --bakeoff` plans it; results go to bakeoff.json (shown on /metrics), never to latest.json, never gate.

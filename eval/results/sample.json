@@ -1,6 +1,6 @@
 {
-  "git_commit": "edcde18c",
-  "timestamp": "2026-11-14T14:35:51+00:00",
+  "git_commit": "c5cc8f47",
+  "timestamp": "2026-11-14T14:46:06+00:00",
   "split": "dev",
   "language": "en",
   "model": "claude-haiku-4.5-eu",
@@ -22,32 +22,32 @@
     "strict": {
       "all": {
         "micro": {
-          "precision": 0.444,
-          "recall": 0.444,
-          "f1": 0.444,
-          "predicted": 9,
+          "precision": 0.7,
+          "recall": 0.778,
+          "f1": 0.737,
+          "predicted": 10,
           "gold": 9,
-          "tp_pred": 4,
-          "tp_gold": 4
+          "tp_pred": 7,
+          "tp_gold": 7
         },
         "per_label": {
           "bandwagon": {
-            "precision": null,
-            "recall": 0.0,
-            "f1": null,
-            "predicted": 0,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 1,
             "gold": 1,
-            "tp_pred": 0,
-            "tp_gold": 0
+            "tp_pred": 1,
+            "tp_gold": 1
           },
           "doubt_casting": {
-            "precision": 0.0,
-            "recall": 0.0,
-            "f1": 0.0,
-            "predicted": 2,
+            "precision": 0.667,
+            "recall": 1.0,
+            "f1": 0.8,
+            "predicted": 3,
             "gold": 2,
-            "tp_pred": 0,
-            "tp_gold": 0
+            "tp_pred": 2,
+            "tp_gold": 2
           },
           "exaggeration_minimisation": {
             "precision": 1.0,
@@ -57,15 +57,6 @@
             "gold": 3,
             "tp_pred": 2,
             "tp_gold": 2
-          },
-          "false_dilemma": {
-            "precision": 0.0,
-            "recall": null,
-            "f1": null,
-            "predicted": 1,
-            "gold": 0,
-            "tp_pred": 0,
-            "tp_gold": 0
           },
           "name_calling": {
             "precision": null,
@@ -175,32 +166,32 @@
         },
         "synthetic": {
           "micro": {
-            "precision": 0.667,
-            "recall": 0.571,
-            "f1": 0.615,
-            "predicted": 6,
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 7,
             "gold": 7,
-            "tp_pred": 4,
-            "tp_gold": 4
+            "tp_pred": 7,
+            "tp_gold": 7
           },
           "per_label": {
             "bandwagon": {
-              "precision": null,
-              "recall": 0.0,
-              "f1": null,
-              "predicted": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
               "gold": 1,
-              "tp_pred": 0,
-              "tp_gold": 0
+              "tp_pred": 1,
+              "tp_gold": 1
             },
             "doubt_casting": {
-              "precision": 0.0,
-              "recall": 0.0,
-              "f1": 0.0,
-              "predicted": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 2,
               "gold": 2,
-              "tp_pred": 0,
-              "tp_gold": 0
+              "tp_pred": 2,
+              "tp_gold": 2
             },
             "exaggeration_minimisation": {
               "precision": 1.0,
@@ -210,15 +201,6 @@
               "gold": 2,
               "tp_pred": 2,
               "tp_gold": 2
-            },
-            "false_dilemma": {
-              "precision": 0.0,
-              "recall": null,
-              "f1": null,
-              "predicted": 1,
-              "gold": 0,
-              "tp_pred": 0,
-              "tp_gold": 0
             },
             "questionable_authority": {
               "precision": 1.0,
@@ -518,16 +500,16 @@
   "abstention_rate": 0.214,
   "cost": {
     "analyses": 14,
-    "llm_calls": 14,
-    "input_tokens": 21644,
-    "output_tokens": 2780,
-    "mean_tokens_per_analysis": 1744.6,
-    "mean_latency_s": 2.3,
-    "credits": 4.692,
-    "mean_credits_per_analysis": 0.3351
+    "llm_calls": 0,
+    "credits_per_call": 0.0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "mean_tokens_per_analysis": 0.0,
+    "mean_latency_s": 0.0,
+    "credits": 0.0,
+    "mean_credits_per_analysis": 0.0
   },
   "llm_failures": 0,
-  "bakeoff": [],
   "gold_report": {
     "language": "en",
     "items": {

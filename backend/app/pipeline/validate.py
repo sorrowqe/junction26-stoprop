@@ -154,18 +154,102 @@ def quote_regions(text: str, start: int, end: int) -> list[tuple[int, int]]:
     return regions
 
 
-def _attributed(text: str, para: Paragraph, rs: int, re_: int) -> bool:
+# ---- who is speaking? (CLAUDE.md §1 rule 3: only a specific, identifiable source makes it reported speech)
+
+# Unnamed / collective sources: their vagueness is the technique ("experts say", "many believe", "insiders claim").
+_VAGUE_WORDS = {
+    "many", "some", "several", "most", "few", "numerous", "various", "certain", "countless", "unnamed", "anonymous",
+    "others", "people", "everyone", "everybody", "someone", "somebody", "they", "experts", "insiders", "sources",
+    "mõned", "paljud", "mitmed", "mitu", "eksperdid", "inimesed", "kõik", "nad",
+    "многие", "некоторые", "несколько", "эксперты", "люди", "все", "они", "источники",
+}
+_FUNCTION = {
+    "the", "a", "an", "this", "that", "these", "those", "his", "her", "its", "their", "our", "my", "your", "in", "on",
+    "at", "during", "after", "before", "also", "and", "but", "so", "then", "meanwhile", "later", "earlier", "today",
+    "yesterday", "of", "for", "from", "to", "by", "with", "as", "while", "when", "however", "now", "again", "has",
+    "have", "had", "was", "were", "is", "are", "be", "been", "not", "never", "repeatedly", "once",
+}
+_DEFINITE = {"the", "this", "that"}
+_SINGULAR_PRONOUNS = {"he", "she", "ta", "tema", "он", "она"}
+_PREPOSITIONAL = ("according to", "по словам")      # the source follows the marker
+_CONTRAST = re.compile(r"(?:^|[\s,])(?:but|yet|whereas|although|though|however|kuid|aga|ent|но|однако)\b|;", re.I)
+_WORD = re.compile(r"[^\W\d_][\w’'-]*")
+
+
+def _plural_looking(word: str) -> bool:
+    w = word.lower()
+    return len(w) > 3 and w.endswith("s") and not w.endswith(("ss", "us", "is", "'s", "’s"))
+
+
+def _words(text: str, offset: int = 0) -> list[tuple[str, int]]:
+    return [(m.group(), m.start() + offset) for m in _WORD.finditer(text)]
+
+
+def _is_vague(words: list[tuple[str, int]]) -> bool:
+    return any(w.lower() in _VAGUE_WORDS for w, _ in words)
+
+
+def _is_specific(words: list[tuple[str, int]], lang: str, sentence_start: int = 0) -> bool:
+    """A named person/organisation/outlet, a definite singular role ("the minister", "the association"),
+    or he/she. Unnamed groups ("Supporters argued", "senior healers say") are not specific.
+    Outside English (not evaluated) only the vagueness test applies."""
+    content = [(w, i) for w, i in words if w.lower() not in _FUNCTION]
+    if not content or _is_vague(words):
+        return False
+    if lang != "en":
+        return True
+    lower = [w.lower() for w, _ in words]
+    for k, (w, i) in enumerate(words):
+        if w[0].isupper() and w.lower() not in _FUNCTION:
+            if i > sentence_start:
+                return True                      # capitalised mid-sentence: a name
+            nxt = words[k + 1][0] if k + 1 < len(words) else ""
+            if nxt[:1].isupper() or not _plural_looking(w):
+                return True                      # "Lira Voss said", "Voss said" (not "Supporters said")
+    if any(w in _SINGULAR_PRONOUNS for w in lower):
+        return True
+    return any(w in _DEFINITE for w in lower) and not _plural_looking(content[-1][0])
+
+
+def _source_words(text: str, m_start: int, m_end: int, verb_after_span: bool) -> list[tuple[str, int]]:
+    """Words naming who speaks, for a reporting verb at text[m_start:m_end] (text = one sentence)."""
+    before = text[:m_start]
+    cut = max(before.rfind(c) for c in ",;:—–(")
+    clause = _words(before[cut + 1:], cut + 1)
+    if any(w.lower() not in _FUNCTION for w, _ in clause):
+        return clause[-8:]                       # "Minister Voss said", "<span>, the mayor said"
+    after = text[m_end:]
+    stop = re.search(r"[,;:.!?—–]", after)
+    following = _words(after[: stop.start() if stop else len(after)], m_end)[:8]
+    if verb_after_span or text[m_start:m_end].lower().startswith(_PREPOSITIONAL):
+        return following                         # ", said the mayor", "according to the minister,"
+    return _words(text)[:6]                      # "She ... , asking, <span>": the sentence's subject
+
+
+def _attributed(text: str, para: Paragraph, rs: int, re_: int, lang: str = "en") -> bool:
+    """Direct quote: quotation marks already show the words are someone else's, so any non-vague
+    attribution counts ("“…,” one resident said"); vague ones ("Experts warn: “…”") do not."""
     before = text[max(para.start, rs - 100) : rs]
     after = text[re_ : min(para.end, re_ + 100)]
     if lexicons.find("*", "scare", before[-20:]):
         return False  # so-called "experts": the author's own scare quotes
+    if lexicons.find("*", "vague_authority", before[-40:]) or lexicons.find("*", "bandwagon", before[-40:]):
+        return False
     if before.rstrip().endswith(":"):
-        return True
-    return bool(lexicons.find("*", "speech", before) or lexicons.find("*", "speech", after))
+        return not _is_vague(_words(before.rstrip()[:-1])[-6:])
+    for m in lexicons.find("*", "speech", before):
+        if not _is_vague(_words(before[: m.start()])[-6:]):
+            return True
+    for m in lexicons.find("*", "speech", after):
+        subject = _words(after[: m.start()])[-6:] + _words(re.split(r"[,;:.!?]", after[m.end():], maxsplit=1)[0])[:4]
+        if not _is_vague(subject):
+            return True
+    return False
 
 
 def attributed_regions(seg: Segmented, para: Paragraph) -> list[tuple[int, int]]:
-    return [(a, b) for a, b in quote_regions(seg.text, para.start, para.end) if _attributed(seg.text, para, a, b)]
+    return [(a, b) for a, b in quote_regions(seg.text, para.start, para.end)
+            if _attributed(seg.text, para, a, b, seg.lang)]
 
 
 _FIRST_PERSON = {"i", "we", "ma", "mina", "me", "meie", "я", "мы"}
@@ -176,9 +260,11 @@ def _indirect_attribution(seg: Segmented, start: int, end: int) -> bool:
     "X said (that) ...", "X called it ...", "according to X, ...", "..., the mayor said.",
     "ministri sõnul ...", "по словам X ...", "X заявил, что ...".
 
-    Not reported speech: first-person attribution ("I said that"), vague attributions that are
-    themselves a technique ("experts say", "sources say", "everyone says"), "so-called", and spans
-    that contain the reporting verb itself.
+    Only a SPECIFIC, identifiable source counts (named person/organisation/outlet, "the minister", he/she).
+    Not reported speech: first-person attribution ("I said that"), vague or unnamed sources that are
+    themselves a technique ("experts say", "insiders claim", "Supporters argued"), "so-called", spans
+    that contain the reporting verb itself, and the author's own clause after a contrast
+    ("X says the grid needs caution, but can we really trust them?").
     """
     sent = next((s for s in seg.sentences if s.start <= start and end <= s.end), None)
     if sent is None:
@@ -198,9 +284,13 @@ def _indirect_attribution(seg: Segmented, start: int, end: int) -> bool:
         if before_words and before_words[-1].lower() in _FIRST_PERSON:
             continue  # "I said that ...": the author's own claim
         if m.end() <= s_loc:
-            return True  # "X said that <span>", "according to X, <span>"
-        if m.start() >= e_loc and re.search(r"[,—–-]", text[e_loc:m.start()]):
-            return True  # "<span>, the mayor said."
+            if _CONTRAST.search(text[m.end():s_loc]):
+                continue  # "X said …, but <span>": the author's own clause
+            if _is_specific(_source_words(text, m.start(), m.end(), False), seg.lang, _words(text)[0][1] if _words(text) else 0):
+                return True  # "X said that <span>", "according to X, <span>"
+        elif m.start() >= e_loc and re.search(r"[,—–-]", text[e_loc:m.start()]):
+            if _is_specific(_source_words(text, m.start(), m.end(), True), seg.lang, _words(text)[0][1] if _words(text) else 0):
+                return True  # "<span>, the mayor said."
     return False
 
 

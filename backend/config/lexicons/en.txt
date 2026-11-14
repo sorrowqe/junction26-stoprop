@@ -93,6 +93,17 @@ according to
 tweeted
 posted
 called
+framed
+described
+questioned
+asking
+saying
+accused
+alleged
+suggested
+urged
+stressed
+noted
 
 [bandwagon]
 everyone knows
