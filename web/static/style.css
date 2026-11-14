@@ -130,3 +130,24 @@ footer { padding: 1rem 16px 2.5rem; }
 .findings button { display: block; width: 100%; }
 .legend .hl { cursor: default; }
 .legend .hl:hover { filter: none; outline: 0; }
+
+/* shared nav + content pages */
+.topnav { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1.2rem; padding-top: .9rem; padding-bottom: .4rem; }
+.topnav .brand { font-weight: 800; font-size: 1.15rem; color: var(--fg); text-decoration: none; margin-right: auto; }
+.topnav .brand span { color: var(--accent); }
+.topnav .links { display: flex; flex-wrap: wrap; gap: .2rem .9rem; }
+.topnav .links a { color: var(--muted); text-decoration: none; padding: .2rem 0; }
+.topnav .links a:hover { color: var(--fg); }
+.topnav .links a[aria-current="page"] { color: var(--fg); font-weight: 600; border-bottom: 2px solid var(--accent); }
+a { color: var(--focus); }
+.tools { list-style: none; padding: 0; margin: 1.2rem 0 0; display: grid; gap: .7rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.tools a { display: block; height: 100%; text-decoration: none; color: var(--fg); background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: .8rem 1rem; }
+.tools a:hover { border-color: var(--fg); }
+.tools span { display: block; color: var(--muted); font-size: .9rem; }
+.page { padding-top: 1.5rem; padding-bottom: 2rem; max-width: 50rem; }
+.page h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); margin: .3rem 0 .6rem; }
+.page h2 { font-size: 1.2rem; margin: 1.6rem 0 .5rem; }
+.page .lede { margin-bottom: 1rem; }
+.page pre { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: .8rem; overflow-x: auto; font-size: .85rem; }
+.principles li { margin-bottom: .5rem; }
+.hero { padding-top: 1.5rem; }

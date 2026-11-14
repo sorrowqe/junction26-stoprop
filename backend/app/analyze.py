@@ -49,6 +49,8 @@ def analyze_text(text: str, sensitivity: str = "balanced", lang: str = "auto") -
             for s in spans
         ],
         "profile": prof,
+        "innocent_explanations": [],
+        "receipts": [],  # filled for URLs in M3
         "mode": "heuristics_only",
         "notes": notes,
         "cost": {"input_tokens": 0, "output_tokens": 0, "cached": False},

@@ -18,7 +18,11 @@ One line per decision (date, milestone, what, why).
 - 2026-11-14 M1: Paragraphs = blank-line separated blocks; if a text has no blank lines, each line is a paragraph (pasted articles often use single newlines).
 - 2026-11-14 M1: Validator matches inside the given sentence only (no fallback to neighbouring sentences); normalizes NFKC, whitespace, quote marks, dashes, zero-width chars, ё->е; case-sensitive first, then case-insensitive fallback; repeated phrase -> first occurrence (or `occurrence=n`).
 - 2026-11-14 M1: Reported speech = span inside a quote region (“” „“ „” «» "") with a speech verb (any of EN/ET/RU lists) within 100 chars before/after or a colon before it; scare quotes after "so-called / nn / так называемый" are NOT reported speech. Unclosed quote runs to paragraph end.
-- 2026-11-14 M1: API offsets are Unicode code points (Python str indices); web/app.js converts them to UTF-16 indices for JS. The extension (M5) must do the same.
+- 2026-11-14 M1: API offsets are Unicode code points (Python str indices); web/app.js converts them to UTF-16 indices for JS. Any JS API client must do the same (documented on /api).
 - 2026-11-14 M1: Lexicon language is detected per paragraph (fallback: whole-text language), so mixed EN/RU/ET texts work.
 - 2026-11-14 M1: Added `GET /api/techniques` (taxonomy for legend/tooltips), `app/taxonomy.py` (load + gate), `app/analyze.py` (pipeline orchestration), `app/pipeline/lexicons.py`. Request size cap 100,000 chars (413), then word truncation at 8,000 (prefix cut, so offsets stay valid).
 - 2026-11-14 M1: Sample texts live in `web/static/samples.json` (fictional town "Harbourton") so tests can assert the neutral sample stays clean.
+- 2026-11-14 v2 reconcile: removed `extension/` and `EXTENSION_ORIGINS`; no install-token/CORS code ever existed. Added `MODEL_EMBED` to `.env.example`.
+- 2026-11-14 v2 reconcile: placeholder pages `/source` (M3), `/swarm` (M5), `/metrics` (M4); `/methodology` lists the principles until the M6 write-up; `/api` already has curl examples; FastAPI `/docs` enabled (Swagger UI assets come from its default CDN).
+- 2026-11-14 v2 reconcile: stub modules `backend/app/swarm/*`, `eval/swarm/*`, `eval/data/raw/` per v2 layout. Analyze response gains `innocent_explanations` and `receipts` (empty until M3).
+- 2026-11-14 v2 reconcile: kept the optional `lang` request field (default `auto`, not in the v2 request schema) - useful for eval and harmless.

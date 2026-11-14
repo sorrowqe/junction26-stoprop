@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API · Stoprop</title>
+  <meta name="description" content="Stoprop public API with curl examples.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api" aria-current="page">API</a></div></nav>
+  <main class="wrap page">
+    <h1>API</h1>
+    <p class="lede">Everything the web app does is available as a JSON API. Interactive reference: <a href="/docs">/docs</a>.</p>
+    <h2>Analyze a text</h2>
+    <pre><code>curl -s https://stoprop.tech/api/analyze \
+  -H 'Content-Type: application/json' \
+  -d '{"text": "Everyone knows the plan failed.", "sensitivity": "balanced", "private": false}'</code></pre>
+    <p>Returns highlighted <code>spans</code> (start/end offsets, label, colour, confidence, plain-language explanation,
+      <code>reported_speech</code>, <code>experimental</code>), a <code>profile</code>, <code>innocent_explanations</code>,
+      <code>mode</code> (<code>llm</code> or <code>heuristics_only</code>) and token <code>cost</code>.
+      <code>sensitivity</code>: <code>strict</code> | <code>balanced</code> | <code>broad</code>.
+      <code>private: true</code> means the text is not written to the shared cache.</p>
+    <p class="muted small">Offsets are Unicode code points (Python string indices). In JavaScript, convert them before slicing
+      strings that contain emoji or other characters outside the Basic Multilingual Plane.</p>
+    <h2>Taxonomy</h2>
+    <pre><code>curl -s https://stoprop.tech/api/techniques</code></pre>
+    <h2>Health and AI budget</h2>
+    <pre><code>curl -s https://stoprop.tech/api/health</code></pre>
+    <h2>Rate limits</h2>
+    <p>Per client IP, per hour: analyze 30, receipts 60, swarm 10, feedback 30. Over the limit you get HTTP 429 with a plain message.</p>
+    <p class="muted">Coming: <code>POST /api/receipts</code> (M3), <code>POST /api/swarm</code> (M5), <code>GET /api/metrics</code> (M4).</p>
+  </main>
+  <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
+</body>
+</html>

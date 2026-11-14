@@ -129,3 +129,27 @@ def test_static_files_served():
     assert client.get("/static/samples.json").status_code == 200
     assert client.get("/static/app.js").status_code == 200
     assert client.get("/static/style.css").status_code == 200
+
+
+def test_pages_served_with_nav():
+    for path in ("/", "/source", "/swarm", "/metrics", "/methodology", "/api"):
+        r = client.get(path)
+        assert r.status_code == 200, path
+        assert 'aria-label="Main"' in r.text and 'href="/swarm"' in r.text, path
+
+
+def test_openapi_docs_enabled():
+    assert client.get("/docs").status_code == 200
+    assert "/api/analyze" in client.get("/openapi.json").json()["paths"]
+
+
+def test_no_extension_leftovers():
+    import pathlib
+    root = config.REPO_ROOT
+    assert not (root / "extension").exists()
+    assert "EXTENSION_ORIGINS" not in (root / ".env.example").read_text(encoding="utf-8")
+
+
+def test_v2_response_fields():
+    body = analyze("Everyone knows the plan failed.")
+    assert "innocent_explanations" in body and body["receipts"] == []

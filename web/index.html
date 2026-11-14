@@ -10,12 +10,18 @@
 </head>
 <body>
   <a class="skip" href="#text">Skip to the analyzer</a>
+  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/" aria-current="page">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
   <header class="hero">
     <div class="wrap">
       <h1>Stop<span>rop</span></h1>
       <p class="tagline">Stoprop: see the spin before it sees you. We flag the tactics, not the opinions.</p>
       <p class="lede">Paste a news article, post or comment. Stoprop highlights <em>how</em> it tries to
         persuade you, explains each technique in plain language, and never labels people or outlets.</p>
+      <ul class="tools" aria-label="Three tools">
+        <li><a href="#h-analyze"><strong>Analyze</strong><span>Name the technique, span by span</span></a></li>
+        <li><a href="/source"><strong>Check a source</strong><span>Receipts for a link or domain</span></a></li>
+        <li><a href="/swarm"><strong>Swarm mode</strong><span>Spot coordinated posting in a batch</span></a></li>
+      </ul>
     </div>
   </header>
 
@@ -83,7 +89,8 @@
   <div id="tip" class="tip" role="tooltip" hidden></div>
 
   <footer class="wrap muted small">
-    Stoprop labels techniques, not people, outlets or opinions. Your text is analyzed and not stored with any identity.
+    Stoprop labels techniques and behaviours, never people, outlets or viewpoints. No accounts, no reading history.
+    <a href="/methodology">Methodology</a> · <a href="/api">API</a>
   </footer>
   <script src="/static/app.js" defer></script>
 </body>

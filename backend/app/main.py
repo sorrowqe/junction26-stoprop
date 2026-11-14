@@ -11,7 +11,7 @@ from app.analyze import analyze_text
 
 MAX_CHARS = 100_000  # hard cap on request size; word truncation (8000) happens later
 
-app = FastAPI(title="Stoprop", version=config.VERSION, docs_url=None, redoc_url=None)
+app = FastAPI(title="Stoprop", version=config.VERSION, docs_url="/docs", redoc_url=None)
 app.mount("/static", StaticFiles(directory=config.WEB_DIR / "static"), name="static")
 
 
@@ -50,6 +50,14 @@ def analyze(req: AnalyzeRequest) -> dict:
     return analyze_text(text, sensitivity=req.sensitivity, lang=req.lang)
 
 
+def _page(name: str) -> FileResponse:
+    return FileResponse(config.WEB_DIR / f"{name}.html", media_type="text/html")
+
+
 @app.get("/", include_in_schema=False)
 def index() -> FileResponse:
-    return FileResponse(config.WEB_DIR / "index.html", media_type="text/html")
+    return _page("index")
+
+
+for _name in ("source", "swarm", "metrics", "methodology", "api"):
+    app.add_api_route(f"/{_name}", (lambda n=_name: _page(n)), methods=["GET"], include_in_schema=False)
