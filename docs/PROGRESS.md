@@ -51,9 +51,19 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   Mistral found unmarked techniques or rejected rows; Gemini accepted everything -> kappa 0.0, raw agreement 87.7%),
   11/12 symmetry pairs kept, 25 reported-speech corrections. sheet_to_jsonl: 89 dev / 49 test items (English),
   clean sets: 30 SemEval "none" + 6 synthetic hard negatives (all splits), 63 ET/RU rows not evaluated.
+- Sample run DONE (`--limit 10`, 14 Haiku calls, dev key): 4.69 credits = **0.335 credits per call**, ~1,750 tokens and
+  2.3 s per analysis, 0 failures, 0 validator rejections. Written to eval/results/sample.json (never shown, never gates).
+  Measured rates per model are kept in eval/results/credit_rates.json; every plan projects credits from them.
+- Bake-off = FIXED subset eval/data/bakeoff_subset.json (seeded quota: 10 SemEval technique + 8 synthetic technique
+  + 6 SemEval "none" + 2 synthetic hard negatives + 2 symmetry pairs = 30 analyses per model, same for every model).
+  `run_eval.py --bakeoff` plans it; results go to bakeoff.json (shown on /metrics), never to latest.json, never gate.
+  Cost guard: each model's first analysis runs alone; stop if it failed or cost > 2x the projected credits per call.
 - NEXT STEPS (each needs Aleksandr's OK for the calls):
-  3. `python eval/run_eval.py` (plan) -> OK -> `--yes` (dev, ~67+ calls with Haiku on the dev key), then bake-off.
-  4. Commit eval/results/*.json, deploy -> /metrics shows the numbers.
+  3. Full dev run: `python eval/run_eval.py --yes` = 97 uncached Haiku calls, ~32.5 credits (writes latest.json,
+     updates dev_precision gating).
+  4. Bake-off: `python eval/run_eval.py --yes --bakeoff` = 90 calls for the 3 non-Haiku models (Haiku is then fully
+     cached), ~30 credits if they cost what Haiku costs (not measured yet; the guard stops at 2x).
+  5. Commit eval/results/*.json, deploy -> /metrics shows the numbers.
 
 ## M3 real-network check (local PC, no AI key)
 - 11 SSRF URLs via the running app with real DNS (incl. 127.0.0.1.nip.io, localtest.me) -> all 400.

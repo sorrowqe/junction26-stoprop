@@ -279,6 +279,89 @@ def test_run_eval_plan_only_makes_no_calls(monkeypatch, tmp_path, capsys):
     assert "1 uncached LLM calls" in out and "Plan only" in out
 
 
+# ------------------------------------------------- bake-off subset + credits
+
+def _items():
+    out = []
+    for n in range(15):
+        out.append({"id": f"sem-{n}", "source": "semeval", "clean_set": None})
+        out.append({"id": f"none-{n}", "source": "semeval", "clean_set": "semeval_none"})
+        out.append({"id": f"syn-{n}", "source": "synthetic", "clean_set": None})
+    out += [{"id": f"hn-{n}", "source": "synthetic", "clean_set": "synthetic_hard_negative"} for n in range(4)]
+    return out
+
+
+def test_bakeoff_subset_is_fixed_and_mixed(tmp_path):
+    items, pairs = _items(), [{"pair_id": f"sym-{n:02d}"} for n in range(1, 12)]
+    sub = re_.make_bakeoff_subset(items, pairs)
+    assert sub == re_.make_bakeoff_subset(list(reversed(items)), pairs)  # order-independent
+    ids = sub["items"]
+    assert len(ids) == 26 and len(sub["pairs"]) == 2
+    assert sum(i.startswith("sem-") for i in ids) == 10 and sum(i.startswith("syn-") for i in ids) == 8
+    assert sum(i.startswith("none-") for i in ids) == 6 and sum(i.startswith("hn-") for i in ids) == 2
+    path = tmp_path / "subset.json"
+    got, got_pairs = re_.load_bakeoff(items, pairs, path)
+    assert path.exists() and {i["id"] for i in got} == set(ids) and len(got_pairs) == 2
+    # once written, the file wins even if the split grows
+    more = items + [{"id": "sem-new", "source": "semeval", "clean_set": None}]
+    assert {i["id"] for i in re_.load_bakeoff(more, pairs, path)[0]} == set(ids)
+
+
+def test_credit_rates_accumulate_and_guess(tmp_path):
+    path = tmp_path / "rates.json"
+    re_.save_credit_rate("m1", {"a": {"llm_calls": 2, "credits": 1.0}}, path)
+    re_.save_credit_rate("m1", {"a": {"llm_calls": 2, "credits": 0.2}}, path)
+    rates = re_.read_credit_rates(path)
+    assert rates["m1"]["credits_per_call"] == 0.3 and rates["m1"]["calls_measured"] == 4
+    assert re_.projected_rate("m1", rates)[0] == 0.3
+    rate, how = re_.projected_rate("m2", rates)
+    assert rate == 0.3 and "NOT measured" in how
+    assert re_.projected_rate("m2", {})[0] is None
+
+
+def _fake_analyze(calls, credits=0.5, mode="llm"):
+    async def fake(text, **kw):
+        calls.append(text)
+        return {"mode": mode, "mode_reason": "ok" if mode == "llm" else "llm_error", "spans": [],
+                "stats": {"validator_rejections": 0},
+                "cost": {"llm_calls": 1, "input_tokens": 10, "output_tokens": 5, "credits": credits}}
+    return fake
+
+
+@pytest.mark.parametrize("credits, mode, stops", [(0.5, "llm", False), (1.0, "llm", True), (0.1, "heuristics_only", True)])
+def test_cost_guard_checks_first_analysis_alone(monkeypatch, credits, mode, stops):
+    import asyncio
+    from app import analyze
+    calls = []
+    monkeypatch.setattr(analyze, "analyze_text", _fake_analyze(calls, credits, mode))
+    texts = {f"t{n}": f"text {n}" for n in range(5)}
+    if stops:
+        with pytest.raises(re_.CostGuardStop):
+            asyncio.run(re_.predict(texts, "broad", guard_rate=0.3))
+        assert calls == ["text 0"]
+    else:
+        preds, runs = asyncio.run(re_.predict(texts, "broad", guard_rate=0.3))
+        assert len(calls) == 5 and len(runs) == 5
+
+
+def test_limit_run_writes_sample_not_latest(monkeypatch, tmp_path):
+    dev = tmp_path / "gold.jsonl"
+    dev.write_text(json.dumps({"id": "x", "source": "semeval", "lang": "en", "text": "Calm text here.", "spans": [],
+                               "clean_set": "semeval_none"}) + "\n", encoding="utf-8")
+    for name, value in (("DEV", dev), ("SYM", tmp_path / "none.jsonl"), ("EVAL_DB", tmp_path / "eval.db"),
+                        ("RESULTS", tmp_path / "results"), ("CREDIT_RATES", tmp_path / "rates.json"),
+                        ("TECHNIQUES_YAML", tmp_path / "never.yaml")):
+        monkeypatch.setattr(re_, name, value)
+    monkeypatch.setattr(re_, "_load_env_local", lambda: None)
+    monkeypatch.setenv("ROUTER_API_KEY", "sk-test-not-real")
+    from app import analyze
+    monkeypatch.setattr(analyze, "analyze_text", _fake_analyze([], credits=0.2))
+    assert re_.main(["--yes", "--limit", "1"]) == 0
+    assert (tmp_path / "results" / "sample.json").exists()
+    assert not (tmp_path / "results" / "latest.json").exists() and not (tmp_path / "never.yaml").exists()
+    assert re_.read_credit_rates(tmp_path / "rates.json")["test-model"]["credits_per_call"] == 0.2
+
+
 # ------------------------------------------------------------------ metrics
 
 def test_api_metrics_and_page():

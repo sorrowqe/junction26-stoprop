@@ -25,6 +25,7 @@
     $("no-results").hidden = !!latest;
     $("results").hidden = !latest;
     if (latest) renderLatest(latest);
+    renderBakeoff(data.bakeoff);
 
     const review = data.ai_review;
     const gold = data.gold_report;
@@ -93,11 +94,20 @@
       ["Mean latency", `${num(c.mean_latency_s)} s`], ["Credits (router) per analysis", num(c.mean_credits_per_analysis)], ["Validator rejection rate (AI quotes not found verbatim)", pct(r.validator_rejection_rate)],
       ["Abstention rate (nothing flagged)", pct(r.abstention_rate)], ["AI failures (fell back to rules)", num(r.llm_failures)]]
       .forEach((x) => body("cost").append(row(x)));
-    if ((r.bakeoff || []).length) {
-      $("bakeoff-wrap").hidden = false;
-      r.bakeoff.forEach((b) => body("bakeoff").append(row([b.model, pct(b.precision), pct(b.recall), pct(b.f1),
-        pct(b.fpr_semeval_none), num(b.mean_tokens_per_analysis), `${num(b.mean_latency_s)} s`])));
-    }
+  }
+
+  function renderBakeoff(b) {
+    if (!b || !(b.models || []).length) return;
+    $("bakeoff-wrap").hidden = false;
+    const c = b.counts || {};
+    $("bakeoff-info").textContent = `Every model saw the same fixed subset: ${num(c.items)} English dev paragraphs ` +
+      `(${Object.entries(c.by_source || {}).map(([s, n]) => `${s} ${n}`).join(", ")}; clean: ` +
+      `${Object.entries(c.clean_sets || {}).map(([s, n]) => `${nice(s)} ${n}`).join(", ") || "none"}) ` +
+      `plus ${num(c.symmetry_pairs)} mirrored pairs. Strict scoring, sensitivity ${b.sensitivity}. ` +
+      `A small subset, so differences of a few points are noise. Commit ${b.git_commit} · ${b.timestamp}.`;
+    b.models.forEach((m) => body("bakeoff").append(row([m.model, pct(m.precision), pct(m.recall), pct(m.f1),
+      pct(m.fpr_semeval_none), pct(m.symmetry_flip_rate), num(m.mean_credits_per_analysis),
+      num(m.mean_tokens_per_analysis), `${num(m.mean_latency_s)} s`, num(m.llm_failures)])));
   }
 
   fetch("/api/metrics").then((r) => r.json()).then(render).catch(() => {

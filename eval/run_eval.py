@@ -2,8 +2,9 @@
 
   python eval/run_eval.py                          # plan: texts, LLM calls, token estimate (no calls)
   python eval/run_eval.py --yes                    # dev split with MODEL_TAGGER (DEV key from .env.local)
-  python eval/run_eval.py --yes --limit 10         # small sample while developing
-  python eval/run_eval.py --yes --models a,b,c     # bake-off: same dev sample through several models
+  python eval/run_eval.py --yes --limit 10         # small sample while developing (writes sample.json only)
+  python eval/run_eval.py --bakeoff                # plan the bake-off: fixed ~30-paragraph subset, every model
+  python eval/run_eval.py --yes --bakeoff [--models a,b,c]   # run it (writes bakeoff.json)
   python eval/run_eval.py --yes --final            # LOCKED test split (announce the call count first)
 
 Metrics, all reported per source (synthetic / semeval / human):
@@ -17,13 +18,17 @@ Metrics, all reported per source (synthetic / semeval / human):
 - validator rejection rate, abstention rate, mean tokens + latency per analysis, LLM failures.
 Predictions = every gated span at the chosen sensitivity, INCLUDING experimental ones (otherwise nothing
 would be measured while everything is experimental).
-Writes eval/results/latest.json (+ latest_<model>.json in a bake-off) and, on dev runs of a single model,
-updates dev_precision / experimental in backend/config/techniques.yaml (labels with >= 5 predictions).
+Outputs: full single-model dev run -> eval/results/latest.json (shown on /metrics) and dev_precision /
+experimental updates in backend/config/techniques.yaml (labels with >= 5 predictions); --limit -> sample.json
+(never shown, never gates); bake-off / multi-model -> bakeoff.json (+ bakeoff_<model>.json).
+Credits: every run records the router's credits per call per model in eval/results/credit_rates.json; the plan
+projects credits from it, and a run stops after its first analysis if that costs > 2x the projection.
 """
 from __future__ import annotations
 
 import argparse
 import asyncio
+import hashlib
 import json
 import os
 import re
@@ -52,6 +57,18 @@ EST_IN, EST_OUT = 1700, 450   # tokens per tagger call (real smoke test: 1632 in
 MIN_PRED_FOR_PRECISION = 5
 PRECISION_THRESHOLD = 0.70
 FLAGGED = ("red", "amber")
+BAKEOFF_SUBSET = ROOT / "eval" / "data" / "bakeoff_subset.json"
+CREDIT_RATES = RESULTS / "credit_rates.json"
+DEFAULT_BAKEOFF_MODELS = "claude-haiku-4.5-eu,gemini-3.5-flash-lite-eu,gpt-5.4-mini,mistral-small-4-eu"
+# (source, clean_set, n): technique paragraphs from both sources + both clean sets; plus mirrored pairs
+BAKEOFF_QUOTA = (("semeval", "", 10), ("synthetic", "", 8), ("semeval", "semeval_none", 6),
+                 ("synthetic", "synthetic_hard_negative", 2))
+BAKEOFF_PAIRS = 2
+COST_GUARD_FACTOR = 2.0
+
+
+class CostGuardStop(Exception):
+    pass
 
 
 # ------------------------------------------------------------------- data
@@ -74,6 +91,37 @@ def load(final: bool, lang: str = LANG, limit: int | None = None) -> tuple[list[
         items = (mixed + rest)[:limit]
         pairs = pairs[: max(1, limit // 5)] if pairs else []
     return items, pairs
+
+
+def _bakeoff_hash(key: str) -> str:
+    return hashlib.sha256(f"stoprop-bakeoff:{key}".encode("utf-8")).hexdigest()
+
+
+def make_bakeoff_subset(items: list[dict], pairs: list[dict]) -> dict:
+    """Seeded, quota-based subset; written once to BAKEOFF_SUBSET and reused so every model sees the same texts."""
+    ids = []
+    for source, clean, n in BAKEOFF_QUOTA:
+        pool = sorted((i for i in items if i["source"] == source and (i.get("clean_set") or "") == clean),
+                      key=lambda i: _bakeoff_hash(i["id"]))
+        ids += [i["id"] for i in pool[:n]]
+    pair_ids = [p["pair_id"] for p in sorted(pairs, key=lambda p: _bakeoff_hash(p["pair_id"]))[:BAKEOFF_PAIRS]]
+    return {"items": ids, "pairs": pair_ids,
+            "quota": [list(q) for q in BAKEOFF_QUOTA] + [["symmetry_pairs", "", BAKEOFF_PAIRS]]}
+
+
+def load_bakeoff(items: list[dict], pairs: list[dict], path: Path | None = None) -> tuple[list[dict], list[dict]]:
+    path = path or BAKEOFF_SUBSET
+    if path.exists():
+        sub = json.loads(path.read_text(encoding="utf-8"))
+    else:
+        sub = make_bakeoff_subset(items, pairs)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(sub, indent=1) + "\n", encoding="utf-8")
+    keep, keep_pairs = set(sub["items"]), set(sub["pairs"])
+    missing = keep - {i["id"] for i in items}
+    if missing:
+        print(f"WARNING: {len(missing)} bake-off ids no longer in the dev split: {sorted(missing)[:5]}")
+    return [i for i in items if i["id"] in keep], [p for p in pairs if p["pair_id"] in keep_pairs]
 
 
 # ---------------------------------------------------------------- scoring
@@ -179,6 +227,8 @@ def compute_metrics(items, pairs, preds, runs) -> dict:
         "validator_rejection_rate": round(sum(r["rejections"] for r in all_runs) / proposed, 3) if proposed else None,
         "abstention_rate": round(sum(r["n_spans"] == 0 for r in all_runs) / n, 3),
         "cost": {"analyses": len(all_runs), "llm_calls": sum(r["llm_calls"] for r in all_runs),
+                 "credits_per_call": round(sum(r.get("credits", 0.0) for r in all_runs)
+                                           / max(1, sum(r["llm_calls"] for r in all_runs)), 4),
                  "input_tokens": sum(r["input_tokens"] for r in all_runs),
                  "output_tokens": sum(r["output_tokens"] for r in all_runs),
                  "mean_tokens_per_analysis": round(sum(r["input_tokens"] + r["output_tokens"] for r in all_runs) / n, 1),
@@ -217,7 +267,45 @@ def plan_calls(texts: dict[str, str], model: str) -> int:
     return calls
 
 
-async def predict(texts: dict[str, str], sensitivity: str) -> tuple[dict, dict]:
+def read_credit_rates(path: Path | None = None) -> dict:
+    path = path or CREDIT_RATES
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
+def save_credit_rate(model: str, runs: dict, path: Path | None = None) -> None:
+    path = path or CREDIT_RATES
+    calls = sum(r["llm_calls"] for r in runs.values())
+    if not calls:
+        return
+    credits = sum(r.get("credits", 0.0) for r in runs.values())
+    rates = read_credit_rates(path)
+    old = rates.get(model, {})
+    total_calls = old.get("calls_measured", 0) + calls
+    total_credits = old.get("credits_measured", 0.0) + credits
+    rates[model] = {"credits_per_call": round(total_credits / total_calls, 4), "calls_measured": total_calls,
+                    "credits_measured": round(total_credits, 4),
+                    "updated": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(rates, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def projected_rate(model: str, rates: dict) -> tuple[float | None, str]:
+    """(credits per call, how we know). Unmeasured models get the highest measured rate as a cautious guess."""
+    if model in rates:
+        return rates[model]["credits_per_call"], f"measured over {rates[model]['calls_measured']} calls"
+    known = {m: r["credits_per_call"] for m, r in rates.items()}
+    if known:
+        m = max(known, key=known.get)
+        return known[m], f"NOT measured yet; guessed from {m}"
+    return None, "unknown (no measurement yet)"
+
+
+async def predict(texts: dict[str, str], sensitivity: str, guard_rate: float | None = None) -> tuple[dict, dict]:
+    """guard_rate: projected credits per call; the first analysis runs alone and the run stops (CostGuardStop) if
+    it failed or cost more than COST_GUARD_FACTOR x the projection."""
     from app.analyze import analyze_text
     preds, runs = {}, {}
     sem = asyncio.Semaphore(3)
@@ -229,9 +317,20 @@ async def predict(texts: dict[str, str], sensitivity: str) -> tuple[dict, dict]:
             runs[key] = {"latency": time.monotonic() - t0, "mode": r["mode"], "n_spans": len(r["spans"]),
                          "rejections": r["stats"]["validator_rejections"], "llm_calls": r["cost"]["llm_calls"],
                          "input_tokens": r["cost"]["input_tokens"], "output_tokens": r["cost"]["output_tokens"],
-                         "credits": r["cost"].get("credits", 0.0)}
+                         "credits": r["cost"].get("credits", 0.0), "mode_reason": r.get("mode_reason")}
             preds[key] = r["spans"]
-    await asyncio.gather(*(one(k, t) for k, t in texts.items()))
+
+    keys = list(texts)
+    if guard_rate is not None and keys:
+        first = keys.pop(0)
+        await one(first, texts[first])
+        r = runs[first]
+        if r["mode"] != "llm":
+            raise CostGuardStop(f"first analysis did not use the model (mode_reason={r['mode_reason']})", runs)
+        if r["llm_calls"] and r["credits"] / r["llm_calls"] > COST_GUARD_FACTOR * guard_rate:
+            raise CostGuardStop(f"first call cost {r['credits'] / r['llm_calls']:.4f} credits, projection "
+                                f"{guard_rate:.4f} (> {COST_GUARD_FACTOR}x)", runs)
+    await asyncio.gather(*(one(k, texts[k]) for k in keys))
     return preds, runs
 
 
@@ -290,7 +389,11 @@ def main(argv=None) -> int:
     ap.add_argument("--models", default="", help="comma-separated bake-off models (default: MODEL_TAGGER)")
     ap.add_argument("--sensitivity", default="broad", choices=["strict", "balanced", "broad"])
     ap.add_argument("--limit", type=int, default=None)
+    ap.add_argument("--bakeoff", action="store_true",
+                    help=f"fixed mixed subset ({BAKEOFF_SUBSET.name}); default models: {DEFAULT_BAKEOFF_MODELS}")
     args = ap.parse_args(argv)
+    if args.bakeoff and (args.final or args.limit):
+        ap.error("--bakeoff runs on its fixed dev subset; do not combine with --final or --limit")
 
     from app.store import Store, set_store
     set_store(Store(EVAL_DB))  # separate cache from production
@@ -298,17 +401,33 @@ def main(argv=None) -> int:
     if not items:
         print("No gold items. Run: python eval/sheet_to_jsonl.py")
         return 2
-    models = [m.strip() for m in args.models.split(",") if m.strip()] or [os.environ.get("MODEL_TAGGER", "claude-haiku-4.5-eu")]
+    if args.bakeoff:
+        items, pairs = load_bakeoff(items, pairs)
+    default_models = DEFAULT_BAKEOFF_MODELS if args.bakeoff else os.environ.get("MODEL_TAGGER", "claude-haiku-4.5-eu")
+    models = [m.strip() for m in (args.models or default_models).split(",") if m.strip()]
+    bakeoff_mode = args.bakeoff or len(models) > 1
     texts = texts_to_run(items, pairs)
-    print(f"Split: {'TEST (final)' if args.final else 'dev'}  language: {LANG}  items: {len(items)} "
+    print(f"Split: {'TEST (final)' if args.final else 'dev'}{' (bake-off subset)' if args.bakeoff else ''}  "
+          f"language: {LANG}  items: {len(items)} "
           f"{dict(Counter(i['source'] for i in items))}  clean: {dict(Counter(i['clean_set'] for i in items if i['clean_set']))}  "
           f"symmetry pairs: {len(pairs)}")
-    total_calls = 0
+    total_calls, total_credits, unknown = 0, 0.0, False
+    rates = read_credit_rates()
+    guard = {}
     for m in models:
         calls = plan_calls(texts, m)
         total_calls += calls
-        print(f"  {m}: {len(texts)} analyses -> {calls} uncached LLM calls, ~{calls * EST_IN:,} in / ~{calls * EST_OUT:,} out tokens")
-    print(f"Total: {total_calls} LLM calls")
+        rate, how = projected_rate(m, rates)
+        guard[m] = rate
+        if rate is None:
+            unknown = True
+            credit_txt = "credits unknown"
+        else:
+            total_credits += calls * rate
+            credit_txt = f"~{calls * rate:.1f} credits ({rate:.3f}/call, {how})"
+        print(f"  {m}: {len(texts)} analyses -> {calls} uncached LLM calls, ~{calls * EST_IN:,} in / "
+              f"~{calls * EST_OUT:,} out tokens, {credit_txt}")
+    print(f"Total: {total_calls} LLM calls, ~{total_credits:.1f} credits{' + unknown' if unknown else ''}")
     if not args.yes:
         print("\nPlan only. Re-run with --yes after the OK.")
         return 0
@@ -322,14 +441,25 @@ def main(argv=None) -> int:
     for m in models:
         os.environ["MODEL_TAGGER"] = m
         tagger.reset_inflight()
-        preds, runs = asyncio.run(predict(texts, args.sensitivity))
+        try:
+            preds, runs = asyncio.run(predict(texts, args.sensitivity, guard_rate=guard.get(m)))
+        except CostGuardStop as stop:
+            msg, partial = stop.args
+            save_credit_rate(m, partial)
+            print(f"STOPPED at {m}: {msg}. Nothing written except the measured credit rate. Ask before continuing.")
+            return 3
+        save_credit_rate(m, runs)
         metrics = compute_metrics(items, pairs, preds, runs)
         results[m] = metrics
         micro = metrics["scores"]["strict"]["all"]["micro"]
         bakeoff.append({"model": m, **{k: micro[k] for k in ("precision", "recall", "f1")},
                         "fpr_semeval_none": metrics["clean_fpr"].get("semeval_none", {}).get("fpr_any"),
                         "mean_tokens_per_analysis": metrics["cost"]["mean_tokens_per_analysis"],
-                        "mean_latency_s": metrics["cost"]["mean_latency_s"]})
+                        "mean_credits_per_analysis": metrics["cost"]["mean_credits_per_analysis"],
+                        "mean_latency_s": metrics["cost"]["mean_latency_s"],
+                        "symmetry_flip_rate": metrics["symmetry"].get("flip_rate"),
+                        "validator_rejection_rate": metrics["validator_rejection_rate"],
+                        "llm_failures": metrics["llm_failures"]})
         print(f"  {m}: strict micro P={micro['precision']} R={micro['recall']} F1={micro['f1']}  "
               f"credits={metrics['cost']['credits']} ({metrics['cost']['llm_calls']} calls)")
 
@@ -341,18 +471,27 @@ def main(argv=None) -> int:
         "counts": {"items": len(items), "by_source": dict(Counter(i["source"] for i in items)),
                    "clean_sets": dict(Counter(i["clean_set"] for i in items if i["clean_set"])), "symmetry_pairs": len(pairs)},
         **results[primary],
-        "bakeoff": bakeoff if len(models) > 1 else [],
         "gold_report": _read(RESULTS / "gold_report.json"),
         "ai_review": _read(RESULTS / "ai_review.json"),
     }
-    if not args.final and len(models) == 1 and not args.limit:  # never from a small sample
-        out["dev_precision_updates"] = update_dev_precision(results[primary]["scores"]["strict"]["all"]["per_label"])
     RESULTS.mkdir(parents=True, exist_ok=True)
-    for m in models:
-        (RESULTS / f"latest_{re.sub(r'[^\w.-]', '_', m)}.json").write_text(
-            json.dumps({**out, "model": m, **results[m]}, indent=2, ensure_ascii=False), encoding="utf-8")
-    (RESULTS / "latest.json").write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"Wrote {RESULTS / 'latest.json'}")
+    dump = lambda path, data: path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    if bakeoff_mode:  # never gates techniques and never replaces latest.json
+        out["subset"] = "bakeoff_subset" if args.bakeoff else ("sample" if args.limit else "full")
+        out["models"] = bakeoff
+        for m in models:
+            dump(RESULTS / f"bakeoff_{re.sub(r'[^\w.-]', '_', m)}.json", {**out, "model": m, **results[m]})
+        target = RESULTS / "bakeoff.json"
+        dump(target, {k: v for k, v in out.items() if k not in ("gold_report", "ai_review")})
+    elif args.limit:  # a small sample: kept for inspection, never shown on /metrics, never gates
+        target = RESULTS / "sample.json"
+        dump(target, out)
+    else:
+        if not args.final:
+            out["dev_precision_updates"] = update_dev_precision(results[primary]["scores"]["strict"]["all"]["per_label"])
+        target = RESULTS / "latest.json"
+        dump(target, out)
+    print(f"Wrote {target}")
     return 0
 
 
