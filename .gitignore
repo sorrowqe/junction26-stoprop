@@ -12,3 +12,6 @@ __pycache__/
 eval/data/test/
 # downloaded corpora and cached generator replies (re-creatable)
 eval/data/cache/
+# LibreOffice / office lock files
+.~lock.*#
+~$*

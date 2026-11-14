@@ -88,7 +88,7 @@
       const r = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: text.trim() ? text : null, url: url || null, sensitivity: $("sensitivity").value,
+        body: JSON.stringify({ text: text.trim() ? text : null, url: url || null, sensitivity: $("sensitivity").value || null,
           lang: "auto", private: $("private").checked }),
       });
       const body = await r.json().catch(() => ({}));
@@ -124,6 +124,9 @@
     const res = current.result;
     const spans = visibleSpans();
 
+    const langNote = $("lang-note");
+    langNote.hidden = !res.language_note;
+    langNote.textContent = res.language_note || "";
     const banner = $("banner");
     const msg = bannerText(res);
     banner.hidden = !msg;

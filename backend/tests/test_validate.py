@@ -158,7 +158,43 @@ def test_reported_speech_et():
 
 
 def test_not_reported_speech_outside_quotes():
-    assert not _reported('Everyone knows it failed, the minister said "no comment".', "p1s1", "Everyone knows")
+    assert not _reported('Everyone knows it failed. The minister said "no comment".', "p1s1", "Everyone knows")
+
+
+# ---- attributed INDIRECT speech counts as reported speech (policy 2026-11-14)
+
+import pytest  # noqa: E402
+
+
+@pytest.mark.parametrize("text, sid, quote", [
+    ("The mayor said that the plan was a total disaster for the town.", "p1s1", "a total disaster"),
+    ("Minister Kask called the proposal a reckless betrayal of voters.", "p1s1", "a reckless betrayal"),
+    ("According to the opposition leader, the reform is a scam.", "p1s1", "a scam"),
+    ("The reform is a scam, the opposition leader told reporters.", "p1s1", "a scam"),
+    ("The reform is a scam — the opposition leader said.", "p1s1", "a scam"),
+    ("Minister Kask warned that families would freeze in the dark.", "p1s1", "families would freeze"),
+    ("Ministri sõnul on see plaan täielik katastroof.", "p1s1", "täielik katastroof"),
+    ("Minister ütles, et plaan on täielik katastroof.", "p1s1", "täielik katastroof"),
+    ("Министр заявил, что реформа — полный провал.", "p1s1", "полный провал"),
+    ("По словам министра, реформа — полный провал.", "p1s1", "полный провал"),
+])
+def test_indirect_speech_is_reported(text, sid, quote):
+    assert _reported(text, sid, quote)
+
+
+@pytest.mark.parametrize("text, sid, quote", [
+    ("I said that the plan was a total disaster for the town.", "p1s1", "a total disaster"),
+    ("We warned that the reform is a scam.", "p1s1", "a scam"),
+    ("Experts say the reform is a scam.", "p1s1", "a scam"),
+    ("Experts say the reform is a scam.", "p1s1", "Experts say"),
+    ("Many people are saying the reform is a scam.", "p1s1", "a scam"),
+    ("The so-called experts are clowns.", "p1s1", "clowns"),
+    ("The reform is a scam. The minister said nothing.", "p1s1", "a scam"),
+    ("The minister is a liar and a coward.", "p1s1", "a liar"),
+    ("Mina ütlesin, et see on katastroof.", "p1s1", "katastroof"),
+])
+def test_not_indirect_reported_speech(text, sid, quote):
+    assert not _reported(text, sid, quote)
 
 
 def test_not_reported_speech_without_attribution():

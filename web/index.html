@@ -46,8 +46,9 @@
         <div class="controls">
           <label class="inline">Sensitivity
             <select id="sensitivity">
+              <option value="" selected>Automatic</option>
               <option value="strict">Strict (fewest labels)</option>
-              <option value="balanced" selected>Balanced</option>
+              <option value="balanced">Balanced</option>
               <option value="broad">Broad (more labels)</option>
             </select>
           </label>
@@ -64,6 +65,7 @@
     <section id="result" hidden aria-labelledby="h-result">
       <h2 id="h-result" class="sr-only">Result</h2>
       <div id="banner" class="banner" hidden></div>
+      <p id="lang-note" class="lang-note" hidden></p>
       <div class="grid">
         <article class="card">
           <h3>Highlighted text</h3>

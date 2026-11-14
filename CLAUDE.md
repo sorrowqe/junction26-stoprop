@@ -64,8 +64,11 @@ happy-path demo. Must run live on Hostinger (our KVM 2 VPS) with a public URL: h
    Prompts and UI copy must follow this.
 2. **The LLM proposes, deterministic code verifies.** Every span returned by a model must be
    found **verbatim** in the source text or it is dropped. Offsets are computed by our code.
-3. **Reported speech is not the author's manipulation.** Loaded language inside a quotation
-   attributed to someone else is labelled `reported_speech` and does not count against the text.
+3. **Reported speech is not the author's manipulation.** Loaded language attributed to someone
+   else is labelled `reported_speech` and does not count against the text. This covers direct
+   quotes AND attributed indirect speech ("X said that…", "X called it…", "according to X…",
+   "…, the minister said"). Not reported speech: first-person attribution ("I said that…") and
+   vague attributions that are themselves a technique ("experts say", "sources claim").
 4. **Abstain instead of guessing.** "Nothing found", "insufficient data" and "not checked" are
    valid outputs and must be shown honestly.
 5. **Two independent signals before a strong verdict.** A swarm cluster is "likely coordinated"

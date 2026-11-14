@@ -154,3 +154,24 @@ def test_no_extension_leftovers():
 def test_v2_response_fields():
     body = analyze("Everyone knows the plan failed.")
     assert "innocent_explanations" in body and body["receipts"] == []
+
+
+def test_language_coverage_english_evaluated():
+    body = analyze("Everyone knows the plan failed and the council is to blame for it.")
+    assert body["lang"] == "en" and body["language_evaluated"] is True
+    assert body["sensitivity"] == "balanced" and body["language_note"] is None
+
+
+def test_unevaluated_language_defaults_to_strict_with_note():
+    body = analyze("Kõik teavad, et see plaan on läbi kukkunud. Minister ütles seda esmaspäeval.")
+    assert body["lang"] == "et" and body["language_evaluated"] is False
+    assert body["sensitivity"] == "strict" and body["spans"] == []  # strict drops rule-based hints
+    assert "only been measured for English" in body["language_note"] and "Estonian" in body["language_note"]
+    # an explicit choice is respected
+    explicit = analyze("Kõik teavad, et see plaan on läbi kukkunud. Minister ütles seda esmaspäeval.", sensitivity="broad")
+    assert explicit["sensitivity"] == "broad" and explicit["spans"]
+
+
+def test_other_language_note():
+    body = analyze("Die Regierung hat heute einen neuen Plan vorgestellt, der die Energiepreise senken soll.")
+    assert body["language_evaluated"] is False and "this language" in body["language_note"]

@@ -6,7 +6,7 @@ import hashlib
 import json
 import logging
 
-from app import config, taxonomy
+from app import config, languages, taxonomy
 from app.llm import budget
 from app.pipeline import heuristics, profile, segment, tagger, validate
 from app.store import get_store
@@ -33,7 +33,7 @@ def truncate_words(text: str, max_words: int = MAX_WORDS) -> tuple[str, bool]:
     return text, False
 
 
-async def analyze_text(text: str, sensitivity: str = "balanced", lang: str = "auto",
+async def analyze_text(text: str, sensitivity: str | None = None, lang: str = "auto",
                        private: bool = False, domain: str | None = None, count_seen: bool = True) -> dict:
     notes: list[str] = []
     text, truncated = truncate_words(text)
@@ -43,6 +43,10 @@ async def analyze_text(text: str, sensitivity: str = "balanced", lang: str = "au
     seg = segment.segment(text, lang=lang if lang in LANG_OVERRIDES else None)
     if seg.lang == "other":
         notes.append("Language not recognised as English, Estonian or Russian: word-list hints were limited.")
+
+    language_evaluated = languages.is_evaluated(seg.lang)
+    if sensitivity not in taxonomy.SENSITIVITIES:
+        sensitivity = languages.default_sensitivity(seg.lang)
 
     hints = heuristics.extract_hints(seg)
     heuristic_candidates = heuristics.spans_from_hints(hints)
@@ -94,6 +98,9 @@ async def analyze_text(text: str, sensitivity: str = "balanced", lang: str = "au
     return {
         "id": "r_" + digest[:12],
         "lang": seg.lang,
+        "language_evaluated": language_evaluated,
+        "language_note": languages.note(seg.lang),
+        "sensitivity": sensitivity,
         "genre": prof["genre"],
         "spans": [{k: s[k] for k in SPAN_FIELDS} for s in spans],
         "profile": prof,

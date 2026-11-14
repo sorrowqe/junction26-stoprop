@@ -17,7 +17,7 @@
     <ol class="principles">
       <li><strong>How, not what.</strong> We label techniques and behaviours, never people, outlets or viewpoints.</li>
       <li><strong>The AI proposes, code verifies.</strong> Every highlighted passage must appear word for word in your text; positions are computed by our code.</li>
-      <li><strong>Reported speech is not the author's manipulation.</strong> Quoted words attributed to someone else are marked and not counted.</li>
+      <li><strong>Reported speech is not the author's manipulation.</strong> Words attributed to someone else (direct quotes and attributed indirect speech such as “X said that…” or “according to X…”) are marked and not counted. Vague attributions like “experts say” do not count as reported speech.</li>
       <li><strong>Abstain instead of guessing.</strong> “Nothing found”, “insufficient data” and “not checked” are valid answers.</li>
       <li><strong>Two independent signals</strong> before calling anything “likely coordinated”.</li>
       <li><strong>Only show what we can measure.</strong> Techniques below 70% measured precision are experimental and hidden by default.</li>
@@ -26,6 +26,8 @@
       <li><strong>Innocent explanations</strong> are listed next to every flag.</li>
       <li><strong>Privacy by default.</strong> No accounts; swarm uploads are processed in memory.</li>
     </ol>
+    <p><strong>Language coverage:</strong> any language is accepted, but accuracy has only been measured for English.
+      Other languages use strict sensitivity by default and are marked as not measured (see <a href="/metrics">Metrics</a>).</p>
     <p class="muted">No AI-generated-text detection: such detectors are unreliable and known to be biased against non-native writers.</p>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>

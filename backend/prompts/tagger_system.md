@@ -15,8 +15,11 @@ contain nothing worth labelling.
 4. "quote" must be copied character for character from the sentence named by "sentence_id": the shortest passage
    (usually 2 to 15 words) that shows the technique. Do not paraphrase, translate, fix spelling, change quotation
    marks, add "..." or join two sentences. Never include the sentence id in the quote.
-5. Words inside quotation marks that the text attributes to someone else may still be labelled; the system marks
-   them as reported speech separately. Do not label the reporting verb itself ("she said").
+5. Reported speech: words the text attributes to someone else - direct quotes AND attributed indirect speech
+   ("X said that ...", "X called it ...", "according to X, ...", "..., the minister said") - may still be labelled;
+   the system marks them as reported speech, which does not count against the text. Do not label the reporting
+   verb itself ("she said"). Vague attributions such as "experts say" or "sources claim" are not reported speech:
+   the vague attribution itself can be questionable_authority.
 6. unsupported_claim = a specific, check-worthy factual statement (numbers, events, causes) for which the text
    gives no source. supported_claim = such a statement with a link, a named source or dated data in the text.
    Do not mark opinions, predictions, questions or common knowledge as claims. Neither label says anything about

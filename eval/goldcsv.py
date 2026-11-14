@@ -5,7 +5,9 @@ Offsets are Python str indices (code points) into `text`, end exclusive (same as
 
 Columns:
   id, source (synthetic | semeval | human), lang, genre, kind, topic, direction, text, quote, label,
-  start, end, reported_speech (y | n | empty = unknown), ok (human review: y | n | empty), notes
+  start, end, reported_speech (y | n | empty = unknown), ok (human review: y | n | empty), notes,
+  ai_ok (two-model consensus: y | n | empty = reviewers disagreed / not reviewed), ai_reasons
+Decision per row (sheet_to_jsonl.py): `ok` if filled, else `ai_ok`; semeval/human rows are kept as labelled.
 
 Marker syntax used by the generator:  [[label|exact phrase]]  or  [[label|exact phrase|rs]]
 (rs = the phrase is quoted from a third party = reported speech, must not count against the text).
@@ -26,9 +28,9 @@ from app.pipeline.segment import detect_language, segment  # noqa: E402
 from app.pipeline.validate import quote_regions  # noqa: E402
 
 GOLD_COLUMNS = ["id", "source", "lang", "genre", "kind", "topic", "direction", "text", "quote", "label",
-                "start", "end", "reported_speech", "ok", "notes"]
+                "start", "end", "reported_speech", "ok", "notes", "ai_ok", "ai_reasons"]
 SYMMETRY_COLUMNS = ["pair_id", "variant", "source", "lang", "topic", "swap", "text", "quote", "label",
-                    "start", "end", "ok", "notes"]
+                    "start", "end", "ok", "notes", "ai_ok", "ai_reasons"]
 CSV_ENCODING = "utf-8-sig"  # BOM so Excel / Google Sheets open Cyrillic and Estonian correctly
 
 MARKER = re.compile(r"\[\[([a-z_]+)\|([^\[\]|]+?)(?:\|(rs))?\]\]")
@@ -125,4 +127,11 @@ def write_csv(path: Path, columns: list[str], rows: list[dict]) -> None:
 
 def read_csv(path: Path) -> list[dict]:
     with path.open(encoding=CSV_ENCODING, newline="") as f:
-        return list(csv.DictReader(f))
+        return [{k: (v if v is not None else "") for k, v in row.items()} for row in csv.DictReader(f)]
+
+
+def check_not_open(path: Path) -> None:
+    """Refuse to rewrite a CSV that LibreOffice / Excel currently has open (it would be overwritten on save)."""
+    for lock in (path.parent / f".~lock.{path.name}#", path.parent / f"~${path.name}"):
+        if lock.exists():
+            raise SystemExit(f"{path.name} is open in a spreadsheet program ({lock.name}). Close it and run again.")

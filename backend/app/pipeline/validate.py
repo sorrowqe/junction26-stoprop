@@ -168,11 +168,50 @@ def attributed_regions(seg: Segmented, para: Paragraph) -> list[tuple[int, int]]
     return [(a, b) for a, b in quote_regions(seg.text, para.start, para.end) if _attributed(seg.text, para, a, b)]
 
 
+_FIRST_PERSON = {"i", "we", "ma", "mina", "me", "meie", "я", "мы"}
+
+
+def _indirect_attribution(seg: Segmented, start: int, end: int) -> bool:
+    """Attributed indirect speech in the same sentence (CLAUDE.md §1 rule 3):
+    "X said (that) ...", "X called it ...", "according to X, ...", "..., the mayor said.",
+    "ministri sõnul ...", "по словам X ...", "X заявил, что ...".
+
+    Not reported speech: first-person attribution ("I said that"), vague attributions that are
+    themselves a technique ("experts say", "sources say", "everyone says"), "so-called", and spans
+    that contain the reporting verb itself.
+    """
+    sent = next((s for s in seg.sentences if s.start <= start and end <= s.end), None)
+    if sent is None:
+        return False
+    text = sent.text
+    folded = lexicons.fold(text)
+    vague = [(m.start(), m.end()) for sec in ("vague_authority", "bandwagon") for m in lexicons.find("*", sec, text, folded)]
+    s_loc, e_loc = start - sent.start, end - sent.start
+    for m in lexicons.find("*", "speech", text, folded):
+        if m.start() < e_loc and s_loc < m.end():
+            continue  # the span contains the reporting verb ("Experts say ...")
+        if text[max(0, m.start() - 3):m.start()].lower().endswith("so-"):
+            continue  # "so-called"
+        if any(a <= m.start() and m.end() <= b for a, b in vague):
+            continue  # "experts say", "many people are saying": the attribution itself is the technique
+        before_words = re.findall(r"\w+", text[: m.start()])
+        if before_words and before_words[-1].lower() in _FIRST_PERSON:
+            continue  # "I said that ...": the author's own claim
+        if m.end() <= s_loc:
+            return True  # "X said that <span>", "according to X, <span>"
+        if m.start() >= e_loc and re.search(r"[,—–-]", text[e_loc:m.start()]):
+            return True  # "<span>, the mayor said."
+    return False
+
+
 def is_reported_speech(seg: Segmented, start: int, end: int) -> bool:
-    """True if [start, end) lies inside quotation marks attributed to a third party."""
+    """True if [start, end) is reported speech: inside quotation marks attributed to a third party,
+    or inside attributed indirect speech in the same sentence (CLAUDE.md §1 rule 3)."""
     for para in seg.paragraphs:
         if para.start <= start and end <= para.end:
-            return any(a <= start and end <= b for a, b in attributed_regions(seg, para))
+            if any(a <= start and end <= b for a, b in attributed_regions(seg, para)):
+                return True
+            return _indirect_attribution(seg, start, end)
     return False
 
 

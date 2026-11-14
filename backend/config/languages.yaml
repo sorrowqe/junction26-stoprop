@@ -1,0 +1,7 @@
+# Which languages have MEASURED accuracy (eval/run_eval.py). Every language is accepted; languages that
+# are not evaluated get "language_evaluated": false, strict sensitivity by default, and a UI note.
+languages:
+  en: {name: English, evaluated: true}
+  et: {name: Estonian, evaluated: false}
+  ru: {name: Russian, evaluated: false}
+  other: {name: Other languages, evaluated: false}

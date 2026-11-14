@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-14 (M3 deployed; gold-set tooling for M4 built, generation awaiting OK)_
+_Last updated: 2026-11-14 (M4 in progress: English-only eval tooling built; AI review first batch pending OK)_
 
 Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 
@@ -41,13 +41,17 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   `eval/make_synthetic.py` (seeded specs, gpt-5.5-eu, dry run by default), `eval/semeval_sample.py`
   (Zenodo download, md5 check, label mapping) -> `eval/data/raw/semeval_sample.csv` (100 paragraphs, 112 spans).
 
-## In progress
-- Synthetic gold GENERATED (2026-11-14, gpt-5.5-eu, dev key): 23 calls (22 + 1 repair), 28,001 in / 20,936 out
-  tokens (1,457 reasoning) = ~49k tokens (44% of the estimate). 90/90 items accepted (157 rows), 20/20 symmetry
-  pairs (58 rows), 0 dropped; repair fixed syn-014 (planted technique missing) and syn-049 (span too long).
-  Our reported-speech detector agrees on 11/11 rs spans. NEXT: human review of the `ok` column
-  (eval/data/raw/synthetic_gold.csv, symmetry.csv) - watch for news-style items where the planted technique is
-  the reporter paraphrasing a politician (e.g. syn-001): arguably reported speech, mark n or fix.
+## In progress (M4)
+- Scope change: evaluation is **English only** (ET/RU kept in the CSVs, excluded). Built: `config/languages.yaml` +
+  `app/languages.py` (language_evaluated, strict default, UI note), indirect reported speech (validate.py, prompt,
+  CLAUDE.md §1.3), `eval/ai_review.py` (Gemini + Mistral consensus), `eval/sheet_to_jsonl.py`, `eval/run_eval.py`,
+  `/api/metrics` + `/metrics` (disclosures, language coverage, results, test-set quality). Tests: 416 passed.
+- Synthetic gold GENERATED (gpt-5.5-eu, 23 calls, ~49k tokens): 90 items (157 rows) + 20 symmetry pairs.
+- NEXT STEPS (each needs Aleksandr's OK for the calls):
+  1. `python eval/ai_review.py --first-batch` (2 calls) -> credits + projection -> OK -> `--yes` (22 calls total).
+  2. `python eval/sheet_to_jsonl.py` (no calls).
+  3. `python eval/run_eval.py` (plan) -> OK -> `--yes` (dev, ~67+ calls with Haiku on the dev key), then bake-off.
+  4. Commit eval/results/*.json, deploy -> /metrics shows the numbers.
 
 ## M3 real-network check (local PC, no AI key)
 - 11 SSRF URLs via the running app with real DNS (incl. 127.0.0.1.nip.io, localtest.me) -> all 400.
@@ -82,7 +86,7 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 ## How to verify (PC, Git Bash, in the repo folder)
 ```bash
 .venv/Scripts/python -m pip install -r backend/requirements-dev.txt   # if requirements changed
-.venv/Scripts/python -m pytest -q                                     # expect: 364 passed
+.venv/Scripts/python -m pytest -q                                     # expect: 416 passed
 GIT_COMMIT=test1234 PYTHONPATH=backend .venv/Scripts/python -m uvicorn app.main:app --port 8000
 # browser: http://127.0.0.1:8000 (without a key: rules-only mode + banner)
 ```

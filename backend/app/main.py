@@ -9,7 +9,9 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from app import config, ratelimit, taxonomy
+import json
+
+from app import config, languages, ratelimit, taxonomy
 from app.analyze import analyze_text, prewarm_samples
 from app.llm import budget
 from app.pipeline import extract
@@ -38,7 +40,8 @@ class AnalyzeRequest(BaseModel):
     text: str | None = None
     url: str | None = None
     lang: str = "auto"
-    sensitivity: Literal["strict", "balanced", "broad"] = "balanced"
+    # None = automatic: balanced for evaluated languages (English), strict for languages we have not measured
+    sensitivity: Literal["strict", "balanced", "broad"] | None = None
     private: bool = False  # analyze, but do not write to the shared cache
 
 
@@ -59,6 +62,24 @@ def health() -> dict:
         "llm": {"configured": config.llm_configured(), "model": config.model_tagger()},
         "storage": get_store().kind,
     }
+
+
+RESULTS_DIR = config.REPO_ROOT / "eval" / "results"
+
+
+def _read_result(name: str):
+    path = RESULTS_DIR / name
+    try:
+        return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
+    except ValueError:
+        return None
+
+
+@app.get("/api/metrics")
+def metrics() -> dict:
+    """Latest evaluation results (eval/results/*.json, committed) + language coverage."""
+    return {"latest": _read_result("latest.json"), "ai_review": _read_result("ai_review.json"),
+            "gold_report": _read_result("gold_report.json"), "languages": languages.coverage()}
 
 
 @app.get("/api/techniques")
