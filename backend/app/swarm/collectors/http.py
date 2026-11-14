@@ -77,11 +77,18 @@ class Session:
     async def get_json(self, url: str, params=None, headers: dict | None = None):
         return await self.request_json("GET", url, params=params, headers=headers)
 
+    async def get_text(self, url: str, params=None, headers: dict | None = None, timeout_s: float | None = None) -> str:
+        raw = await self._request_bytes("GET", url, params=params,
+                                        headers={"Accept": "text/html,application/atom+xml,application/xml;q=0.9,*/*;q=0.8",
+                                                 **(headers or {})},
+                                        timeout_s=timeout_s)
+        return raw.decode("utf-8", errors="replace")
+
     async def post_json(self, url: str, payload: dict, headers: dict | None = None, timeout_s: float | None = None):
         return await self.request_json("POST", url, json_body=payload, headers=headers, timeout_s=timeout_s)
 
-    async def request_json(self, method: str, url: str, *, params=None, json_body=None, headers: dict | None = None,
-                           timeout_s: float | None = None):
+    async def _request_bytes(self, method: str, url: str, *, params=None, json_body=None, headers: dict | None = None,
+                             timeout_s: float | None = None) -> bytes:
         if self.requests >= self.max_requests:
             raise BudgetExhausted("request limit")
         if self.remaining() <= 1.0:
@@ -95,8 +102,7 @@ class Session:
             async with asyncio.timeout(min(timeout_s or REQUEST_TIMEOUT_S, self.remaining())):
                 async with self._client.stream(method, url, params=params, json=json_body,
                                                timeout=min(timeout_s or REQUEST_TIMEOUT_S, max(1.0, self.remaining())),
-                                               headers={"Accept": "application/json", "User-Agent": extract.USER_AGENT,
-                                                        **(headers or {})}) as resp:
+                                               headers={"User-Agent": extract.USER_AGENT, **(headers or {})}) as resp:
                     if resp.status_code == 429:
                         raise RateLimited()
                     if resp.status_code >= 400:
@@ -115,6 +121,7 @@ class Session:
                         body += chunk
                         if len(body) > MAX_BYTES:
                             raise CollectorError("The platform sent more data than we accept in one response.", 502)
+                    return bytes(body)
         except TimeoutError:
             if self.remaining() <= 1.0:
                 raise BudgetExhausted("time limit") from None
@@ -123,7 +130,12 @@ class Session:
             if isinstance(exc, extract.FetchError) and exc.code == "blocked":
                 raise CollectorError(exc.message, 400, "blocked") from None
             raise CollectorError("Could not reach the platform. Please try again later.", 502, "connect") from None
+
+    async def request_json(self, method: str, url: str, *, params=None, json_body=None, headers: dict | None = None,
+                           timeout_s: float | None = None):
+        raw = await self._request_bytes(method, url, params=params, json_body=json_body,
+                                        headers={"Accept": "application/json", **(headers or {})}, timeout_s=timeout_s)
         try:
-            return json.loads(bytes(body).decode("utf-8", errors="replace") or "null")
+            return json.loads(raw.decode("utf-8", errors="replace") or "null")
         except ValueError:
             raise CollectorError("The platform sent an answer we could not read.", 502, "bad_json") from None

@@ -164,7 +164,15 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
     `syndication.py` ("Copies elsewhere") receipt on Analyze URL, and `RATE_LIMIT_MULTIPLIER` for shared venue Wi-Fi.
   - Verified live via `scripts/live_web_smoke.py` (0 AI Router calls): Brave `site:err.ee` 5 hits in 1.75 s, Oxylabs
     scrape `bbc.com/news` 1,419 words in 8.6 s, Bluesky post URL in 0.91 s, `err.ee` domain age `2010-07-04` in 2.95 s.
-  - Unit tests: **592 passed** (all network/LLM mocked).
+  - Unit tests: **599 passed** (all network/LLM mocked).
+- Unified **Swarm Mode** (`/swarm`, `/trace` -> 302 `/swarm`):
+  - Replaced the 3-tab CSV UI and separate `Trace a post` nav tab with a single auto-detecting `/swarm` box (CSV/JSON
+    moved into a collapsed *Advanced* drawer; 1-click demos never dump raw CSV).
+  - Added public **Reddit** (`reddit.py`: threads & subreddits via Atom `.rss`), **Telegram** (`telegram.py`: single
+    channel `t.me/...` + multi-channel cross-campaign batches), and **Hacker News** (`hackernews.py`) collectors.
+  - Upgraded spread tracing to accept any article URL or 3+ word topic/claim and search **Open Web & News, Reddit,
+    Telegram, Bluesky, and Hacker News** in parallel (verified live: 68 hits across 16 domains & 41 accounts in 3.28 s,
+    0 AI Router calls).
 
 ## Next
 - M5 Part B: benchmark generator + run_swarm_eval.py + /metrics swarm section (announce calls/credits first).

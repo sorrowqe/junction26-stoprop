@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from typing import Literal
 
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, RedirectResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -64,7 +64,14 @@ def health() -> dict:
         "llm": {"configured": config.llm_configured(), "model": config.model_tagger()},
         "search": {"provider": config.active_search_provider(), "configured": config.active_search_provider() != "none"},
         "scraper": oxylabs.status(),
-        "collectors": {"bluesky": True, "mastodon": True, "youtube": bool(config.env("GOOGLE_API_KEY"))},
+        "collectors": {
+            "reddit": True,
+            "telegram": True,
+            "bluesky": True,
+            "mastodon": True,
+            "hackernews": True,
+            "youtube": bool(config.env("GOOGLE_API_KEY")),
+        },
         "storage": get_store().kind,
     }
 
@@ -346,38 +353,45 @@ async def verify_claims(req: VerifyRequest, request: Request):
 class TraceRequest(BaseModel):
     text: str | None = None
     url: str | None = None
+    include_forums: bool = False
     stream: bool = False
 
 
 @app.post("/api/trace")
 async def trace_post(req: TraceRequest, request: Request):
-    """Trace a post: find where the same text spread (exact-phrase search on the open web and Bluesky), then run the
-    swarm detector on the copies. Public data only; no identity research; nothing stored. 5 traces/hour/IP.
-    Body {"text": ...} or {"url": "<public post link>"}; "stream": true for NDJSON progress lines."""
+    """Trace where a claim, post, or article spread across the open web and public platforms, then run the swarm
+    detector on the copies. Public data only; no identity research; nothing stored."""
     from app.swarm import collectors
     from app.swarm.collectors.http import CollectorError
     from app.trace import fingerprint
-    from app.trace.run import TraceError, trace
+    from app.trace.run import MIN_QUERY_WORDS, TraceError, trace
     text, url = (req.text or "").strip(), (req.url or "").strip()
     if not text and not url:
-        raise HTTPException(400, "Please paste a post's text or a link to a public post.")
+        raise HTTPException(400, "Please paste text, a claim, or a link.")
     if url:
+        host = collectors._host(url)
+        for hosts, why in collectors.CLOSED.items():
+            if host in hosts or any(host.endswith("." + h) for h in hosts):
+                raise HTTPException(400, why + collectors.UPLOAD_HINT)
         try:
-            collectors.classify(url)
-        except CollectorError as exc:
+            extract.check_url(url)
+        except extract.FetchError as exc:
             raise HTTPException(exc.status, exc.message) from None
-    elif len(fingerprint.words(text)) < fingerprint.MIN_WORDS:
-        raise HTTPException(400, "Please paste a post of at least 8 words, or a link to a public post.")
+    elif len(fingerprint.words(text)) < MIN_QUERY_WORDS:
+        raise HTTPException(400, "Please enter at least 3 words (a claim, headline, or post text) or a public link.")
     elif len(text) > 20_000:
         raise HTTPException(413, "That text is too long to trace (max 20,000 characters).")
     ratelimit.enforce("trace", request)
 
     async def run(progress):
         async with asyncio.timeout(45):
-            return await trace(text=None if url else text, url=url or None, progress=progress)
+            return await trace(text=None if url else text, url=url or None,
+                               include_forums=req.include_forums, progress=progress)
 
     def error(exc: Exception) -> tuple[int, str]:
         if isinstance(exc, (TraceError, CollectorError)):
+            return exc.status, exc.message
+        if isinstance(exc, extract.FetchError):
             return exc.status, exc.message
         if isinstance(exc, TimeoutError):
             return 504, "Tracing took too long. Please try again."
@@ -396,5 +410,10 @@ def index() -> FileResponse:
     return _page("index")
 
 
-for _name in ("source", "swarm", "trace", "metrics", "methodology", "api"):
+@app.get("/trace", include_in_schema=False)
+def trace_redirect() -> RedirectResponse:
+    return RedirectResponse("/swarm", status_code=302)
+
+
+for _name in ("source", "swarm", "metrics", "methodology", "api"):
     app.add_api_route(f"/{_name}", (lambda n=_name: _page(n)), methods=["GET"], include_in_schema=False)

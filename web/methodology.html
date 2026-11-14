@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/trace">Trace a post</a><a href="/metrics">Metrics</a><a href="/methodology" aria-current="page">Methodology</a><a href="/api">API</a></div></nav>
+  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology" aria-current="page">Methodology</a><a href="/api">API</a></div></nav>
   <main class="wrap page">
     <h1>Methodology</h1>
     <p class="lede">The full write-up (pipeline, caching, privacy, evaluation protocol and known limitations) is
@@ -40,21 +40,22 @@
       “Likely coordinated” needs text reuse plus one other family; text reuse alone is “worth watching”. Shared news
       headlines, generic phrases, quoted statements and event hashtags lower the verdict and are shown as innocent
       explanations. Verdicts describe groups and behaviour, never individual people.</p>
-    <p><strong>Where swarm posts come from.</strong> Paste a link and Stoprop reads the post and its replies through
-      public interfaces: Bluesky's public AppView API (no login), the Mastodon server's own public API (many
-      servers share at most 60 replies with visitors who are not logged in; we say so), and the YouTube Data API
-      (comments, with a server key). Each run is limited to 2000 posts, 40 API requests and 25 seconds; collected
-      posts stay in memory for 10 minutes and are never written to disk. X (Twitter), Facebook, Instagram, Threads,
-      TikTok and Reddit do not allow outside tools to read posts without login or paid/approved API access, so
-      they are not supported; export the posts yourself and upload a file instead. We do not scrape logged-in
-      pages. Groups of the same accounts posting several messages are shown as one campaign.</p>
-    <p><strong>Trace a post</strong> follows a message, not a messenger: one small AI call picks 2–3 distinctive
-      sentences (checked word for word; a word-rarity rule takes over if the AI is unavailable), then at most 6
-      exact-phrase searches run on the open web (search-engine results) and on Bluesky's public search. Every hit is
-      verified in its text or snippet before it counts as a copy, and the normal swarm signals and innocent
-      explanations (including syndication from news agencies and press-release services) run on the copies.
-      Trace does no identity research, does not look up profiles, never links accounts across platforms, and
-      stores nothing. Mastodon cannot be searched without logging in, so it is not searched.</p>
+    <p><strong>Where swarm posts come from.</strong> Paste a link, several links, or a claim/post into Swarm mode:
+      thread and channel links are read through public interfaces — <strong>Reddit</strong> threads and subreddits
+      (public Atom feeds), <strong>Telegram</strong> public channel web previews (<code>t.me/s/…</code>, including
+      multi-channel batches to catch cross-channel campaigns), <strong>Bluesky</strong>'s public AppView API,
+      <strong>Mastodon</strong> server public APIs, <strong>Hacker News</strong> (Algolia API), and
+      <strong>YouTube</strong> comments (Data API v3 when configured). Each run is limited to 2000 posts, 40 API
+      requests and 25 seconds; collected posts stay in memory for 10 minutes and are never written to disk. Closed
+      platforms that require login or paid developer access (X/Twitter, Facebook, Instagram, Threads, TikTok) are
+      not scraped directly — instead, paste a post's text into Swarm mode to search where it spread, or use the
+      advanced CSV/JSON dataset import.</p>
+    <p><strong>Narrative &amp; copy spread (integrated into Swarm mode)</strong> follows a message, not a messenger:
+      paste an article link, a viral post, or a short claim/topic and Stoprop searches the <strong>open web &amp; news</strong>,
+      <strong>Reddit</strong>, <strong>Telegram</strong> public channels, <strong>Bluesky</strong>, and
+      <strong>Hacker News</strong>, verifies matches, checks hosting domain ages and look-alike names, and runs the
+      swarm detector on dated copies. It does no identity research, never looks up profiles, never links accounts
+      across platforms, and stores nothing.</p>
     <p class="muted">No AI-generated-text detection: such detectors are unreliable and known to be biased against non-native writers.</p>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>

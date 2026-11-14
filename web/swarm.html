@@ -9,94 +9,108 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm" aria-current="page">Swarm mode</a><a href="/trace">Trace a post</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
+  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm" aria-current="page">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
   <main class="wrap page wide">
     <h1>Swarm mode</h1>
-    <p class="lede">Paste a link to a public post and Stoprop reads the replies, then looks for coordinated behaviour:
-      copied text, timing bursts, look-alike accounts and pushed links. It never judges a single post or person.
-      A group is called “likely coordinated” only when copied text <em>and</em> at least one independent signal agree.</p>
+    <p class="lede">Spot coordinated amplification and copy-paste campaigns. Paste a social thread or channel link to
+      check its posts and comments — or paste any article link, claim, or viral post text to trace where the same
+      wording spread across the web and public platforms.</p>
+    <p class="banner principle"><strong>We trace where this text spread. We don't research who is behind any account.</strong>
+      A group is called “likely coordinated” only when copied text <em>and</em> at least one independent signal (timing
+      burst, account pattern, or shared link push) agree.</p>
 
     <section class="card" aria-labelledby="h-in">
-      <h2 id="h-in" class="sr-only">Posts to check</h2>
-      <div class="tabs" role="tablist" aria-label="How to provide posts">
-        <button type="button" role="tab" id="tab-link" aria-controls="panel-link" aria-selected="true">Paste a link</button>
-        <button type="button" role="tab" id="tab-links" aria-controls="panel-links" aria-selected="false" tabindex="-1">Paste several links</button>
-        <button type="button" role="tab" id="tab-file" aria-controls="panel-file" aria-selected="false" tabindex="-1">Upload a file</button>
+      <h2 id="h-in">Investigate a thread, channel, or narrative</h2>
+      <div class="samples" role="group" aria-label="One-click examples">
+        <span class="muted small">Try an example:</span>
+        <button type="button" id="ex-campaign">Coordinated campaign (demo)</button>
+        <button type="button" id="ex-reddit">Live Reddit (r/europe)</button>
+        <button type="button" id="ex-telegram">Live Telegram (@euronews_en)</button>
+        <button type="button" id="ex-trace">Trace a narrative across the web</button>
       </div>
+
       <form id="swarm-form" novalidate>
-        <div role="tabpanel" id="panel-link" aria-labelledby="tab-link">
-          <label for="link" class="field-label">Link to a public post</label>
-          <input id="link" type="url" inputmode="url" autocomplete="off" placeholder="https://bsky.app/profile/…/post/…">
-          <p class="muted small">Stoprop collects the post and its replies (up to 2000 posts, about 25 seconds).</p>
-        </div>
-        <div role="tabpanel" id="panel-links" aria-labelledby="tab-links" hidden>
-          <label for="links" class="field-label">Up to 50 links, one per line</label>
-          <textarea id="links" rows="6" spellcheck="false" placeholder="https://bsky.app/profile/…/post/…&#10;https://mastodon.social/@…/…"></textarea>
-          <p class="muted small">Each link counts as one post (replies are not collected). Use this to check whether
-            posts you found in different places come from a coordinated group.</p>
-        </div>
-        <div role="tabpanel" id="panel-file" aria-labelledby="tab-file" hidden>
-          <div class="row-actions">
-            <label class="file-pick">Choose a CSV or JSON file<input type="file" id="file" accept=".csv,.json,.txt,text/csv,application/json"></label>
-            <span id="file-info" class="muted small" aria-live="polite"></span>
-          </div>
-          <label for="data" class="field-label">Or paste CSV / JSON</label>
-          <textarea id="data" rows="8" spellcheck="false" placeholder="id,author,timestamp,text&#10;1,alice,2026-11-14T10:00:00Z,Example post text"></textarea>
-          <details class="small">
-            <summary>Format</summary>
-            <p>Columns <code>id, author, timestamp, text</code> (timestamp in ISO 8601 or unix time), optional
-              <code>url, author_created_at, platform</code>. JSON: a list of objects with the same fields.
-              Up to 2000 posts or 2 MB. Rows with problems are skipped and listed.</p>
-          </details>
-        </div>
-
-        <p class="examples small">Try an example:
-          <button type="button" class="secondary" id="ex-sample">Fictional posts with two campaigns</button>
-          <button type="button" class="secondary" id="ex-bsky">A real Bluesky thread (snapshot)</button>
+        <label for="swarm-input" class="field-label">Paste a link (or several links), or paste a post / claim / headline</label>
+        <textarea id="swarm-input" class="swarm-textarea" rows="4" spellcheck="false"
+          placeholder="Paste a Reddit thread or subreddit (reddit.com/r/…), Telegram channel (t.me/…) — or 2+ channels on separate lines — YouTube / Bluesky / Mastodon / Hacker News link, or any news link or claim text to trace where it spread…"></textarea>
+        <p id="mode-hint" class="mode-hint muted small" aria-live="polite">
+          Auto-detects what you paste: social thread/channel → checks replies &amp; posts; article link or text → traces copies across Web, Reddit, Hacker News &amp; Bluesky.
         </p>
-        <fieldset class="options">
-          <legend class="sr-only">Options</legend>
-          <label class="inline check"><input type="checkbox" id="deep"> Deep mode: also find paraphrases
-            <span class="muted small">(AI embeddings, costs credits, up to 2000 posts; weaker evidence)</span></label>
-          <label class="inline check"><input type="checkbox" id="tag"> Tag techniques in flagged groups
-            <span class="muted small">(AI, up to 10 calls)</span></label>
-        </fieldset>
-        <button type="submit" id="go">Find coordinated groups</button>
-        <p id="status" class="status" role="status" aria-live="polite"></p>
-      </form>
+        <div class="platform-badges" aria-label="Supported public sources">
+          <span class="muted small">Works with:</span>
+          <span class="pill">Reddit</span>
+          <span class="pill">Telegram (t.me)</span>
+          <span class="pill">Open Web &amp; News</span>
+          <span class="pill">Bluesky</span>
+          <span class="pill">Mastodon</span>
+          <span class="pill">Hacker News</span>
+          <span class="pill" id="yt-pill">YouTube</span>
+        </div>
 
-      <details class="platforms small">
-        <summary>Which links work?</summary>
-        <ul>
-          <li><strong>Bluesky</strong>: any public post (bsky.app/profile/…/post/…), with all replies and quote posts.</li>
-          <li><strong>Mastodon</strong>: a post on any server (…/@user/123…). Many servers share at most 60 replies with
-            visitors who are not logged in; Stoprop says so when that happens.</li>
-          <li><strong>YouTube</strong>: a video link (watch, youtu.be, shorts), with its comments.
-            <span id="yt-status" class="muted"></span></li>
-          <li><strong>Not possible</strong>: X (Twitter), Facebook, Instagram, Threads, TikTok and Reddit do not let
-            outside tools read posts without login or paid or approved API access. Export the posts yourself and use
-            “Upload a file”.</li>
-        </ul>
-        <p class="muted">Collected posts are processed in memory and kept for 10 minutes so a repeated check is instant;
-          nothing is written to disk.</p>
-      </details>
+        <div class="controls">
+          <button type="submit" id="go">Investigate</button>
+        </div>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+
+        <details class="advanced-box" id="adv-box">
+          <summary class="small">Advanced: AI options &amp; research dataset import (CSV / JSON)</summary>
+          <div class="advanced-body">
+            <fieldset class="options">
+              <legend class="sr-only">AI options for thread/batch checks</legend>
+              <label class="inline check"><input type="checkbox" id="deep"> Deep mode: also find paraphrases
+                <span class="muted small">(AI embeddings, costs credits, weaker evidence)</span></label>
+              <label class="inline check"><input type="checkbox" id="tag"> Tag manipulation techniques in flagged groups
+                <span class="muted small">(AI, up to 10 calls)</span></label>
+            </fieldset>
+            <div class="row-actions" style="margin-top:.6rem">
+              <label class="file-pick">Choose a CSV or JSON file<input type="file" id="file" accept=".csv,.json,.txt,text/csv,application/json"></label>
+              <span id="file-info" class="muted small" aria-live="polite"></span>
+              <button type="button" class="secondary small" id="clear-file" hidden>Clear dataset</button>
+            </div>
+            <p class="muted small">For closed platforms (X/Twitter, Facebook, Instagram, TikTok), paste a post's text in the main box above to search where it spread, or upload a research export (`id, author, timestamp, text`) here.</p>
+          </div>
+        </details>
+      </form>
     </section>
 
     <section id="result" hidden aria-labelledby="h-res">
       <div class="card">
         <h2 id="h-res">Result</h2>
         <div id="source" hidden></div>
+        <div id="verdict-line" class="cluster-head" hidden></div>
         <p id="summary"></p>
+        <p id="first-seen" class="small" hidden></p>
+        <svg id="trace-timeline" class="timeline" role="img" hidden></svg>
         <ul id="notes" class="notes small"></ul>
         <details id="failed-wrap" hidden><summary id="failed-sum"></summary><ul id="failed" class="small"></ul></details>
         <details id="rejected-wrap" hidden><summary id="rejected-sum"></summary><ul id="rejected" class="small"></ul></details>
-        <button type="button" id="download" class="secondary">Download JSON</button>
+        <div class="row-actions" style="margin-top:.5rem">
+          <button type="button" id="trace-root-btn" class="secondary" hidden>Trace where this post spread across the web →</button>
+          <button type="button" id="download" class="secondary">Download JSON</button>
+        </div>
       </div>
-      <p class="muted small">Verdicts describe behaviour in this batch, never people. “Likely coordinated” needs copied
-        text plus timing, account or amplification evidence. Innocent explanations (shared headlines, generic phrases,
-        quoted statements, event hashtags) lower the verdict and are listed with each group. Groups of the same
-        accounts posting several different messages are shown as one campaign.</p>
+
       <div id="clusters"></div>
+
+      <div id="trace-extra" hidden>
+        <div class="card" id="domains-card" hidden>
+          <h3>Websites carrying this text</h3>
+          <div class="table-wrap"><table id="domains"><thead><tr><th>Website</th><th>Pages</th><th>First seen</th><th>Provenance checks</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="card" id="accounts-card" hidden>
+          <h3>Public social accounts carrying this text</h3>
+          <p class="muted small">Only public usernames returned with each search hit. Stoprop never researches who runs an account.</p>
+          <div class="table-wrap"><table id="accounts"><thead><tr><th>Account</th><th>Copies</th><th>First copy</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="card">
+          <h3>Where Stoprop searched</h3>
+          <ol id="fingerprints" class="small"></ol>
+          <p id="fp-method" class="muted small"></p>
+          <div class="table-wrap"><table id="coverage"><thead><tr><th>Source</th><th>Status</th><th>Searches</th><th>Hits</th><th>Confirmed copies</th></tr></thead><tbody></tbody></table></div>
+          <ul id="coverage-notes" class="small muted"></ul>
+        </div>
+        <details class="card" id="copies-wrap"><summary id="copies-sum">All matching results</summary><ul id="copies" class="copies small"></ul></details>
+      </div>
     </section>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>

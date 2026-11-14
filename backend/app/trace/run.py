@@ -14,9 +14,12 @@ import time
 import uuid
 from collections import Counter, defaultdict
 
+from app.pipeline import extract
+from app.receipts import domain as dom
 from app.receipts import service as receipts_service
 from app.swarm import clusters, collectors, ingest, textreuse
 from app.swarm.collectors import bluesky as bsky
+from app.swarm.collectors.base import make_post
 from app.swarm.collectors.http import CollectorError, Session
 from app.swarm.ingest import Post
 from app.trace import fingerprint, search
@@ -25,6 +28,7 @@ MAX_SEARCHES = 6
 DEADLINE_S = 30.0
 MAX_RECEIPT_DOMAINS = 8
 CONFIRM_WORDS = 6
+MIN_QUERY_WORDS = 3
 MAX_LISTED = 200
 PRINCIPLE = "We trace where this text spread. We don't research who is behind any account."
 
@@ -37,7 +41,8 @@ class TraceError(Exception):
 
 def _windows(fp_norm: str, n: int = CONFIRM_WORDS) -> set[str]:
     ws = fp_norm.split()
-    return {" ".join(ws[i:i + n]) for i in range(max(1, len(ws) - n + 1))}
+    k = min(n, max(2, len(ws)))
+    return {" ".join(ws[i:i + k]) for i in range(max(1, len(ws) - k + 1))}
 
 
 def confirm_text(fp_norms: list[str], text: str, source_norm: str = "") -> list[int]:
@@ -50,40 +55,67 @@ def confirm_text(fp_norms: list[str], text: str, source_norm: str = "") -> list[
     return hits
 
 
-def confirm_snippet(fp_norms: list[str], snippet: str) -> list[int]:
-    """Search snippets are truncated: a run of >= 6 consecutive fingerprint words must appear."""
+def confirm_snippet(fp_norms: list[str], snippet: str, *, topic_mode: bool = False) -> list[int]:
+    """Search snippets are truncated: a run of >= 6 consecutive fingerprint words must appear (or >=60% of topic words)."""
     body = fingerprint.norm(snippet)
+    if topic_mode:
+        body_words = set(body.split())
+        out = []
+        for i, f in enumerate(fp_norms):
+            kws = [w for w in f.split() if len(w) >= 3]
+            if kws and sum(1 for w in kws if w in body_words) >= max(2, (len(kws) * 3 + 4) // 5):
+                out.append(i)
+        return out
     return [i for i, f in enumerate(fp_norms) if any(w in body for w in _windows(f))]
 
 
 async def _source(text: str | None, url: str | None) -> dict:
     if url:
+        platform = None
         try:
-            collectors.classify(url)
-            coll, _ = await collectors.collect_urls([url], cache=False)
+            platform = collectors.classify(url)
         except CollectorError as exc:
+            if exc.code == "closed_platform":
+                raise TraceError(exc.message, exc.status) from None
+        if platform is not None:
+            try:
+                coll, _ = await collectors.collect_urls([url], cache=False)
+            except CollectorError as exc:
+                raise TraceError(exc.message, exc.status) from None
+            if not coll.posts:
+                raise TraceError("That post has no text to trace.", 404)
+            p = coll.posts[0]
+            return {"text": p.text, "platform": p.platform, "url": url, "id": p.id, "author": p.author, "ts": p.ts,
+                    "author_created_at": p.author_created_at, "link": p.url}
+        try:
+            art = await extract.fetch_article(url)
+        except extract.FetchError as exc:
             raise TraceError(exc.message, exc.status) from None
-        if not coll.posts:
-            raise TraceError("That post has no text to trace.", 404)
-        p = coll.posts[0]
-        return {"text": p.text, "platform": p.platform, "url": url, "id": p.id, "author": p.author, "ts": p.ts,
-                "author_created_at": p.author_created_at, "link": p.url}
+        reg = dom.registrable(dom.normalize_host(art.final_url))
+        return {"text": art.text[:fingerprint.MAX_INPUT_CHARS], "platform": "web", "url": url,
+                "id": art.final_url, "author": reg, "ts": None, "author_created_at": None, "link": art.final_url}
     text = (text or "").strip()
-    if len(fingerprint.words(text)) < fingerprint.MIN_WORDS:
-        raise TraceError("Please paste a post of at least 8 words, or a link to a public post.")
+    if len(fingerprint.words(text)) < MIN_QUERY_WORDS:
+        raise TraceError("Please enter at least 3 words (a claim, headline, or post text) or a public link.")
     return {"text": text[:fingerprint.MAX_INPUT_CHARS], "platform": None, "url": None, "id": None, "author": None, "ts": None}
 
 
-async def trace(text: str | None = None, url: str | None = None, progress=None) -> dict:
+async def trace(text: str | None = None, url: str | None = None, progress=None, *, include_forums: bool = False) -> dict:
     t0 = time.monotonic()
     say = progress or (lambda m: None)
-    say("Reading the post…" if url else "Choosing distinctive sentences…")
+    say("Reading the link…" if url else "Choosing distinctive phrases…")
     src = await _source(text, url)
     if url:
-        say("Choosing distinctive sentences…")
-    fps, fmeta = await fingerprint.pick(src["text"])
+        say("Choosing distinctive phrases…")
+    src_words = fingerprint.words(src["text"])
+    topic_mode = src["platform"] is None and len(src_words) < 10 and not src["text"].rstrip().endswith((".", "!", "?"))
+    if len(src_words) < fingerprint.MIN_WORDS or topic_mode:
+        fps = [src["text"].strip()]
+        fmeta = {"method": "query", "llm_calls": 0, "credits": 0.0, "note": None}
+    else:
+        fps, fmeta = await fingerprint.pick(src["text"])
     if not fps:
-        raise TraceError("No sentence of at least 8 words was found to search for.")
+        raise TraceError("No searchable phrase was found in that text.")
     queries = [fingerprint.query_phrase(f) for f in fps]
     fp_norms = [fingerprint.norm(q) for q in queries]
     source_norm = fingerprint.norm(fingerprint.clean(src["text"]))
@@ -91,24 +123,48 @@ async def trace(text: str | None = None, url: str | None = None, progress=None) 
     if fmeta.get("note"):
         notes.append(fmeta["note"])
 
+    web_on = search.web_configured()
     coverage = {
-        "web": {"source": "Open web (search engine results via Oxylabs)", "status": "not_configured", "searches": 0,
+        "web": {"source": "Open web & news (search engine results)", "status": "not_configured", "searches": 0,
                 "results": 0, "confirmed": 0, "note": None},
         "bluesky": {"source": "Bluesky (public post search)", "status": "searched", "searches": 0, "results": 0,
                     "confirmed": 0, "note": None},
-        "mastodon": {"source": "Mastodon", "status": "not_available", "searches": 0, "results": 0, "confirmed": 0,
-                     "note": search.MASTODON_NOTE},
     }
-    web_on = search.web_configured()
+    if include_forums:
+        coverage["reddit"] = {"source": "Reddit (public threads)", "status": "searched" if web_on else "not_configured",
+                              "searches": 0, "results": 0, "confirmed": 0, "note": None}
+        coverage["telegram"] = {"source": "Telegram (public channels)", "status": "searched" if web_on else "not_configured",
+                                "searches": 0, "results": 0, "confirmed": 0, "note": None}
+        coverage["hackernews"] = {"source": "Hacker News (public search)", "status": "searched", "searches": 0,
+                                  "results": 0, "confirmed": 0, "note": None}
+    coverage["mastodon"] = {"source": "Mastodon", "status": "not_available", "searches": 0, "results": 0,
+                            "confirmed": 0, "note": search.MASTODON_NOTE}
+
     if not web_on:
-        coverage["web"]["note"] = "Open-web search is not configured on this server, so only Bluesky was searched."
+        coverage["web"]["note"] = "Open-web search is not configured on this server, so only public social search ran."
     raw_web: list[tuple[int, dict]] = []
     raw_bsky: list[tuple[int, dict]] = []
+    raw_reddit: list[tuple[int, dict]] = []
+    raw_telegram: list[tuple[int, dict]] = []
+    raw_hn: list[tuple[int, dict]] = []
 
-    async with Session(max_requests=MAX_SEARCHES, deadline_s=DEADLINE_S) as s:
+    max_req = (MAX_SEARCHES * 3) if include_forums else MAX_SEARCHES
+    async with Session(max_requests=max_req, deadline_s=DEADLINE_S) as s:
         async def one(kind: str, i: int, q: str):
+            label = {"web": "the open web", "bluesky": "Bluesky", "reddit": "Reddit",
+                     "telegram": "Telegram", "hackernews": "Hacker News"}[kind]
+            exact = not topic_mode
             try:
-                hits = await (search.web(s, q) if kind == "web" else search.bluesky(s, q))
+                if kind == "web":
+                    hits = await search.web(s, q, exact=exact)
+                elif kind == "bluesky":
+                    hits = await search.bluesky(s, q, exact=exact)
+                elif kind == "reddit":
+                    hits = await search.reddit_posts(s, q, exact=exact)
+                elif kind == "telegram":
+                    hits = await search.telegram_posts(s, q, exact=exact)
+                else:
+                    hits = await search.hackernews_posts(s, q, exact=exact)
             except search.SearchUnavailable as exc:
                 coverage[kind]["status"], coverage[kind]["note"] = "failed", str(exc)
                 return
@@ -118,14 +174,21 @@ async def trace(text: str | None = None, url: str | None = None, progress=None) 
                 return
             coverage[kind]["searches"] += 1
             coverage[kind]["results"] += len(hits)
-            (raw_web if kind == "web" else raw_bsky).extend((i, h) for h in hits)
-            say(f"Searched {'the web' if kind == 'web' else 'Bluesky'} for sentence {i + 1}: {len(hits)} results…")
+            {"web": raw_web, "bluesky": raw_bsky, "reddit": raw_reddit,
+             "telegram": raw_telegram, "hackernews": raw_hn}[kind].extend((i, h) for h in hits)
+            say(f"Searched {label} for phrase {i + 1}: {len(hits)} results…")
+
         jobs = []
         for i, q in enumerate(queries):
             if web_on:
                 jobs.append(one("web", i, q))
             jobs.append(one("bluesky", i, q))
-        await asyncio.gather(*jobs[:MAX_SEARCHES])
+            if include_forums and i == 0:
+                if web_on:
+                    jobs.append(one("reddit", i, q))
+                    jobs.append(one("telegram", i, q))
+                jobs.append(one("hackernews", i, q))
+        await asyncio.gather(*jobs[:max_req])
         if web_on and coverage["web"]["status"] == "not_configured":
             coverage["web"]["status"] = "searched"
         searches_used = s.requests
@@ -136,7 +199,8 @@ async def trace(text: str | None = None, url: str | None = None, progress=None) 
     for i, p in raw_bsky:
         if p["uri"] == src.get("id"):
             continue
-        hits = confirm_text(fp_norms, (p.get("record") or {}).get("text", ""), source_norm)
+        ptxt = (p.get("record") or {}).get("text", "")
+        hits = confirm_snippet(fp_norms, ptxt, topic_mode=True) if topic_mode else confirm_text(fp_norms, ptxt, source_norm)
         if not hits:
             related += 1
             continue
@@ -147,11 +211,65 @@ async def trace(text: str | None = None, url: str | None = None, progress=None) 
                                              "text": post.text[:600], "ts": post.ts, "confirmed": True,
                                              "fingerprints": set(), "_post": post})
         item["fingerprints"].update(hits)
+    import re as _re
+    for i, rd_hit in raw_reddit:
+        m = _re.search(r"reddit\.com/r/([A-Za-z0-9_]+)", rd_hit["url"], _re.I)
+        sub = f"r/{m.group(1)}" if m else "reddit"
+        body_txt = f"{rd_hit['title']} {rd_hit['snippet']}".strip()
+        hits = confirm_snippet(fp_norms, body_txt, topic_mode=topic_mode)
+        if not hits:
+            related += 1
+            continue
+        post = (Post(id=rd_hit["url"], author=sub, ts=rd_hit["ts"], text=body_txt, url=rd_hit["url"], platform="reddit")
+                if rd_hit["ts"] is not None else None)
+        item = copies.setdefault(rd_hit["url"], {
+            "platform": "reddit", "account": sub, "url": rd_hit["url"],
+            "text": rd_hit["snippet"][:600], "ts": rd_hit["ts"], "confirmed": True, "fingerprints": set(),
+            **({"_post": post} if post else {}),
+        })
+        item["fingerprints"].update(hits)
+
+    for i, tg_hit in raw_telegram:
+        m = _re.search(r"(?:t\.me|telegram\.me)/(?:s/)?([A-Za-z0-9_]{4,64})", tg_hit["url"], _re.I)
+        chan = f"@{m.group(1)}" if m else "@telegram"
+        body_txt = f"{tg_hit['title']} {tg_hit['snippet']}".strip()
+        hits = confirm_snippet(fp_norms, body_txt, topic_mode=topic_mode)
+        if not hits:
+            related += 1
+            continue
+        post = (Post(id=tg_hit["url"], author=chan, ts=tg_hit["ts"], text=body_txt, url=tg_hit["url"], platform="telegram")
+                if tg_hit["ts"] is not None else None)
+        item = copies.setdefault(tg_hit["url"], {
+            "platform": "telegram", "account": chan, "url": tg_hit["url"],
+            "text": tg_hit["snippet"][:600], "ts": tg_hit["ts"], "confirmed": True, "fingerprints": set(),
+            **({"_post": post} if post else {}),
+        })
+        item["fingerprints"].update(hits)
+
+    for i, hn_item in raw_hn:
+        author = hn_item.get("author") or ""
+        body_txt = f"{hn_item.get('title') or hn_item.get('story_title') or ''}\n{hn_item.get('comment_text') or hn_item.get('story_text') or ''}".strip()
+        hits = (confirm_snippet(fp_norms, body_txt, topic_mode=True) if topic_mode
+                else (confirm_text(fp_norms, body_txt, source_norm) or confirm_snippet(fp_norms, body_txt)))
+        if not hits or not author:
+            related += 1
+            continue
+        oid = str(hn_item["objectID"])
+        purl = f"https://news.ycombinator.com/item?id={oid}"
+        post = make_post(f"hn:{oid}", f"hn/{author}", hn_item.get("created_at"), body_txt, url=purl, platform="hackernews")
+        if post is None:
+            continue
+        item = copies.setdefault(f"hn:{oid}", {
+            "platform": "hackernews", "account": f"hn/{author}", "url": purl,
+            "text": body_txt[:600], "ts": post.ts, "confirmed": True, "fingerprints": set(), "_post": post,
+        })
+        item["fingerprints"].update(hits)
+
     unconfirmed = 0
     for i, r in raw_web:
         if src.get("url") and r["url"].rstrip("/") == src["url"].rstrip("/"):
             continue
-        hits = confirm_snippet(fp_norms, f"{r['title']} {r['snippet']}")
+        hits = confirm_snippet(fp_norms, f"{r['title']} {r['snippet']}", topic_mode=topic_mode)
         item = copies.get(r["url"])
         if item is None:
             item = copies[r["url"]] = {"platform": "web", "domain": r["domain"], "url": r["url"], "title": r["title"],
@@ -163,8 +281,9 @@ async def trace(text: str | None = None, url: str | None = None, progress=None) 
     for item in copies.values():
         if item["platform"] == "web" and not item["confirmed"]:
             unconfirmed += 1
-    for kind in ("web", "bluesky"):
-        coverage[kind]["confirmed"] = sum(1 for c in copies.values() if c["platform"] == kind and c["confirmed"])
+    for kind in coverage:
+        if kind != "mastodon":
+            coverage[kind]["confirmed"] = sum(1 for c in copies.values() if c["platform"] == kind and c["confirmed"])
     if related:
         notes.append(f"{related} Bluesky search results mention or quote the post without copying its text; they are "
                      "not counted as copies.")
@@ -181,7 +300,7 @@ async def trace(text: str | None = None, url: str | None = None, progress=None) 
     for key, c in copies.items():
         if not c["confirmed"] or c["ts"] is None:
             continue
-        if c["platform"] == "bluesky":
+        if "_post" in c:
             batch_posts.append(c["_post"])
         else:
             batch_posts.append(Post(id=key, author=c["domain"], ts=c["ts"], text=f"{c['title']} {c['text']}", url=c["url"],
@@ -226,8 +345,9 @@ async def trace(text: str | None = None, url: str | None = None, progress=None) 
         first_seen = origin
     accounts = defaultdict(lambda: {"copies": 0, "first": None})
     for c in confirmed:
-        if c["platform"] == "bluesky":
-            a = accounts[c["account"]]
+        if c["platform"] != "web" and c.get("account"):
+            label = c["account"] if c["platform"] == "bluesky" else f"{c['account']} ({c['platform']})"
+            a = accounts[label]
             a["copies"] += 1
             a["first"] = c["ts"] if a["first"] is None else min(a["first"], c["ts"])
     sites = defaultdict(lambda: {"pages": 0, "first": None})

@@ -1,4 +1,5 @@
-// /swarm page (vanilla JS). Data: POST /api/swarm. All user data is inserted as text, never as HTML.
+// Unified /swarm page (vanilla JS): one smart input box for social threads/channels (POST /api/swarm)
+// and cross-platform narrative/article spread (POST /api/trace). All external data is inserted as text only.
 (() => {
   "use strict";
   const $ = (id) => document.getElementById(id);
@@ -9,11 +10,18 @@
     organic_looking: { text: "Looks organic", cls: "v-organic", ico: "○" },
     insufficient_data: { text: "Not enough data", cls: "v-none", ico: "–" },
   };
+  const TRACE_STATUS = {
+    searched: "Searched", not_configured: "Not configured", not_available: "Not available",
+    failed: "Failed", partial: "Partly searched",
+  };
   const FAMILY = { T: "Text reuse", S: "Timing", A: "Accounts", M: "Amplification" };
-  const PLATFORM = { bluesky: "Bluesky", mastodon: "Mastodon", youtube: "YouTube", mixed: "several platforms" };
-  const TABS = ["link", "links", "file"];
+  const PLATFORM = {
+    bluesky: "Bluesky", mastodon: "Mastodon", youtube: "YouTube",
+    reddit: "Reddit", telegram: "Telegram", hackernews: "Hacker News", mixed: "several platforms",
+  };
   let last = null;
-  let example = null;   // source info of a loaded example (shown with the result)
+  let example = null;
+  let uploadedData = "";
 
   const el = (tag, attrs = {}, text) => {
     const e = document.createElement(tag);
@@ -21,34 +29,73 @@
     if (text !== undefined) e.textContent = text;
     return e;
   };
-  const fmtTime = (t) => new Date(t * 1000).toISOString().replace("T", " ").slice(0, 16) + " UTC";
+  const fmtTime = (t) => (t ? new Date(t * 1000).toISOString().replace("T", " ").slice(0, 16) + " UTC" : "date unknown");
+  const safeLink = (url, text) => (/^https?:\/\//.test(url || "")
+    ? el("a", { href: url, rel: "noopener noreferrer nofollow", target: "_blank" }, text || url)
+    : el("span", {}, text || ""));
   const list = (items, cls) => {
     const ul = el("ul", { class: cls || "" });
     items.forEach((x) => ul.append(el("li", {}, x)));
     return ul;
   };
-  const status = (msg) => { $("status").textContent = msg || ""; };
+  const setTableRows = (id, data) => $(id).querySelector("tbody").replaceChildren(...data.map((cells) => {
+    const tr = el("tr");
+    cells.forEach((c, i) => {
+      const td = el(i === 0 ? "th" : "td", i === 0 ? { scope: "row" } : {});
+      if (c instanceof Node) td.append(c); else td.textContent = String(c);
+      tr.append(td);
+    });
+    return tr;
+  }));
+  const status = (msg, isErr) => {
+    $("status").className = isErr ? "status error" : "status";
+    $("status").textContent = msg || "";
+  };
 
-  // ------------------------------------------------------------------ tabs
-  function activeTab() {
-    return TABS.find((t) => $(`tab-${t}`).getAttribute("aria-selected") === "true");
+  function socialPlatform(url) {
+    const u = (url || "").trim();
+    if (!/^https?:\/\//i.test(u)) return null;
+    if (/^https?:\/\/(?:www\.)?bsky\.app\/profile\/[^/?#]+\/post\/[a-z0-9]+/i.test(u)) return "Bluesky";
+    if (/^https?:\/\/(?:(?:www|old|new|np)\.)?reddit\.com\/(?:r\/[a-z0-9_]+(?:\/comments\/[a-z0-9]+)?|comments\/[a-z0-9]+)/i.test(u)
+        || /^https?:\/\/redd\.it\/[a-z0-9]+/i.test(u)) return "Reddit";
+    if (/^https?:\/\/(?:www\.)?(?:t\.me|telegram\.(?:me|dog))\/(?:s\/)?[a-z0-9_]{4,64}/i.test(u)) return "Telegram";
+    if (/^https?:\/\/(?:(?:www|m|music)\.)?youtube\.com\/(?:watch\?.*v=|shorts\/|live\/|embed\/)/i.test(u)
+        || /^https?:\/\/youtu\.be\/[a-z0-9_-]{11}/i.test(u)) return "YouTube";
+    if (/^https?:\/\/news\.ycombinator\.com\/item\?.*id=\d+/i.test(u)) return "Hacker News";
+    if (/^https:\/\/[a-z0-9.-]+\.[a-z]{2,}\/(?:(?:deck\/)?@[^/?#]+|users\/[^/?#]+\/statuses|web\/statuses)\/\d+/i.test(u)) return "Mastodon";
+    return null;
   }
-  function selectTab(name, focus) {
-    TABS.forEach((t) => {
-      const on = t === name;
-      $(`tab-${t}`).setAttribute("aria-selected", String(on));
-      $(`tab-${t}`).tabIndex = on ? 0 : -1;
-      $(`panel-${t}`).hidden = !on;
-    });
-    if (focus) $(`tab-${name}`).focus();
+
+  function detectMode() {
+    if (uploadedData.trim()) {
+      return { kind: "file", hint: "Dataset file loaded — will check all rows for coordinated groups." };
+    }
+    const raw = $("swarm-input").value.trim();
+    if (!raw) {
+      return {
+        kind: "empty",
+        hint: "Auto-detects what you paste: social thread/channel → checks replies & posts; article link or text → traces copies across Web, Reddit, Hacker News & Bluesky.",
+      };
+    }
+    const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const allUrls = lines.length >= 1 && lines.every((l) => /^https?:\/\/\S+$/i.test(l));
+    if (allUrls && lines.length === 1) {
+      const url = lines[0];
+      const plat = socialPlatform(url);
+      if (plat) {
+        return { kind: "swarm_url", url, hint: `Detected ${plat} link — will collect posts & comments and check for coordinated groups.` };
+      }
+      return { kind: "trace_url", url, hint: "Detected web/article link — will extract its text and trace where copies spread across the Open Web, Reddit, Hacker News & Bluesky." };
+    }
+    if (allUrls && lines.length > 1) {
+      const socialCount = lines.filter((u) => socialPlatform(u)).length;
+      if (socialCount > 0) {
+        return { kind: "swarm_urls", urls: lines, hint: `Detected ${lines.length} links — will collect across all channels/posts and look for cross-account coordination.` };
+      }
+      return { kind: "trace_url", url: lines[0], hint: "Detected article link — will extract its text and trace where copies spread across the web." };
+    }
+    return { kind: "trace_text", text: raw, hint: "Detected text / claim — will search the Open Web, Reddit, Hacker News & Bluesky for matching posts and check for coordinated spread." };
   }
-  TABS.forEach((t, i) => {
-    $(`tab-${t}`).addEventListener("click", () => selectTab(t));
-    $(`tab-${t}`).addEventListener("keydown", (e) => {
-      const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-      if (d) { e.preventDefault(); selectTab(TABS[(i + d + TABS.length) % TABS.length], true); }
-    });
-  });
 
   // --------------------------------------------------------------- results
   function timeline(c) {
@@ -184,9 +231,21 @@
     box.append(el("p", { class: "small muted" }, bits.join(" ")));
   }
 
-  function render(r) {
+  function resetView() {
+    $("verdict-line").hidden = true;
+    $("first-seen").hidden = true;
+    $("trace-timeline").hidden = true;
+    $("trace-extra").hidden = true;
+    $("failed-wrap").hidden = true;
+    $("rejected-wrap").hidden = true;
+    $("trace-root-btn").hidden = true;
+    $("clusters").replaceChildren();
+  }
+
+  function renderSwarm(r) {
     last = r;
     $("result").hidden = false;
+    resetView();
     renderSource(r.source || example);
     const s = r.summary, bv = s.by_verdict;
     const camp = s.campaigns ? ` (${s.message_clusters} message groups, ${s.campaigns} merged into campaigns)` : "";
@@ -198,6 +257,17 @@
     if (r.cost && (r.cost.embeddings || r.cost.llm_calls)) {
       notes.append(el("li", {}, `AI use: ${r.cost.embeddings} embeddings, ${r.cost.llm_calls} tagging calls.`));
     }
+    const rootText = r.source && r.source.root && r.source.root.text ? r.source.root.text.trim() : "";
+    if (rootText.split(/\s+/).length >= 4) {
+      const btn = $("trace-root-btn");
+      btn.hidden = false;
+      btn.onclick = () => {
+        uploadedData = "";
+        $("swarm-input").value = rootText.slice(0, 600);
+        updateHint();
+        submit();
+      };
+    }
     const failed = (r.source && r.source.failed) || [];
     $("failed-wrap").hidden = !failed.length;
     $("failed-sum").textContent = `Links that could not be read (${failed.length})`;
@@ -206,17 +276,98 @@
     $("rejected-sum").textContent = `Skipped rows (${s.rejected})`;
     $("rejected").replaceChildren(...r.rejected.map((x) => el("li", {}, `Row ${x.row}: ${x.reason}`)));
     const box = $("clusters");
-    box.replaceChildren();
     if (!r.clusters.length) {
-      box.append(el("p", { class: "card" }, "No groups of accounts posting the same text were found. That is a valid result: " +
-        "nothing here looks coordinated."));
+      box.append(el("p", { class: "card" }, "No multi-account groups posting the same text were found in this batch. " +
+        "Nothing here looks coordinated (if this is a single broadcast channel, paste 2+ channel links or click “Trace where this post spread” above)."));
     }
     r.clusters.forEach((c) => box.append(card(c)));
   }
 
+  function drawTraceTimeline(points) {
+    const svg = $("trace-timeline");
+    svg.replaceChildren();
+    svg.hidden = points.length < 2;
+    if (points.length < 2) return;
+    const W = 640, H = 70, pad = 10;
+    const t0 = points[0].t, t1 = points[points.length - 1].t, span = Math.max(t1 - t0, 1);
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    const axis = document.createElementNS(SVGNS, "line");
+    Object.entries({ x1: pad, x2: W - pad, y1: 40, y2: 40, class: "axis" }).forEach(([k, v]) => axis.setAttribute(k, v));
+    svg.append(axis);
+    points.forEach((p) => {
+      const dot = document.createElementNS(SVGNS, "circle");
+      dot.setAttribute("cx", pad + ((p.t - t0) / span) * (W - 2 * pad));
+      dot.setAttribute("cy", p.platform === "web" ? 28 : 18);
+      dot.setAttribute("r", p.is_source ? 6 : 4);
+      dot.setAttribute("class", `dot ${p.is_source ? "var-3" : p.platform === "web" ? "var-2" : ""}`);
+      const title = document.createElementNS(SVGNS, "title");
+      title.textContent = `${p.platform}: ${p.who} · ${fmtTime(p.t)}`;
+      dot.append(title);
+      svg.append(dot);
+    });
+    [[pad, "start", fmtTime(t0)], [W - pad, "end", fmtTime(t1)]].forEach(([x, a, label]) => {
+      const t = document.createElementNS(SVGNS, "text");
+      t.setAttribute("x", x); t.setAttribute("y", H - 8); t.setAttribute("text-anchor", a); t.setAttribute("class", "tl-label");
+      t.textContent = label;
+      svg.append(t);
+    });
+  }
+
+  function renderTrace(r) {
+    last = r;
+    $("result").hidden = false;
+    resetView();
+    $("source").hidden = true;
+    const sp = r.spread;
+    const vline = $("verdict-line");
+    vline.replaceChildren();
+    if (r.verdict && VERDICT[r.verdict]) {
+      const v = VERDICT[r.verdict];
+      vline.append(el("span", { class: `verdict ${v.cls}` }, `${v.ico} ${v.text}`));
+      vline.hidden = false;
+    }
+    $("summary").textContent = `Found ${sp.copies} confirmed cop${sp.copies === 1 ? "y" : "ies"} across ` +
+      `${sp.domains.length} website${sp.domains.length === 1 ? "" : "s"} and ${sp.accounts.length} public social account${sp.accounts.length === 1 ? "" : "s"} ` +
+      `(${(r.elapsed_ms / 1000).toFixed(1)} s).`;
+    const fs = $("first-seen");
+    fs.replaceChildren();
+    if (sp.first_seen) {
+      fs.hidden = false;
+      fs.append("Earliest dated copy found: ", el("strong", {}, sp.first_seen.who), ` (${sp.first_seen.platform}) at ${fmtTime(sp.first_seen.ts)} · `, safeLink(sp.first_seen.url, "open"));
+    }
+    drawTraceTimeline(sp.timeline || []);
+    $("notes").replaceChildren(...(r.notes || []).map((n) => el("li", {}, n)));
+    if (r.cluster) $("clusters").append(card(r.cluster));
+
+    $("trace-extra").hidden = false;
+    $("domains-card").hidden = !sp.domains.length;
+    setTableRows("domains", sp.domains.map((d) => [d.domain, d.pages, fmtTime(d.first),
+      (d.receipts || []).map((x) => x.text).filter(Boolean).join(" ") || "–"]));
+    $("accounts-card").hidden = !sp.accounts.length;
+    setTableRows("accounts", sp.accounts.map((a) => [a.account, a.copies, fmtTime(a.first)]));
+    $("fingerprints").replaceChildren(...(r.fingerprints || []).map((f) =>
+      el("li", {}, `“${f.sentence}” — ${f.copies} confirmed cop${f.copies === 1 ? "y" : "ies"}`)));
+    $("fp-method").textContent = {
+      llm: "Phrases chosen by AI and verified word for word against your input.",
+      heuristic: "Phrases chosen by word-rarity rule (0 AI calls).",
+      mixed: "Phrases chosen by AI + word-rarity rule, verified word for word.",
+      query: "Exact query searched directly (0 AI calls).",
+    }[r.fingerprint_method] || "";
+    setTableRows("coverage", (r.coverage || []).map((x) => [x.source, TRACE_STATUS[x.status] || x.status, x.searches, x.results, x.confirmed]));
+    $("coverage-notes").replaceChildren(...(r.coverage || []).filter((x) => x.note).map((x) => el("li", {}, x.note)));
+    $("copies-sum").textContent = `All matching results (${(r.copies || []).length})`;
+    $("copies").replaceChildren(...(r.copies || []).map((x) => {
+      const li = el("li", { class: x.confirmed ? "" : "unconfirmed" });
+      li.append(el("strong", {}, x.platform === "web" ? x.domain : x.account),
+        document.createTextNode(` · ${fmtTime(x.ts)}${x.confirmed ? "" : " · unconfirmed snippet"} · `),
+        safeLink(x.url, "open"), el("div", { class: "muted" }, x.text || ""));
+      return li;
+    }));
+  }
+
   // ---------------------------------------------------------------- submit
-  async function post(payload, streaming) {
-    const res = await fetch("/api/swarm", {
+  async function postStream(endpoint, payload, streaming) {
+    const res = await fetch(endpoint, {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
     });
     if (!streaming || !res.ok || !(res.headers.get("content-type") || "").includes("ndjson")) {
@@ -236,7 +387,7 @@
         buf = buf.slice(nl + 1);
         if (!line) continue;
         const msg = JSON.parse(line);
-        if (msg.progress) status(msg.progress);
+        if (msg.progress) status(msg.progress, false);
         if (msg.error) throw new Error(msg.error.detail);
         if (msg.result) return msg.result;
       }
@@ -244,57 +395,101 @@
     }
   }
 
+  function updateHint() {
+    $("mode-hint").textContent = detectMode().hint;
+  }
+
   async function submit(ev) {
     if (ev) ev.preventDefault();
+    const mode = detectMode();
+    if (mode.kind === "empty") return status("Paste a link, several links, or a claim / post text first — or click a Try button above.", true);
     const opts = { deep: $("deep").checked, tag_clusters: $("tag").checked };
-    const tab = activeTab();
-    let payload;
-    if (tab === "link") {
-      const url = $("link").value.trim();
-      if (!url) return status("Paste a link to a public post first, or try an example.");
-      payload = { url, stream: true, ...opts };
-      example = null;
-    } else if (tab === "links") {
-      const urls = $("links").value.split(/\s+/).map((u) => u.trim()).filter(Boolean);
-      if (!urls.length) return status("Paste one or more links first.");
-      payload = { urls, stream: true, ...opts };
-      example = null;
-    } else {
-      const data = $("data").value;
-      if (!data.trim()) return status("Choose or paste a file first, or try an example.");
-      payload = { data, ...opts };
-    }
     $("go").disabled = true;
-    status(tab === "file" ? "Analyzing…" : "Collecting posts…");
+    status("Starting…", false);
     try {
-      const body = await post(payload, tab !== "file");
-      status("");
-      render(body);
+      if (mode.kind === "file") {
+        const body = await postStream("/api/swarm", { data: uploadedData, ...opts }, false);
+        status("", false);
+        renderSwarm(body);
+      } else if (mode.kind === "swarm_url") {
+        example = null;
+        const body = await postStream("/api/swarm", { url: mode.url, stream: true, ...opts }, true);
+        status("", false);
+        renderSwarm(body);
+      } else if (mode.kind === "swarm_urls") {
+        example = null;
+        const body = await postStream("/api/swarm", { urls: mode.urls, stream: true, ...opts }, true);
+        status("", false);
+        renderSwarm(body);
+      } else if (mode.kind === "trace_url") {
+        example = null;
+        const body = await postStream("/api/trace", { url: mode.url, include_forums: true, stream: true }, true);
+        status("", false);
+        renderTrace(body);
+      } else {
+        example = null;
+        const body = await postStream("/api/trace", { text: mode.text, include_forums: true, stream: true }, true);
+        status("", false);
+        renderTrace(body);
+      }
       $("result").scrollIntoView({ behavior: "smooth", block: "start" });
     } catch (e) {
-      status(e.message || "Something went wrong.");
+      status(e.message || "Something went wrong.", true);
     } finally {
       $("go").disabled = false;
     }
   }
 
+  $("swarm-input").addEventListener("input", () => {
+    if (uploadedData) {
+      uploadedData = "";
+      $("file-info").textContent = "";
+      $("clear-file").hidden = true;
+    }
+    updateHint();
+  });
   $("swarm-form").addEventListener("submit", submit);
-  $("ex-sample").addEventListener("click", async () => {
-    selectTab("file");
-    $("data").value = await (await fetch("/static/swarm_sample.csv")).text();
-    $("file-info").textContent = "Example loaded: fictional posts with two campaigns, a shared news headline and an event hashtag.";
-    example = { platform: "example", note: "Fictional example data made for this demo." };
+
+  $("ex-campaign").addEventListener("click", async () => {
+    $("swarm-input").value = "";
+    $("go").disabled = true;
+    status("Running coordinated campaign demo…", false);
+    try {
+      const csv = await (await fetch("/static/swarm_sample.csv")).text();
+      example = { platform: "demo", note: "Built-in benchmark dataset: 2 coordinated bot campaigns + organic news sharing & an event hashtag." };
+      const opts = { deep: $("deep").checked, tag_clusters: $("tag").checked };
+      const body = await postStream("/api/swarm", { data: csv, ...opts }, false);
+      status("", false);
+      renderSwarm(body);
+      $("result").scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (e) {
+      status(e.message || "Could not load demo.", true);
+    } finally {
+      $("go").disabled = false;
+    }
+  });
+
+  $("ex-reddit").addEventListener("click", () => {
+    uploadedData = "";
+    $("swarm-input").value = "https://www.reddit.com/r/europe";
+    updateHint();
     submit();
   });
-  $("ex-bsky").addEventListener("click", async () => {
-    selectTab("file");
-    const text = await (await fetch("/static/examples/bluesky_thread.json")).text();
-    $("data").value = text;
-    const snap = JSON.parse(text).source;
-    $("file-info").textContent = "Example loaded: a stored snapshot of a real public Bluesky thread (no live fetch).";
-    example = { ...snap, posts: undefined };
+
+  $("ex-telegram").addEventListener("click", () => {
+    uploadedData = "";
+    $("swarm-input").value = "https://t.me/euronews_en";
+    updateHint();
     submit();
   });
+
+  $("ex-trace").addEventListener("click", () => {
+    uploadedData = "";
+    $("swarm-input").value = "Russia GPS jamming Baltic flights";
+    updateHint();
+    submit();
+  });
+
   $("file").addEventListener("change", async () => {
     const f = $("file").files[0];
     if (!f) return;
@@ -302,9 +497,18 @@
       $("file-info").textContent = "That file is larger than 2 MB.";
       return;
     }
-    $("data").value = await f.text();
-    $("file-info").textContent = `${f.name} loaded.`;
+    uploadedData = await f.text();
+    $("file-info").textContent = `${f.name} ready (${Math.round(f.size / 1024)} KB). Click Investigate.`;
+    $("clear-file").hidden = false;
     example = null;
+    updateHint();
+  });
+  $("clear-file").addEventListener("click", () => {
+    uploadedData = "";
+    $("file").value = "";
+    $("file-info").textContent = "";
+    $("clear-file").hidden = true;
+    updateHint();
   });
   $("download").addEventListener("click", () => {
     if (!last) return;
@@ -316,6 +520,8 @@
   });
   fetch("/api/health").then((r) => r.json()).then((h) => {
     const yt = h.collectors && h.collectors.youtube;
-    $("yt-status").textContent = yt ? "" : "(not configured on this server right now)";
+    if (!yt) $("yt-pill").title = "Needs GOOGLE_API_KEY on server to read YouTube comments";
   }).catch(() => {});
+  const q = new URLSearchParams(location.search).get("q");
+  if (q) { $("swarm-input").value = q; updateHint(); submit(); }
 })();

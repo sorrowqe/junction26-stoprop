@@ -331,13 +331,23 @@ def extract_main_text(html: str, url: str) -> tuple[str, dict]:
 
 
 async def _try_social_post(url: str) -> Article | None:
-    """Tier 0: public social post links (Bluesky, Mastodon, YouTube) via our native API collectors."""
+    """Tier 0: public social post links (Reddit post, Telegram post, Bluesky, Mastodon, YouTube) via collectors."""
     from datetime import datetime, timezone
     from app.swarm import collectors
-    from app.swarm.collectors import bluesky, mastodon, youtube
+    from app.swarm.collectors import bluesky, hackernews, mastodon, reddit, telegram, youtube
     from app.swarm.collectors.http import CollectorError
 
-    if not (bluesky.parse(url) or mastodon.parse(url) or (youtube.parse(url) and config.env("GOOGLE_API_KEY"))):
+    rd = reddit.parse(url)
+    tg = telegram.parse(url)
+    is_single_social = (
+        bluesky.parse(url)
+        or mastodon.parse(url)
+        or hackernews.parse(url)
+        or (rd and rd[0] == "thread")
+        or (tg and tg[1] is not None)
+        or (youtube.parse(url) and config.env("GOOGLE_API_KEY"))
+    )
+    if not is_single_social:
         return None
     try:
         coll, _ = await collectors.collect_urls([url], cache=True)

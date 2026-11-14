@@ -10,15 +10,22 @@ from __future__ import annotations
 import time
 from urllib.parse import urlsplit
 
-from app.swarm.collectors import bluesky, mastodon, youtube
+from app.swarm.collectors import bluesky, hackernews, mastodon, reddit, telegram, youtube
 from app.swarm.collectors.base import Collected
 from app.swarm.collectors.http import BudgetExhausted, CollectorError, HTTPStatus, RateLimited, Session
 
 MAX_LINKS = 50
 CACHE_TTL_S = 600
 CACHE_MAX = 200
-PLATFORM_NAMES = {"bluesky": "Bluesky", "mastodon": "Mastodon", "youtube": "YouTube"}
-UPLOAD_HINT = " If you can export the posts yourself, use “Upload a file” (CSV or JSON)."
+PLATFORM_NAMES = {
+    "bluesky": "Bluesky",
+    "mastodon": "Mastodon",
+    "youtube": "YouTube",
+    "reddit": "Reddit",
+    "telegram": "Telegram",
+    "hackernews": "Hacker News",
+}
+UPLOAD_HINT = " Paste the post's text into Swarm mode instead to trace where the same wording spread across the web, or use Advanced CSV/JSON import."
 CLOSED = {
     ("x.com", "twitter.com", "mobile.twitter.com", "t.co"):
         "X (Twitter) does not offer free public access to posts and replies: reading them requires a paid developer "
@@ -28,11 +35,11 @@ CLOSED = {
         "login and approved app access, so Stoprop cannot fetch them.",
     ("tiktok.com", "vm.tiktok.com"):
         "TikTok only opens its research API to approved academic researchers, so Stoprop cannot fetch comments.",
-    ("reddit.com", "old.reddit.com", "new.reddit.com", "redd.it"):
-        "Reddit requires registered API access and blocks anonymous automated reading, so Stoprop cannot fetch threads.",
 }
-SUPPORTED_HINT = ("Supported links: Bluesky posts (bsky.app/profile/…/post/…), Mastodon posts on any server "
-                  "(…/@user/123…), and YouTube videos (youtube.com/watch?v=… or youtu.be/…).")
+SUPPORTED_HINT = (
+    "Supported links: Reddit threads or subreddits (reddit.com/r/…), Telegram public channels/posts (t.me/…), "
+    "YouTube videos, Bluesky posts, Mastodon posts, and Hacker News items."
+)
 
 _cache: dict[tuple, tuple[float, Collected]] = {}
 
@@ -56,6 +63,12 @@ def classify(url: str) -> str:
             raise CollectorError(why + UPLOAD_HINT, 400, "closed_platform")
     if bluesky.parse(url):
         return "bluesky"
+    if reddit.parse(url):
+        return "reddit"
+    if telegram.parse(url):
+        return "telegram"
+    if hackernews.parse(url):
+        return "hackernews"
     if youtube.parse(url):
         return "youtube"
     if host in youtube.HOSTS or host == "youtube.com":
@@ -64,6 +77,10 @@ def classify(url: str) -> str:
         return "mastodon"
     if host == "bsky.app":
         raise CollectorError("That Bluesky link does not point to a post. " + SUPPORTED_HINT, 400, "unsupported")
+    if host in reddit.HOSTS:
+        raise CollectorError("That Reddit link does not point to a thread or subreddit. " + SUPPORTED_HINT, 400, "unsupported")
+    if host in telegram.HOSTS:
+        raise CollectorError("That Telegram link does not point to a public channel or post. " + SUPPORTED_HINT, 400, "unsupported")
     raise CollectorError("Stoprop cannot read posts from that link. " + SUPPORTED_HINT + UPLOAD_HINT, 400, "unsupported")
 
 
@@ -98,7 +115,8 @@ async def collect_url(url: str, progress=None) -> tuple[Collected, bool]:
     hit = _cached(key)
     if hit:
         return hit, True
-    module = {"bluesky": bluesky, "mastodon": mastodon, "youtube": youtube}[platform]
+    module = {"bluesky": bluesky, "mastodon": mastodon, "youtube": youtube,
+              "reddit": reddit, "telegram": telegram, "hackernews": hackernews}[platform]
     if platform == "youtube":
         youtube._key()  # "not configured" before any network setup
     try:
@@ -150,7 +168,8 @@ async def collect_urls(urls: list[str], progress=None, *, cache: bool = True) ->
     coll.failed = list(failed)
     async with Session(progress=progress) as s:
         for platform, us in groups.items():
-            module = {"bluesky": bluesky, "mastodon": mastodon, "youtube": youtube}[platform]
+            module = {"bluesky": bluesky, "mastodon": mastodon, "youtube": youtube,
+                      "reddit": reddit, "telegram": telegram, "hackernews": hackernews}[platform]
             try:
                 await module.collect_single(us, s, coll)
             except CollectorError as exc:

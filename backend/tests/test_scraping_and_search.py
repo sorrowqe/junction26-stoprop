@@ -271,3 +271,115 @@ def test_syndication_receipt_and_health_status(monkeypatch):
     assert h["search"] == {"provider": "brave", "configured": True}
     assert h["scraper"]["configured"] is True and h["scraper"]["daily_cap"] == 150
     assert "bsa-key" not in json.dumps(h) and "oxy-key" not in json.dumps(h)
+
+
+def test_telegram_cross_channel_and_reddit_and_hn_collectors(monkeypatch):
+    msg = "The emergency harbour contract was secretly signed tonight without a vote or public tender."
+
+    def tg_html(chan: str, minute: int) -> str:
+        return (
+            f'<div class="tgme_widget_message" data-post="{chan}/101">'
+            f'<div class="tgme_widget_message_text">{msg} <a href="https://shady-leak.example/doc">leak</a></div>'
+            f'<time datetime="2026-11-14T10:0{minute}:00+00:00"></time></div>'
+        )
+
+    reddit_atom = (
+        '<?xml version="1.0" encoding="UTF-8"?>'
+        '<feed xmlns="http://www.w3.org/2005/Atom"><title>Thread</title>'
+        '<entry><id>t3_abc12</id><author><name>/u/op_user</name></author>'
+        '<updated>2026-11-14T09:00:00+00:00</updated><title>Harbour discussion</title>'
+        '<link href="https://www.reddit.com/r/europe/comments/abc12/x/"/>'
+        '<content type="html">&lt;p&gt;What do people think about the port contract?&lt;/p&gt;</content></entry>'
+        + "".join(
+            f'<entry><id>t1_c{k}</id><author><name>/u/portbot{100 + k}</name></author>'
+            f'<updated>2026-11-14T09:0{k}:00+00:00</updated><title>reply</title>'
+            f'<link href="https://www.reddit.com/r/europe/comments/abc12/x/c{k}/"/>'
+            f'<content type="html">&lt;p&gt;{msg}&lt;/p&gt;</content></entry>'
+            for k in range(1, 5)
+        )
+        + "</feed>"
+    )
+
+    def handler(req: httpx2.Request):
+        if req.url.host == "t.me":
+            chan = req.url.path.rsplit("/", 1)[-1]
+            idx = {"chan_alpha": 1, "chan_beta": 2, "chan_gamma": 3}.get(chan, 4)
+            return httpx2.Response(200, text=tg_html(chan, idx), headers={"Content-Type": "text/html"})
+        if req.url.host == "www.reddit.com":
+            return httpx2.Response(200, text=reddit_atom, headers={"Content-Type": "application/atom+xml"})
+        if req.url.host == "hn.algolia.com" and req.url.path == "/api/v1/items/999":
+            return httpx2.Response(200, json={
+                "id": 999, "author": "founder", "title": "Show HN", "created_at_i": 1794650000,
+                "children": [{"id": 1001, "author": "commenter1", "text": "<p>Great tool.</p>", "created_at_i": 1794650100}],
+            })
+        return httpx2.Response(404)
+
+    monkeypatch.setattr(chttp, "client_factory", lambda: httpx2.AsyncClient(transport=httpx2.MockTransport(handler)))
+
+    r_tg = client.post("/api/swarm", json={"urls": ["https://t.me/chan_alpha", "https://t.me/chan_beta", "https://t.me/chan_gamma"]})
+    assert r_tg.status_code == 200 and r_tg.json()["clusters"][0]["author_count"] == 3
+
+    r_rd = client.post("/api/swarm", json={"url": "https://www.reddit.com/r/europe/comments/abc12/harbour/"})
+    assert r_rd.status_code == 200 and r_rd.json()["summary"]["posts"] == 5
+    from app.swarm.collectors import reddit
+    with pytest.raises(chttp.CollectorError):
+        reddit.parse_atom_feed('<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><feed/>')
+
+    r_hn = client.post("/api/swarm", json={"url": "https://news.ycombinator.com/item?id=999"})
+    assert r_hn.status_code == 200 and r_hn.json()["summary"]["posts"] == 2
+
+
+def test_trace_redirect_short_query_and_multi_platform_spread(monkeypatch):
+    redir = client.get("/trace", follow_redirects=False)
+    assert redir.status_code == 302 and redir.headers["location"] == "/swarm"
+
+    monkeypatch.setenv("SEARCH_PROVIDER", "brave")
+    monkeypatch.setenv("BRAVE_API_KEY", "bsa-key")
+    monkeypatch.setattr(websearch, "BRAVE_MIN_INTERVAL_S", 0.0)
+
+    def handler(req: httpx2.Request):
+        if req.url.host == "api.search.brave.com":
+            q = req.url.params.get("q", "")
+            if "site:reddit.com" in q:
+                return httpx2.Response(200, json={"web": {"results": [{
+                    "url": "https://www.reddit.com/r/europe/comments/r1/drone_radar/",
+                    "title": "Estonia drone radar deployment announced",
+                    "description": "Discussion on Estonia drone radar deployment.",
+                    "page_age": "2026-11-14T08:10:00",
+                }]}})
+            if "site:t.me" in q:
+                return httpx2.Response(200, json={"web": {"results": [{
+                    "url": "https://t.me/balticnews/77",
+                    "title": "Baltic News Telegram",
+                    "description": "Estonia drone radar deployment announced on Tuesday.",
+                    "page_age": "2026-11-14T08:15:00",
+                }]}})
+            return httpx2.Response(200, json={"web": {"results": [{
+                "url": "https://clone-news.example/p", "title": "Estonia drone radar report",
+                "description": "Estonia drone radar deployment announced on Tuesday.",
+                "page_age": "2026-11-14T08:00:00",
+            }]}})
+        if req.url.host == "api.bsky.app":
+            return httpx2.Response(200, json={"posts": []})
+        if req.url.host == "hn.algolia.com":
+            return httpx2.Response(200, json={"hits": [{
+                "objectID": "555", "author": "techreader", "created_at": "2026-11-14T08:30:00Z",
+                "comment_text": "Discussion of the Estonia drone radar deployment announced today.",
+            }]})
+        return httpx2.Response(404)
+
+    monkeypatch.setattr(chttp, "client_factory", lambda: httpx2.AsyncClient(transport=httpx2.MockTransport(handler)))
+
+    async def no_rdap(target):
+        return {"domain": target, "registrable_domain": target, "receipts": []}
+
+    from app.receipts import service as receipts_service
+    monkeypatch.setattr(receipts_service, "domain_receipts", no_rdap)
+
+    r = client.post("/api/trace", json={"text": "Estonia drone radar", "include_forums": True})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["fingerprint_method"] == "query" and body["cost"]["llm_calls"] == 0
+    assert body["spread"]["copies"] == 4  # web + reddit + telegram + hackernews
+    cov = {c["source"].split(" ")[0]: c for c in body["coverage"]}
+    assert cov["Reddit"]["confirmed"] == 1 and cov["Telegram"]["confirmed"] == 1 and cov["Hacker"]["confirmed"] == 1

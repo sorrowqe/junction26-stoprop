@@ -99,6 +99,12 @@ def analyze(coll):
     (MASTO_URL, "mastodon"), ("https://fosstodon.org/@someone@mastodon.social/1234567", "mastodon"),
     ("https://mastodon.example/users/Project/statuses/999", "mastodon"),
     (YT_URL, "youtube"), ("https://youtu.be/abcdefghijk", "youtube"), ("https://www.youtube.com/shorts/abcdefghijk", "youtube"),
+    ("https://www.reddit.com/r/europe/comments/1xw9jzk/title/", "reddit"),
+    ("https://www.reddit.com/r/europe", "reddit"),
+    ("https://redd.it/1xw9jzk", "reddit"),
+    ("https://t.me/euronews_en", "telegram"),
+    ("https://t.me/durov/540", "telegram"),
+    ("https://news.ycombinator.com/item?id=41234567", "hackernews"),
 ])
 def test_classify_supported(url, platform):
     assert collectors.classify(url) == platform
@@ -107,12 +113,12 @@ def test_classify_supported(url, platform):
 @pytest.mark.parametrize("url, phrase", [
     ("https://x.com/someone/status/123", "X (Twitter)"), ("https://twitter.com/a/status/1", "X (Twitter)"),
     ("https://www.facebook.com/page/posts/1", "Meta's platforms"), ("https://www.instagram.com/p/abc/", "Meta's platforms"),
-    ("https://www.tiktok.com/@a/video/1", "TikTok"), ("https://www.reddit.com/r/x/comments/abc/", "Reddit"),
+    ("https://www.tiktok.com/@a/video/1", "TikTok"),
 ])
 def test_closed_platforms_explained(url, phrase):
     with pytest.raises(chttp.CollectorError) as exc:
         collectors.classify(url)
-    assert phrase in exc.value.message and "Upload a file" in exc.value.message and exc.value.status == 400
+    assert phrase in exc.value.message and "Swarm mode" in exc.value.message and exc.value.status == 400
 
 
 @pytest.mark.parametrize("url", ["https://example.com/article", "https://www.youtube.com/@channel", "https://bsky.app/profile/x",
