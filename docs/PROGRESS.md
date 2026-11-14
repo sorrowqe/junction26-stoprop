@@ -149,6 +149,13 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   documented response shape; LLM via FakeLLM).
 - NOT yet run: the AI fingerprint and Oxylabs web search live (no SEARCH_API_KEY on the PC; needs Aleksandr's OK).
 
+## Display + claim verification DONE (not yet deployed)
+- Display: techniques red, not yet validated dashed, all shown; validated = precision >= 0.70 on >= 15 predictions.
+- Verify claims: `backend/app/verify/` (claims, news [GDELT/Oxylabs], judge, run), POST /api/verify, "Verify claims" card.
+  Live 2026-11-14 from the PC: GDELT rate-limited (429) most requests from the venue IP -> all checks "could not check"
+  (honest); one earlier run exposed a false "cited source not found" on a true ERR report -> fixed (lenient outlet
+  search; zero outlet articles = could not check). Check end-to-end on the server after deploy. Tests: 584 passed.
+
 ## Next
 - M5 Part B: benchmark generator + run_swarm_eval.py + /metrics swarm section (announce calls/credits first).
 - YouTube live check once GOOGLE_API_KEY (YouTube Data API v3 enabled) is in .env.local and the server .env.

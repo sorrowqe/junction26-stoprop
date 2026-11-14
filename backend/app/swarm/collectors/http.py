@@ -94,6 +94,7 @@ class Session:
         try:
             async with asyncio.timeout(min(timeout_s or REQUEST_TIMEOUT_S, self.remaining())):
                 async with self._client.stream(method, url, params=params, json=json_body,
+                                               timeout=min(timeout_s or REQUEST_TIMEOUT_S, max(1.0, self.remaining())),
                                                headers={"Accept": "application/json", "User-Agent": extract.USER_AGENT,
                                                         **(headers or {})}) as resp:
                     if resp.status_code == 429:

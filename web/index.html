@@ -93,6 +93,15 @@
             <p class="muted small">Before drawing conclusions, consider:</p>
             <ul id="innocent" class="innocent"></ul>
           </section>
+          <section class="card" id="verify-card" hidden aria-labelledby="h-verify">
+            <h3 id="h-verify">Check the claims</h3>
+            <p class="muted small">Looks up to 3 factual claims in recent news: did the cited source really report it,
+              do independent outlets report it, does anything contradict it? Takes up to 30 seconds; 10 checks per hour.
+              Results say what was found, never “true” or “false”.</p>
+            <button type="button" id="verify-btn">Verify claims</button>
+            <p id="verify-status" class="status" role="status" aria-live="polite"></p>
+            <div id="verify-out"></div>
+          </section>
           <section class="card" aria-labelledby="h-legend">
             <h3 id="h-legend">Legend</h3>
             <ul id="legend" class="legend"></ul>

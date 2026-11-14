@@ -13,7 +13,7 @@
   const COLORS = {
     red:   { icon: "!", name: "Manipulation technique", desc: "A persuasion technique. Solid underline: validated (measured precision at least 70% on 15+ examples); dashed: not yet validated." },
     amber: { icon: "?", name: "Unsupported claim", desc: "No source is given in the text. Not “false”." },
-    green: { icon: "↗", name: "Claim with a source", desc: "A link, named source or dated data appears in the text. Not “true”." },
+    green: { icon: "↗", name: "Cites a source (not yet verified)", desc: "A named source, link or dated data appears in the text. Use “Verify claims” to check it. Not “true”." },
     blue:  { icon: "≈", name: "Balance marker", desc: "A fair counter-argument or an acknowledged uncertainty." },
   };
   const PRIORITY = { red: 0, amber: 1, green: 2, blue: 3 };
@@ -89,6 +89,7 @@
       if (current && $("text").value === current.text) analyze();
     });
     $("refresh-receipts").addEventListener("click", refreshReceipts);
+    $("verify-btn").addEventListener("click", verifyClaims);
     wireTooltip();
   }
 
@@ -121,6 +122,8 @@
       const analyzed = typeof body.text === "string" ? body.text : text;
       if (typeof body.text === "string") $("text").value = body.text;  // show the fetched article text
       current = { text: analyzed, url, result: body };
+      $("verify-out").textContent = "";
+      $("verify-status").textContent = "";
       status.textContent = "";
       render();
       $("result").hidden = false;
@@ -158,6 +161,7 @@
     renderFindings(spans, res);
     renderProfile(res);
     renderInnocent(spans, res);
+    $("verify-card").hidden = false;
     renderSource(res);
   }
 
@@ -210,6 +214,93 @@
       return "AI analysis is not switched on on this server." + rules;
     }
     return "";
+  }
+
+  // ---------------------------------------------------------- claim checks
+  const VERDICT_CLS = { cited_source_not_found: "v-likely", contradicted: "v-likely", corroborated: "v-organic",
+    no_reports_found: "v-none", not_checked: "v-none" };
+  const STANCE = { supports: "reports it", contradicts: "contradicts it" };
+  const when = (t) => (t ? new Date(t * 1000).toISOString().slice(0, 10) : "date unknown");
+
+  function renderClaims(r) {
+    const out = $("verify-out");
+    out.textContent = "";
+    if (!r.claims.length) out.append(el("p", "muted", "No check-worthy factual claims were found."));
+    r.claims.forEach((c, i) => {
+      const box = el("div", "claim-check");
+      const head = el("p");
+      head.append(el("span", `verdict ${VERDICT_CLS[c.verdict] || "v-none"}`, c.verdict_text), " ", el("strong", null, `Claim ${i + 1}: `), c.claim);
+      box.append(head);
+      if (c.cited_source) box.append(el("p", "small muted", `Cited source: ${c.cited_source}${c.cited_domains.length ? ` (${c.cited_domains.join(", ")})` : ""}`));
+      box.append(el("p", "small", c.text));
+      if (c.evidence.length) {
+        const ul = el("ul", "small evidence-list");
+        c.evidence.forEach((a) => {
+          const li = el("li");
+          const link = /^https?:\/\//.test(a.url) ? el("a", null, a.title || a.url) : el("span", null, a.title || a.url);
+          if (link.tagName === "A") { link.href = a.url; link.rel = "noopener noreferrer nofollow"; link.target = "_blank"; }
+          li.append(el("strong", null, `${a.domain} (${when(a.ts)}) ${STANCE[a.stance] || ""}: `), link);
+          if (a.quote) li.append(el("div", "muted", `“${a.quote}”${a.read ? "" : " (headline only; the page could not be read)"}`));
+          ul.append(li);
+        });
+        box.append(ul);
+      }
+      if (c.fact_checks && c.fact_checks.length) {
+        const ul = el("ul", "small");
+        c.fact_checks.forEach((f) => ul.append(el("li", null, `Fact-check by ${f.publisher}: “${f.claim}” rated “${f.rating}”`)));
+        box.append(el("p", "small", "Existing fact-checks:"), ul);
+      }
+      out.append(box);
+    });
+    const notes = el("ul", "notes small muted");
+    r.notes.forEach((n) => notes.append(el("li", null, n)));
+    if (r.cached) notes.append(el("li", null, "Checked less than an hour ago; reused."));
+    out.append(notes);
+  }
+
+  async function verifyClaims() {
+    if (!current) return;
+    const btn = $("verify-btn");
+    const st = $("verify-status");
+    btn.disabled = true;
+    st.className = "status";
+    st.textContent = "Starting…";
+    try {
+      const res = await fetch("/api/verify", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: current.text, stream: true }) });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.detail || `The server answered ${res.status}.`);
+      }
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "", result = null;
+      while (!result) {
+        const { value, done } = await reader.read();
+        if (value) buf += dec.decode(value, { stream: true });
+        let nl;
+        while ((nl = buf.indexOf("\n")) >= 0) {
+          const line = buf.slice(0, nl).trim();
+          buf = buf.slice(nl + 1);
+          if (!line) continue;
+          const msg = JSON.parse(line);
+          if (msg.progress) st.textContent = msg.progress;
+          if (msg.error) throw new Error(msg.error.detail);
+          if (msg.result) result = msg.result;
+        }
+        if (done && !result) throw new Error("The connection closed before the result arrived.");
+      }
+      st.textContent = "";
+      const before = current.result.spans.filter((s) => s.source !== "verify");
+      current.result.spans = before.concat(result.spans || []);
+      render();
+      renderClaims(result);
+    } catch (e) {
+      st.className = "status error";
+      st.textContent = e.message || "Something went wrong.";
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   function renderInnocent(spans, res) {

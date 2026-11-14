@@ -253,3 +253,6 @@ tbody th { font-weight: 600; }
 /* validated = solid underline (per colour style); not yet validated = dashed, any colour */
 .hl.exp { text-decoration-style: dashed; }
 .badge.ok { border-color: var(--green); color: var(--green); }
+.claim-check { border-top: 1px solid var(--border); padding-top: .6rem; margin-top: .6rem; }
+.claim-check .verdict { margin-right: .3rem; }
+.evidence-list li { margin-bottom: .4rem; overflow-wrap: anywhere; }

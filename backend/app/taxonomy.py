@@ -34,13 +34,14 @@ def version() -> int:
 
 
 def names() -> dict[str, str]:
-    return {t["label"]: t["name"] for t in load()["techniques"]}
+    return {t["label"]: t.get("display_name") or t["name"] for t in load()["techniques"]}
 
 
 def public() -> dict:
     """Taxonomy for the UI legend / tooltips."""
     keys = ("label", "name", "kind", "color", "definition", "example", "experimental", "dev_precision", "dev_predictions")
-    return {"version": version(), "labels": [{k: t.get(k) for k in keys} for t in load()["techniques"]]}
+    return {"version": version(), "labels": [{**{k: t.get(k) for k in keys}, "name": t.get("display_name") or t["name"]}
+                                             for t in load()["techniques"]]}
 
 
 def gate(spans: list[dict], sensitivity: str) -> list[dict]:

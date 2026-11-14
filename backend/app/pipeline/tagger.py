@@ -56,7 +56,7 @@ def paragraph_hash(text: str) -> str:
 def system_prompt() -> str:
     lines = []
     for t in taxonomy.load()["techniques"]:
-        if not t.get("enabled", True):
+        if not t.get("enabled", True) or t.get("tagger") is False:
             continue
         lines.append(f"- {t['label']} ({t['name']}): {t['definition']} Example: {t['example']}")
     template = (config.PROMPTS_DIR / "tagger_system.md").read_text(encoding="utf-8")

@@ -43,6 +43,10 @@ def _isolated(monkeypatch):
     monkeypatch.setattr(collectors_http, "client_factory", _no_http)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
     monkeypatch.delenv("SEARCH_API_KEY", raising=False)
+    monkeypatch.delenv("NEWS_SEARCH", raising=False)
+    from app.verify import news as verify_news, run as verify_run
+    verify_news.reset()
+    verify_run.reset()
     monkeypatch.setenv("SEARCH_PROVIDER", "none")
     collectors.reset_cache()
     monkeypatch.delenv("FACTCHECK_API_KEY", raising=False)

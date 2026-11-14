@@ -110,7 +110,7 @@ def test_truncation_is_prefix_with_note():
 def test_techniques_endpoint():
     body = client.get("/api/techniques").json()
     labels = {t["label"] for t in body["labels"]}
-    assert len(labels) == 13
+    assert len(labels) == 14 and "unverifiable_attribution" in labels
     assert {"loaded_language", "unsupported_claim", "supported_claim", "balance"} <= labels
     for t in body["labels"]:
         assert t["definition"] and t["name"] and t["color"] in ("red", "amber", "green", "blue")

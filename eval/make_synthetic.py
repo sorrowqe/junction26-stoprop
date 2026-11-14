@@ -138,7 +138,7 @@ def build_specs(seed: int = 2026) -> tuple[list[dict], list[dict]]:
 # ----------------------------------------------------------------- prompts
 
 def system_prompt() -> str:
-    lines = [f"- {t['label']}: {t['definition']} Example: {t['example']}" for t in taxonomy.load()["techniques"]]
+    lines = [f"- {t['label']}: {t['definition']} Example: {t['example']}" for t in taxonomy.load()["techniques"] if t.get("tagger") is not False]
     return f"""You write short synthetic test paragraphs for evaluating a manipulation-technique detector.
 The detector labels HOW something is said, never WHICH side is right, so the test set must be balanced:
 both political sides use the same techniques equally, and neutral texts must stay neutral.

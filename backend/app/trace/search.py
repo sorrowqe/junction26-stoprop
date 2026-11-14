@@ -49,11 +49,11 @@ def snippet_date(snippet: str, now: datetime | None = None) -> float | None:
     return None
 
 
-async def web(s: Session, phrase: str) -> list[dict]:
+async def web(s: Session, phrase: str, exact: bool = True) -> list[dict]:
     if not web_configured():
         raise SearchUnavailable("Open-web search is not configured on this server.")
     try:
-        data = await s.post_json(OXYLABS_SEARCH, {"query": f'"{phrase}"', "max_results": WEB_MAX_RESULTS},
+        data = await s.post_json(OXYLABS_SEARCH, {"query": f'"{phrase}"' if exact else phrase, "max_results": WEB_MAX_RESULTS},
                                  headers={"Authorization": f"Bearer {config.search_api_key()}"}, timeout_s=WEB_TIMEOUT_S)
     except HTTPStatus as exc:
         if exc.status in (401, 403):

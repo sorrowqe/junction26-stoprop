@@ -138,6 +138,7 @@ techniques:
 
   - label: supported_claim
     name: Claim with a source
+    display_name: Cites a source (not yet verified)
     kind: claim
     color: green
     definition: A factual claim that comes with a link, a named source or dated data in the text. This does not mean it is true.
@@ -156,5 +157,19 @@ techniques:
     example: "Critics argue the cost estimate is too optimistic, and the final figure is not yet known."
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    dev_precision: null
+    experimental: true
+
+  # Added by claim verification (POST /api/verify), never proposed by the tagger (tagger: false keeps it out
+  # of the tagger prompt): the text names a source, but no report from that source saying it was found.
+  - label: unverifiable_attribution
+    name: Unverifiable attribution
+    kind: technique
+    color: red
+    tagger: false
+    definition: The text says a named outlet reported this, but we found no report from that outlet saying it.
+    example: "Russia is attacking Estonia with drones, according to Delfi news (when Delfi published no such report)."
+    enabled: true
+    min_confidence: {strict: 0.0, balanced: 0.0, broad: 0.0}
     dev_precision: null
     experimental: true

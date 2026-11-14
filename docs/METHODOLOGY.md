@@ -98,3 +98,24 @@ Known limits: search engines index only part of the web and may miss very recent
 missing, so web copies without a date are listed but cannot be placed on the timeline; Bluesky search returns at
 most 100 results per sentence; a text that many people quote independently (a slogan, a headline) will show
 spread without coordination, which is why innocent explanations are always listed.
+
+## Verify claims
+
+"Verify claims" on an analysis checks up to 3 factual claims against recent news; it never says "true" or "false".
+Bounded pipeline (no agent loop, about 30 s): one AI call extracts the claims, the cited outlet and the exact
+attribution phrase (checked word for word); a lenient search of the cited outlet's domains (last 30 days, any key
+entity) and a news search across outlets (last 14 days) run on the GDELT DOC 2.0 index (free; at most 4 searches,
+request starts spaced 5.5 s apart as GDELT asks); at most 5 articles are read with the SSRF-safe fetcher plus up to 8
+more headlines from the cited outlet; one AI call per claim judges supports / contradicts / unrelated, and every
+evidence quote must appear word for word in the article or headline, otherwise the judgement is discarded. Google
+Fact Check Tools is searched when a key is configured.
+
+Verdicts: **cited source not found** (the index has recent articles from that outlet on the topic, but none says it;
+also adds a red "unverifiable attribution" span on the attribution phrase), **contradicted**, **corroborated**
+(N independent outlets; an outlet's own sister domains count once), **no reports found** (with the caveat that it
+may be too recent or not indexed), **could not check** (search busy or failed, or no articles from the cited outlet
+on the topic at all; never turned into "not found"). Results are cached for one hour; 10 checks per hour per IP.
+
+Lesson from live testing (2026-11-14): a true ERR report published the same day was not yet in the index; an
+exact-keyword search would have marked it "not found". Hence the lenient outlet search and the rule that zero
+articles from the outlet means "could not check".

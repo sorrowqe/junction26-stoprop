@@ -41,7 +41,7 @@ def labels() -> set[str]:
 
 
 def technique_labels() -> set[str]:
-    return {t["label"] for t in taxonomy.load()["techniques"] if t["kind"] == "technique"}
+    return {t["label"] for t in taxonomy.load()["techniques"] if t["kind"] == "technique" and t.get("tagger") is not False}
 
 
 @dataclass

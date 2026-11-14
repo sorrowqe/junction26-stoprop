@@ -302,6 +302,39 @@ async def _respond(run, error, stream: bool):
     return StreamingResponse(lines(), media_type="application/x-ndjson")
 
 
+class VerifyRequest(BaseModel):
+    text: str
+    stream: bool = False
+
+
+@app.post("/api/verify")
+async def verify_claims(req: VerifyRequest, request: Request):
+    """Verify up to 3 check-worthy claims in a text: was the cited source really saying it, do independent outlets
+    report it, do reports contradict it. Verdicts: cited_source_not_found | contradicted | corroborated |
+    no_reports_found | not_checked (never true/false). <= 30 s, 10 checks/hour/IP, results cached 1 h."""
+    from app.verify.run import VerifyError, verify
+    text = (req.text or "").strip()
+    if len(text.split()) < 5:
+        raise HTTPException(400, "Please give a text of at least a few words to check.")
+    if len(text) > 20_000:
+        raise HTTPException(413, "That text is too long to check (max 20,000 characters).")
+    ratelimit.enforce("verify", request)
+
+    async def run(progress):
+        async with asyncio.timeout(45):
+            return await verify(text, progress)
+
+    def error(exc: Exception) -> tuple[int, str]:
+        if isinstance(exc, VerifyError):
+            return exc.status, exc.message
+        if isinstance(exc, TimeoutError):
+            return 504, "Checking took too long. Please try again."
+        logging.getLogger("stoprop.verify").exception("verify failed")
+        return 500, "Something went wrong while checking the claims."
+
+    return await _respond(run, error, req.stream)
+
+
 class TraceRequest(BaseModel):
     text: str | None = None
     url: str | None = None
