@@ -4,28 +4,87 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Stoprop</title>
-  <meta name="description" content="Stoprop highlights manipulation techniques in text and explains them in plain language.">
-  <style>
-    :root { --bg: #fafaf7; --fg: #1d1d1b; --muted: #5c5c57; --accent: #b3261e; }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg: #141413; --fg: #ececea; --muted: #a3a39e; --accent: #f2b8b5; }
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--bg); color: var(--fg);
-           font: 18px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-    main { max-width: 42rem; margin: 0 auto; padding: 18vh 16px 4rem; }
-    h1 { font-size: clamp(2rem, 6vw, 3rem); margin: 0 0 .5rem; letter-spacing: -.02em; }
-    h1 span { color: var(--accent); }
-    .tagline { font-size: 1.25rem; margin: 0 0 2rem; }
-    p { color: var(--muted); }
-  </style>
+  <meta name="description" content="Stoprop highlights manipulation techniques in text and explains them in plain language. We flag the tactics, not the opinions.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <main>
-    <h1>Stop<span>rop</span></h1>
-    <p class="tagline">Stoprop: see the spin before it sees you. We flag the tactics, not the opinions.</p>
-    <p>Paste a text or a link and Stoprop highlights manipulation techniques, explains each one
-       in plain language, and shows provenance receipts for the source. The analyzer is coming soon.</p>
+  <a class="skip" href="#text">Skip to the analyzer</a>
+  <header class="hero">
+    <div class="wrap">
+      <h1>Stop<span>rop</span></h1>
+      <p class="tagline">Stoprop: see the spin before it sees you. We flag the tactics, not the opinions.</p>
+      <p class="lede">Paste a news article, post or comment. Stoprop highlights <em>how</em> it tries to
+        persuade you, explains each technique in plain language, and never labels people or outlets.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="input card" aria-labelledby="h-analyze">
+      <h2 id="h-analyze">Analyze a text</h2>
+      <div class="samples" id="samples" role="group" aria-label="Sample texts">
+        <span class="muted">Try a sample:</span>
+      </div>
+      <form id="form" novalidate>
+        <label for="text" class="field-label">Text</label>
+        <textarea id="text" rows="9" placeholder="Paste a news article, social media post or comment…" spellcheck="false"></textarea>
+
+        <label for="url" class="field-label">Or a link <span class="pill">coming soon</span></label>
+        <input id="url" type="url" placeholder="https://…" disabled aria-describedby="url-note">
+        <p id="url-note" class="muted small">Link analysis (with source receipts) is being built. Paste the text for now.</p>
+
+        <div class="controls">
+          <label class="inline">Sensitivity
+            <select id="sensitivity">
+              <option value="strict">Strict (fewest labels)</option>
+              <option value="balanced" selected>Balanced</option>
+              <option value="broad">Broad (more labels)</option>
+            </select>
+          </label>
+          <label class="inline check">
+            <input type="checkbox" id="show-exp">
+            Show experimental labels
+          </label>
+          <button type="submit" id="go">Analyze</button>
+        </div>
+      </form>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="result" hidden aria-labelledby="h-result">
+      <h2 id="h-result" class="sr-only">Result</h2>
+      <div id="banner" class="banner" hidden></div>
+      <div class="grid">
+        <article class="card">
+          <h3>Highlighted text</h3>
+          <div id="doc" class="doc-text"></div>
+          <h3>Findings</h3>
+          <div id="empty" class="empty" hidden></div>
+          <ol id="findings" class="findings"></ol>
+        </article>
+        <aside>
+          <section class="card" aria-labelledby="h-profile">
+            <h3 id="h-profile">Profile</h3>
+            <p id="summary" class="summary"></p>
+            <dl id="profile" class="profile"></dl>
+            <ul id="notes" class="notes"></ul>
+          </section>
+          <section class="card" aria-labelledby="h-legend">
+            <h3 id="h-legend">Legend</h3>
+            <ul id="legend" class="legend"></ul>
+            <p class="muted small">Colours describe <em>how</em> a passage is written, never whether it is true.
+              Most text stays uncoloured. There is no single “propaganda score”.</p>
+          </section>
+        </aside>
+      </div>
+    </section>
   </main>
+
+  <div id="tip" class="tip" role="tooltip" hidden></div>
+
+  <footer class="wrap muted small">
+    Stoprop labels techniques, not people, outlets or opinions. Your text is analyzed and not stored with any identity.
+  </footer>
+  <script src="/static/app.js" defer></script>
 </body>
 </html>

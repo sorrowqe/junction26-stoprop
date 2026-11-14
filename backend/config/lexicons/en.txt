@@ -1,0 +1,166 @@
+# English lexicon - hints only. See README.md.
+[emotive]
+shocking
+outrageous
+disgusting
+disgraceful
+horrific
+terrifying
+catastroph*
+disaster*
+scandal*
+insane
+unbelievable
+
+[intensifier]
+very
+extremely
+totally
+absolutely
+utterly
+incredibly
+truly
+massively
+hugely
+completely
+
+[absolutist]
+always
+never
+everyone
+everybody
+nobody
+no one
+nothing
+everything
+forever
+every single
+without exception
+undeniabl*
+
+[ingroup]
+we
+us
+our
+ours
+ourselves
+
+[outgroup]
+they
+them
+their
+theirs
+themselves
+
+[attribution]
+said
+says
+told
+stated
+according to
+reported
+announced
+confirmed
+wrote
+added
+explained
+noted
+spokes*
+statement
+press release
+data from
+figures from
+survey by
+study by
+published by
+
+[speech]
+said
+says
+told
+stated
+asked
+added
+claimed
+wrote
+declared
+insisted
+argued
+warned
+explained
+replied
+according to
+tweeted
+posted
+called
+
+[bandwagon]
+everyone knows
+everybody knows
+as we all know
+we all know
+as everyone knows
+nobody believes
+no one believes
+everyone agrees
+everybody agrees
+all reasonable people
+any sensible person
+the whole world knows
+everyone is talking about
+
+[vague_authority]
+experts say
+experts agree
+experts warn
+scientists say
+scientists agree
+doctors agree
+studies show
+studies have shown
+research shows
+research proves
+sources say
+insiders say
+many people are saying
+people are saying
+
+[balance]
+however
+on the other hand
+critics say
+critics argue
+to be fair
+it is unclear
+it remains unclear
+it is not known
+in contrast
+although
+others argue
+supporters say
+opponents say
+not yet confirmed
+could not be independently verified
+disputed
+
+[opinion]
+i think
+i believe
+in my view
+in my opinion
+should
+must
+we need
+
+[first_person]
+i
+me
+my
+mine
+myself
+we
+us
+our
+
+[scare]
+so-called

@@ -1,0 +1,147 @@
+# Estonian lexicon - hints only. See README.md.
+[emotive]
+šokeeriv*
+skandaal*
+katastroof*
+jube
+õudne
+õudse*
+kohutav*
+häbiväärne
+häbiväärse*
+uskumatu*
+pöörane
+pöörase*
+
+[intensifier]
+väga
+äärmiselt
+täiesti
+absoluutselt
+tohutult
+kohutavalt
+uskumatult
+ülimalt
+täielikult
+
+[absolutist]
+alati
+mitte kunagi
+mitte keegi
+mitte midagi
+keegi ei
+igavesti
+eranditult
+iga viimane
+
+[ingroup]
+meie
+me
+meid
+meile
+meil
+meist
+
+[outgroup]
+nemad
+nad
+neid
+neile
+nende
+neil
+
+[attribution]
+ütles
+ütleb
+teatas
+kinnitas
+märkis
+sõnas
+sõnul
+kirjutas
+andmetel
+andmeil
+teatel
+hinnangul
+pressiteate*
+statistikaamet*
+
+[speech]
+ütles
+ütleb
+sõnas
+teatas
+märkis
+kirjutas
+väitis
+lisas
+rõhutas
+hoiatas
+küsis
+sõnul
+kinnitas
+vastas
+nentis
+
+[bandwagon]
+kõik teavad
+kõik ju teavad
+igaüks teab
+nagu me kõik teame
+nagu kõik teavad
+keegi ei usu
+kõik on nõus
+iga mõistlik inimene
+kogu maailm teab
+
+[vague_authority]
+eksperdid ütlevad
+eksperdid hoiatavad
+eksperdid on ühel meelel
+teadlased ütlevad
+teadlased on tõestanud
+uuringud näitavad
+uuringud on näidanud
+allikad väidavad
+paljud ütlevad
+inimesed räägivad
+
+[balance]
+samas
+teisalt
+kriitikud
+kriitikute sõnul
+pole selge
+ei ole selge
+jääb ebaselgeks
+kuigi
+vastased
+toetajad
+vaidlustatud
+ei õnnestunud sõltumatult kontrollida
+
+[opinion]
+minu arvates
+ma arvan
+ma usun
+peaks
+peaksime
+peame
+tuleb
+
+[first_person]
+ma
+mina
+mind
+minu
+mulle
+mul
+me
+meie
+meid
+meil
+
+[scare]
+nn
+nö
+niinimetatud
