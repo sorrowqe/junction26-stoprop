@@ -38,9 +38,10 @@
         <p id="private-note" class="muted small">AI results are cached per paragraph, so the same text is instant and free next time.
           Tick this to analyze without saving anything to that shared cache.</p>
 
-        <label for="url" class="field-label">Or a link <span class="pill">coming soon</span></label>
-        <input id="url" type="url" placeholder="https://…" disabled aria-describedby="url-note">
-        <p id="url-note" class="muted small">Link analysis (with source receipts) is being built. Paste the text for now.</p>
+        <label for="url" class="field-label">Or a link</label>
+        <input id="url" type="url" inputmode="url" placeholder="https://…" aria-describedby="url-note" autocomplete="off">
+        <p id="url-note" class="muted small">Stoprop fetches public web pages only and adds source receipts.
+          If you give both text and a link, the text is analyzed and the link is used for the receipts.</p>
 
         <div class="controls">
           <label class="inline">Sensitivity
@@ -78,6 +79,13 @@
             <dl id="profile" class="profile"></dl>
             <ul id="notes" class="notes"></ul>
           </section>
+          <section class="card" id="source-card" hidden aria-labelledby="h-source">
+            <h3 id="h-source">Source</h3>
+            <p id="source-info" class="small"></p>
+            <ul id="receipts" class="receipts"></ul>
+            <button type="button" id="refresh-receipts" class="secondary">Refresh checks</button>
+            <p id="receipts-status" class="small muted" role="status" aria-live="polite"></p>
+          </section>
           <section class="card" id="innocent-card" hidden aria-labelledby="h-innocent">
             <h3 id="h-innocent">Other possible explanations</h3>
             <p class="muted small">Before drawing conclusions, consider:</p>
@@ -100,6 +108,7 @@
     Stoprop labels techniques and behaviours, never people, outlets or viewpoints. No accounts, no reading history.
     <a href="/methodology">Methodology</a> · <a href="/api">API</a>
   </footer>
+  <script src="/static/receipts.js" defer></script>
   <script src="/static/app.js" defer></script>
 </body>
 </html>

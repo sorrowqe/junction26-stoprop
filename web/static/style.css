@@ -155,3 +155,32 @@ a { color: var(--focus); }
 .private + .muted { margin: .2rem 0 .4rem; }
 .innocent { padding-left: 1.1rem; margin: .3rem 0 0; font-size: .92rem; }
 .innocent li { margin-bottom: .4rem; }
+
+/* receipts */
+.receipts { list-style: none; padding: 0; margin: .4rem 0 .8rem; }
+.receipt { display: flex; gap: .65rem; padding: .55rem 0; border-top: 1px solid var(--border); }
+.receipt:first-child { border-top: 0; }
+.r-ico {
+  flex: 0 0 1.6rem; height: 1.6rem; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .85rem; border: 2px solid var(--border); color: var(--muted);
+}
+.r-ok .r-ico { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+.r-warning .r-ico { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+.r-neutral .r-ico { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+.r-error .r-ico { border-color: var(--red); color: var(--red); border-style: dashed; }
+.r-not_checked .r-ico { border-style: dashed; }
+.r-body { min-width: 0; font-size: .92rem; }
+.r-head { display: flex; flex-wrap: wrap; gap: .1rem .5rem; align-items: baseline; }
+.r-kind { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+.r-text { margin: .15rem 0; overflow-wrap: anywhere; }
+.r-meta, .r-note { margin: 0; font-size: .8rem; color: var(--muted); }
+.r-note { font-style: italic; }
+button.secondary {
+  background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: .4rem .9rem; cursor: pointer;
+}
+button.secondary:hover { border-color: var(--fg); }
+.source-form { display: flex; flex-wrap: wrap; gap: .6rem; }
+.source-form input { flex: 1 1 16rem; }
+.source-form button { background: var(--fg); color: var(--bg); border: 0; border-radius: 8px; padding: .6rem 1.2rem; font-weight: 600; cursor: pointer; }
+button.linkish { background: none; border: 0; padding: 0; color: var(--focus); text-decoration: underline; cursor: pointer; font-size: inherit; }
+.page .card h2 { font-size: 1.1rem; margin-top: 0; }

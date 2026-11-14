@@ -1,2 +1,59 @@
-# Known outlets for lookalike detection - seeded in M3.
-outlets: []
+# Known news outlets: lookalike detection (receipts) and "mainstream" URLs (swarm amplification, M5).
+# `domains` = official registrable domains. Bump `version` when editing (part of the cache story).
+version: 1
+outlets:
+  # Estonia
+  - {name: ERR (Estonian Public Broadcasting), domains: [err.ee], country: EE}
+  - {name: Postimees, domains: [postimees.ee], country: EE}
+  - {name: Delfi Estonia, domains: [delfi.ee], country: EE}
+  - {name: Õhtuleht, domains: [ohtuleht.ee], country: EE}
+  - {name: Äripäev, domains: [aripaev.ee], country: EE}
+  - {name: Eesti Ekspress, domains: [ekspress.ee], country: EE}
+  - {name: BNS (Baltic News Service), domains: [bns.ee, bns.lt, bns.lv], country: EE}
+  # Latvia / Lithuania
+  - {name: LSM (Latvian Public Broadcasting), domains: [lsm.lv], country: LV}
+  - {name: Delfi Latvia, domains: [delfi.lv], country: LV}
+  - {name: LRT (Lithuanian Public Broadcasting), domains: [lrt.lt], country: LT}
+  - {name: Delfi Lithuania, domains: [delfi.lt], country: LT}
+  - {name: 15min, domains: [15min.lt], country: LT}
+  # Nordics
+  - {name: Yle, domains: [yle.fi], country: FI}
+  - {name: Helsingin Sanomat, domains: [hs.fi], country: FI}
+  - {name: SVT, domains: [svt.se], country: SE}
+  - {name: NRK, domains: [nrk.no], country: NO}
+  - {name: DR, domains: [dr.dk], country: DK}
+  # Wire services
+  - {name: Reuters, domains: [reuters.com], country: INT}
+  - {name: Associated Press, domains: [apnews.com, ap.org], country: US}
+  - {name: AFP, domains: [afp.com], country: FR}
+  # UK / US
+  - {name: BBC, domains: [bbc.co.uk, bbc.com], country: UK}
+  - {name: The Guardian, domains: [theguardian.com, guardian.co.uk], country: UK}
+  - {name: Financial Times, domains: [ft.com], country: UK}
+  - {name: The Economist, domains: [economist.com], country: UK}
+  - {name: The New York Times, domains: [nytimes.com], country: US}
+  - {name: The Washington Post, domains: [washingtonpost.com], country: US}
+  - {name: CNN, domains: [cnn.com], country: US}
+  - {name: Bloomberg, domains: [bloomberg.com], country: US}
+  - {name: Politico, domains: [politico.com, politico.eu], country: INT}
+  # Germany / France / rest of Europe
+  - {name: Deutsche Welle, domains: [dw.com], country: DE}
+  - {name: Der Spiegel, domains: [spiegel.de], country: DE}
+  - {name: Tagesschau, domains: [tagesschau.de], country: DE}
+  - {name: Frankfurter Allgemeine, domains: [faz.net], country: DE}
+  - {name: Süddeutsche Zeitung, domains: [sueddeutsche.de], country: DE}
+  - {name: Bild, domains: [bild.de], country: DE}
+  - {name: Die Zeit, domains: [zeit.de], country: DE}
+  - {name: Le Monde, domains: [lemonde.fr], country: FR}
+  - {name: Le Figaro, domains: [lefigaro.fr], country: FR}
+  - {name: France 24, domains: [france24.com], country: FR}
+  - {name: Euronews, domains: [euronews.com], country: INT}
+  - {name: El País, domains: [elpais.com], country: ES}
+  - {name: ANSA, domains: [ansa.it], country: IT}
+  - {name: Corriere della Sera, domains: [corriere.it], country: IT}
+  - {name: Al Jazeera, domains: [aljazeera.com], country: INT}
+  # Ukraine / independent Russian-language
+  - {name: Ukrinform, domains: [ukrinform.net, ukrinform.ua], country: UA}
+  - {name: The Kyiv Independent, domains: [kyivindependent.com], country: UA}
+  - {name: Meduza, domains: [meduza.io], country: LV}
+  - {name: RFE/RL, domains: [rferl.org], country: INT}

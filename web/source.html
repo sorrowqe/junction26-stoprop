@@ -12,10 +12,35 @@
   <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source" aria-current="page">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
   <main class="wrap page">
     <h1>Check a source</h1>
-    <p class="lede">Enter a link or a domain and get plain-English “receipts”: how old the domain is, when it was
-      first archived, its first TLS certificate, whether it looks like a clone of a known outlet, and related fact-checks.</p>
-    <p class="banner">Coming in milestone M3. Receipts that were not checked will say “not checked” instead of being hidden.</p>
+    <p class="lede">Enter a link or a domain and get plain-English “receipts”: how old the domain is, when the
+      Internet Archive first saved it, its first TLS certificate, whether it looks like a clone of a known news
+      outlet, and related fact-checks. No AI is used here, and checks that were not run say “not checked”.</p>
+
+    <section class="card" aria-labelledby="h-check">
+      <h2 id="h-check" class="sr-only">Check a link or domain</h2>
+      <form id="source-form" class="source-form" novalidate>
+        <label for="target" class="sr-only">Link or domain</label>
+        <input id="target" type="text" inputmode="url" autocomplete="off" spellcheck="false"
+               placeholder="err.ee or https://example.com/article" required>
+        <button type="submit" id="check">Check</button>
+      </form>
+      <p class="muted small">Try: <button type="button" class="linkish" data-try="err.ee">err.ee</button> ·
+        <button type="button" class="linkish" data-try="err-news.ee">err-news.ee</button> ·
+        <button type="button" class="linkish" data-try="spiegel.ltd">spiegel.ltd</button></p>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="card" id="result" hidden aria-labelledby="h-result">
+      <h2 id="h-result">Receipts for <span id="domain"></span></h2>
+      <ul id="receipts" class="receipts"></ul>
+      <button type="button" id="refresh" class="secondary">Refresh checks</button>
+      <p id="refresh-status" class="small muted" role="status" aria-live="polite"></p>
+      <p class="muted small">Receipts describe where a site comes from. They are not a verdict on its content:
+        new domains are also used by genuine new projects, and old domains can publish anything.</p>
+    </section>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
+  <script src="/static/receipts.js" defer></script>
+  <script src="/static/source.js" defer></script>
 </body>
 </html>

@@ -81,10 +81,10 @@ def test_empty_text_rejected():
     assert "paste" in r.json()["detail"].lower()
 
 
-def test_url_only_not_available_yet():
-    r = client.post("/api/analyze", json={"url": "https://example.org"})
+def test_nothing_given_rejected():
+    r = client.post("/api/analyze", json={})
     assert r.status_code == 400
-    assert "link" in r.json()["detail"].lower()
+    assert "text or a link" in r.json()["detail"]
 
 
 def test_too_long_rejected():

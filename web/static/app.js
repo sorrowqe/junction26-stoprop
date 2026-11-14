@@ -66,34 +66,39 @@
       store.set("stoprop.sensitivity", $("sensitivity").value);
       if (current && $("text").value === current.text) analyze();
     });
+    $("refresh-receipts").addEventListener("click", refreshReceipts);
     wireTooltip();
   }
 
   // --------------------------------------------------------------- analyze
   async function analyze() {
     const text = $("text").value;
+    const url = $("url").value.trim();
     const status = $("status");
     status.className = "status";
-    if (!text.trim()) {
-      status.textContent = "Please paste some text first.";
+    if (!text.trim() && !url) {
+      status.textContent = "Please paste some text or a link first.";
       status.className = "status error";
       $("text").focus();
       return;
     }
     $("go").disabled = true;
-    status.textContent = "Analyzing…";
+    status.textContent = text.trim() ? "Analyzing…" : "Fetching the page and analyzing…";
     try {
       const r = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, sensitivity: $("sensitivity").value, lang: "auto", private: $("private").checked }),
+        body: JSON.stringify({ text: text.trim() ? text : null, url: url || null, sensitivity: $("sensitivity").value,
+          lang: "auto", private: $("private").checked }),
       });
       const body = await r.json().catch(() => ({}));
       if (!r.ok) {
         const msg = typeof body.detail === "string" ? body.detail : `Something went wrong (HTTP ${r.status}).`;
         throw new Error(msg);
       }
-      current = { text, result: body };
+      const analyzed = typeof body.text === "string" ? body.text : text;
+      if (typeof body.text === "string") $("text").value = body.text;  // show the fetched article text
+      current = { text: analyzed, url, result: body };
       status.textContent = "";
       render();
       $("result").hidden = false;
@@ -128,6 +133,48 @@
     renderFindings(spans, res);
     renderProfile(res);
     renderInnocent(spans, res);
+    renderSource(res);
+  }
+
+  function renderSource(res) {
+    const card = $("source-card");
+    const receipts = res.receipts || [];
+    card.hidden = !receipts.length && !res.source;
+    $("receipts-status").textContent = "";
+    const info = $("source-info");
+    info.textContent = "";
+    if (res.source) {
+      const a = el("a", null, res.source.title || res.source.final_url);
+      a.href = res.source.final_url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      info.append(a);
+      const bits = [res.source.domain, res.source.date].filter(Boolean);
+      if (bits.length) info.append(el("span", "muted", ` · ${bits.join(" · ")}`));
+    } else if (current.url) {
+      info.append(el("span", "muted", `Receipts for ${current.url}`));
+    }
+    window.StopropReceipts.render($("receipts"), receipts);
+    $("refresh-receipts").hidden = !receipts.length;
+  }
+
+  async function refreshReceipts() {
+    const res = current && current.result;
+    const target = (res && res.source && res.source.final_url) || (current && current.url);
+    if (!target) return;
+    const btn = $("refresh-receipts");
+    btn.disabled = true;
+    $("receipts-status").textContent = "Checking again…";
+    try {
+      const data = await window.StopropReceipts.refresh(target, res.source && res.source.title);
+      res.receipts = data.receipts;
+      window.StopropReceipts.render($("receipts"), data.receipts);
+      $("receipts-status").textContent = "Updated. Each check can be refreshed at most once every 15 minutes.";
+    } catch (err) {
+      $("receipts-status").textContent = err.message;
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   function bannerText(res) {

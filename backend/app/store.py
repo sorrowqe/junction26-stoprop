@@ -51,6 +51,13 @@ CREATE TABLE IF NOT EXISTS usage_log (
   error TEXT
 );
 CREATE INDEX IF NOT EXISTS usage_day ON usage_log(day);
+CREATE TABLE IF NOT EXISTS receipt_cache (
+  key TEXT PRIMARY KEY,
+  data TEXT NOT NULL,
+  checked_at REAL NOT NULL,
+  soft_until REAL NOT NULL,
+  hard_until REAL NOT NULL
+);
 """
 
 
@@ -111,6 +118,18 @@ class Store:
     def cache_size(self) -> int:
         rows = self._exec("SELECT COUNT(*) FROM paragraph_cache")
         return rows[0][0] if rows else 0
+
+    # ------------------------------------------------------- receipts
+    def receipt_get(self, key: str) -> dict | None:
+        rows = self._exec("SELECT data, checked_at, soft_until, hard_until FROM receipt_cache WHERE key = ?", (key,))
+        if not rows:
+            return None
+        data, checked, soft, hard = rows[0]
+        return {"data": json.loads(data), "checked_at": checked, "soft_until": soft, "hard_until": hard}
+
+    def receipt_put(self, key: str, data: dict, checked_at: float, soft_until: float, hard_until: float) -> None:
+        self._exec("INSERT OR REPLACE INTO receipt_cache VALUES (?, ?, ?, ?, ?)",
+                   (key, json.dumps(data, ensure_ascii=False), checked_at, soft_until, hard_until))
 
     # ------------------------------------------------------ sightings
     def note_seen(self, para_hash: str, domain: str | None = None) -> None:
