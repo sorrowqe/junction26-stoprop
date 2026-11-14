@@ -1,0 +1,937 @@
+{
+  "git_commit": "9099f8af",
+  "timestamp": "2026-11-14T14:49:18+00:00",
+  "split": "dev",
+  "language": "en",
+  "model": "gpt-5.4-mini",
+  "sensitivity": "broad",
+  "prompt_version": "27ea5f6b66",
+  "taxonomy_version": 1,
+  "counts": {
+    "items": 26,
+    "by_source": {
+      "semeval": 16,
+      "synthetic": 10
+    },
+    "clean_sets": {
+      "semeval_none": 6,
+      "synthetic_hard_negative": 2
+    },
+    "symmetry_pairs": 2
+  },
+  "scores": {
+    "strict": {
+      "all": {
+        "micro": {
+          "precision": 0.45,
+          "recall": 0.581,
+          "f1": 0.507,
+          "predicted": 40,
+          "gold": 31,
+          "tp_pred": 18,
+          "tp_gold": 18
+        },
+        "per_label": {
+          "balance": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 1,
+            "gold": 1,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "bandwagon": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 2,
+            "gold": 2,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "causal_oversimplification": {
+            "precision": 1.0,
+            "recall": 0.667,
+            "f1": 0.8,
+            "predicted": 2,
+            "gold": 3,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "doubt_casting": {
+            "precision": 0.667,
+            "recall": 0.667,
+            "f1": 0.667,
+            "predicted": 3,
+            "gold": 3,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "exaggeration_minimisation": {
+            "precision": 0.333,
+            "recall": 0.5,
+            "f1": 0.4,
+            "predicted": 3,
+            "gold": 2,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "false_dilemma": {
+            "precision": 0.0,
+            "recall": null,
+            "f1": null,
+            "predicted": 2,
+            "gold": 0,
+            "tp_pred": 0,
+            "tp_gold": 0
+          },
+          "loaded_language": {
+            "precision": 0.2,
+            "recall": 0.429,
+            "f1": 0.273,
+            "predicted": 15,
+            "gold": 7,
+            "tp_pred": 3,
+            "tp_gold": 3
+          },
+          "name_calling": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "predicted": 1,
+            "gold": 6,
+            "tp_pred": 0,
+            "tp_gold": 0
+          },
+          "questionable_authority": {
+            "precision": 0.0,
+            "recall": null,
+            "f1": null,
+            "predicted": 1,
+            "gold": 0,
+            "tp_pred": 0,
+            "tp_gold": 0
+          },
+          "supported_claim": {
+            "precision": 0.4,
+            "recall": 1.0,
+            "f1": 0.571,
+            "predicted": 5,
+            "gold": 2,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "unsupported_claim": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 1,
+            "gold": 1,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "whataboutism": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 4,
+            "gold": 4,
+            "tp_pred": 4,
+            "tp_gold": 4
+          }
+        }
+      },
+      "by_source": {
+        "semeval": {
+          "micro": {
+            "precision": 0.133,
+            "recall": 0.143,
+            "f1": 0.138,
+            "predicted": 15,
+            "gold": 14,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "per_label": {
+            "doubt_casting": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 1,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "exaggeration_minimisation": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "predicted": 2,
+              "gold": 1,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "false_dilemma": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "loaded_language": {
+              "precision": 0.222,
+              "recall": 0.333,
+              "f1": 0.267,
+              "predicted": 9,
+              "gold": 6,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "name_calling": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "predicted": 1,
+              "gold": 6,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "questionable_authority": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "supported_claim": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            }
+          }
+        },
+        "synthetic": {
+          "micro": {
+            "precision": 0.64,
+            "recall": 0.941,
+            "f1": 0.762,
+            "predicted": 25,
+            "gold": 17,
+            "tp_pred": 16,
+            "tp_gold": 16
+          },
+          "per_label": {
+            "balance": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "bandwagon": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 2,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "causal_oversimplification": {
+              "precision": 1.0,
+              "recall": 0.667,
+              "f1": 0.8,
+              "predicted": 2,
+              "gold": 3,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "doubt_casting": {
+              "precision": 0.667,
+              "recall": 1.0,
+              "f1": 0.8,
+              "predicted": 3,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "exaggeration_minimisation": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "false_dilemma": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "loaded_language": {
+              "precision": 0.167,
+              "recall": 1.0,
+              "f1": 0.286,
+              "predicted": 6,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "supported_claim": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667,
+              "predicted": 4,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "unsupported_claim": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "whataboutism": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 4,
+              "gold": 4,
+              "tp_pred": 4,
+              "tp_gold": 4
+            }
+          }
+        }
+      }
+    },
+    "lenient": {
+      "all": {
+        "micro": {
+          "precision": 0.468,
+          "recall": 0.667,
+          "f1": 0.55,
+          "predicted": 47,
+          "gold": 33,
+          "tp_pred": 22,
+          "tp_gold": 22
+        },
+        "per_label": {
+          "balance": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 1,
+            "gold": 1,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "bandwagon": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 2,
+            "gold": 2,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "causal_oversimplification": {
+            "precision": 1.0,
+            "recall": 0.667,
+            "f1": 0.8,
+            "predicted": 2,
+            "gold": 3,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "doubt_casting": {
+            "precision": 0.667,
+            "recall": 0.667,
+            "f1": 0.667,
+            "predicted": 3,
+            "gold": 3,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "exaggeration_minimisation": {
+            "precision": 0.333,
+            "recall": 0.5,
+            "f1": 0.4,
+            "predicted": 3,
+            "gold": 2,
+            "tp_pred": 1,
+            "tp_gold": 1
+          },
+          "false_dilemma": {
+            "precision": 0.0,
+            "recall": null,
+            "f1": null,
+            "predicted": 2,
+            "gold": 0,
+            "tp_pred": 0,
+            "tp_gold": 0
+          },
+          "loaded_language": {
+            "precision": 0.3,
+            "recall": 0.75,
+            "f1": 0.429,
+            "predicted": 20,
+            "gold": 8,
+            "tp_pred": 6,
+            "tp_gold": 6
+          },
+          "name_calling": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "predicted": 1,
+            "gold": 6,
+            "tp_pred": 0,
+            "tp_gold": 0
+          },
+          "questionable_authority": {
+            "precision": 0.0,
+            "recall": null,
+            "f1": null,
+            "predicted": 1,
+            "gold": 0,
+            "tp_pred": 0,
+            "tp_gold": 0
+          },
+          "supported_claim": {
+            "precision": 0.4,
+            "recall": 1.0,
+            "f1": 0.571,
+            "predicted": 5,
+            "gold": 2,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "unsupported_claim": {
+            "precision": 0.667,
+            "recall": 1.0,
+            "f1": 0.8,
+            "predicted": 3,
+            "gold": 2,
+            "tp_pred": 2,
+            "tp_gold": 2
+          },
+          "whataboutism": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "predicted": 4,
+            "gold": 4,
+            "tp_pred": 4,
+            "tp_gold": 4
+          }
+        }
+      },
+      "by_source": {
+        "semeval": {
+          "micro": {
+            "precision": 0.2,
+            "recall": 0.286,
+            "f1": 0.235,
+            "predicted": 20,
+            "gold": 14,
+            "tp_pred": 4,
+            "tp_gold": 4
+          },
+          "per_label": {
+            "doubt_casting": {
+              "precision": null,
+              "recall": 0.0,
+              "f1": null,
+              "predicted": 0,
+              "gold": 1,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "exaggeration_minimisation": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "predicted": 2,
+              "gold": 1,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "false_dilemma": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "loaded_language": {
+              "precision": 0.308,
+              "recall": 0.667,
+              "f1": 0.421,
+              "predicted": 13,
+              "gold": 6,
+              "tp_pred": 4,
+              "tp_gold": 4
+            },
+            "name_calling": {
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "predicted": 1,
+              "gold": 6,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "questionable_authority": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "supported_claim": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "unsupported_claim": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            }
+          }
+        },
+        "synthetic": {
+          "micro": {
+            "precision": 0.667,
+            "recall": 0.947,
+            "f1": 0.783,
+            "predicted": 27,
+            "gold": 19,
+            "tp_pred": 18,
+            "tp_gold": 18
+          },
+          "per_label": {
+            "balance": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "bandwagon": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 2,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "causal_oversimplification": {
+              "precision": 1.0,
+              "recall": 0.667,
+              "f1": 0.8,
+              "predicted": 2,
+              "gold": 3,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "doubt_casting": {
+              "precision": 0.667,
+              "recall": 1.0,
+              "f1": 0.8,
+              "predicted": 3,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "exaggeration_minimisation": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 1,
+              "gold": 1,
+              "tp_pred": 1,
+              "tp_gold": 1
+            },
+            "false_dilemma": {
+              "precision": 0.0,
+              "recall": null,
+              "f1": null,
+              "predicted": 1,
+              "gold": 0,
+              "tp_pred": 0,
+              "tp_gold": 0
+            },
+            "loaded_language": {
+              "precision": 0.286,
+              "recall": 1.0,
+              "f1": 0.444,
+              "predicted": 7,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "supported_claim": {
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.667,
+              "predicted": 4,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "unsupported_claim": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 2,
+              "gold": 2,
+              "tp_pred": 2,
+              "tp_gold": 2
+            },
+            "whataboutism": {
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "predicted": 4,
+              "gold": 4,
+              "tp_pred": 4,
+              "tp_gold": 4
+            }
+          }
+        }
+      }
+    }
+  },
+  "clean_fpr": {
+    "semeval_none": {
+      "paragraphs": 6,
+      "flagged_any": 2,
+      "fpr_any": 0.333,
+      "flagged_techniques": 2,
+      "fpr_techniques": 0.333,
+      "flags_per_1000_words": 11.9
+    },
+    "synthetic_hard_negative": {
+      "paragraphs": 2,
+      "flagged_any": 1,
+      "fpr_any": 0.5,
+      "flagged_techniques": 1,
+      "fpr_techniques": 0.5,
+      "flags_per_1000_words": 4.95
+    }
+  },
+  "symmetry": {
+    "pairs": 2,
+    "flipped": 1,
+    "flip_rate": 0.5,
+    "examples": [
+      {
+        "pair_id": "sym-02",
+        "a": [
+          "doubt_casting",
+          "loaded_language"
+        ],
+        "b": [
+          "doubt_casting",
+          "loaded_language",
+          "name_calling"
+        ]
+      }
+    ]
+  },
+  "validator_rejection_rate": 0.0,
+  "abstention_rate": 0.167,
+  "cost": {
+    "analyses": 30,
+    "llm_calls": 30,
+    "credits_per_call": 0.2111,
+    "input_tokens": 41637,
+    "output_tokens": 3680,
+    "mean_tokens_per_analysis": 1510.6,
+    "mean_latency_s": 1.88,
+    "credits": 6.333,
+    "mean_credits_per_analysis": 0.2111
+  },
+  "llm_failures": 0,
+  "gold_report": {
+    "language": "en",
+    "items": {
+      "dev": 89,
+      "test": 49
+    },
+    "per_source": {
+      "semeval": {
+        "accepted": 100
+      },
+      "synthetic": {
+        "accepted": 38,
+        "excluded": 12
+      }
+    },
+    "per_label": {
+      "balance": {
+        "excluded": 7,
+        "accepted": 7
+      },
+      "bandwagon": {
+        "accepted": 4
+      },
+      "causal_oversimplification": {
+        "accepted": 11
+      },
+      "doubt_casting": {
+        "accepted": 12
+      },
+      "exaggeration_minimisation": {
+        "accepted": 18
+      },
+      "false_dilemma": {
+        "accepted": 4
+      },
+      "fear_appeal": {
+        "accepted": 9
+      },
+      "loaded_language": {
+        "accepted": 54
+      },
+      "name_calling": {
+        "accepted": 34
+      },
+      "none": {
+        "accepted": 30
+      },
+      "questionable_authority": {
+        "accepted": 8,
+        "excluded": 1
+      },
+      "supported_claim": {
+        "excluded": 13,
+        "accepted": 11
+      },
+      "unsupported_claim": {
+        "accepted": 8
+      },
+      "whataboutism": {
+        "accepted": 5
+      }
+    },
+    "clean_sets": {
+      "semeval_none": 30,
+      "synthetic_hard_negative": 6
+    },
+    "symmetry_pairs": {
+      "accepted": 11,
+      "excluded": 1
+    },
+    "not_evaluated_language_rows": 63,
+    "problems": []
+  },
+  "ai_review": {
+    "per_label": {
+      "balance": {
+        "excluded": 7,
+        "accepted": 7,
+        "kappa": 1.0
+      },
+      "bandwagon": {
+        "accepted": 4,
+        "kappa": 1.0
+      },
+      "causal_oversimplification": {
+        "accepted": 8,
+        "kappa": 1.0
+      },
+      "doubt_casting": {
+        "accepted": 14,
+        "kappa": 1.0
+      },
+      "exaggeration_minimisation": {
+        "accepted": 5,
+        "kappa": 1.0
+      },
+      "false_dilemma": {
+        "accepted": 10,
+        "kappa": 1.0
+      },
+      "fear_appeal": {
+        "accepted": 5,
+        "kappa": 1.0
+      },
+      "loaded_language": {
+        "accepted": 13,
+        "kappa": 1.0
+      },
+      "name_calling": {
+        "accepted": 6,
+        "kappa": 1.0
+      },
+      "none": {
+        "accepted": 6,
+        "kappa": 1.0
+      },
+      "questionable_authority": {
+        "excluded": 3,
+        "accepted": 5,
+        "kappa": 0.0
+      },
+      "supported_claim": {
+        "excluded": 13,
+        "accepted": 11,
+        "kappa": 0.0
+      },
+      "unsupported_claim": {
+        "accepted": 8,
+        "kappa": 1.0
+      },
+      "whataboutism": {
+        "accepted": 5,
+        "kappa": 1.0
+      }
+    },
+    "kappa": 0.0,
+    "rows": 130,
+    "items": {
+      "gold:accepted": 38,
+      "gold:excluded": 12,
+      "sym:accepted": 11,
+      "sym:excluded": 1
+    },
+    "reported_speech_corrections": 25,
+    "unmarked_technique_items": {
+      "one": 29,
+      "both": 1
+    },
+    "reviewers": [
+      "gemini-3.5-flash-eu",
+      "mistral-medium-3.5-eu"
+    ],
+    "language": "en",
+    "method": "two model families, consensus only, not human-verified",
+    "timestamp": "2026-11-14T14:27:04+00:00",
+    "git_commit": "da9ef7b8",
+    "calls": {
+      "gemini-3.5-flash-eu": 12,
+      "mistral-medium-3.5-eu": 11
+    },
+    "tokens": {
+      "gemini-3.5-flash-eu": {
+        "in": 22476,
+        "out": 9293
+      },
+      "mistral-medium-3.5-eu": {
+        "in": 21892,
+        "out": 7515
+      }
+    },
+    "credits": {
+      "gemini-3.5-flash-eu": 15.4903,
+      "mistral-medium-3.5-eu": 11.7745
+    },
+    "raw_agreement": 0.877,
+    "accept_rate": {
+      "gemini-3.5-flash-eu": 1.0,
+      "mistral-medium-3.5-eu": 0.877
+    },
+    "items_with_unmarked_techniques": {
+      "gemini-3.5-flash-eu": 1,
+      "mistral-medium-3.5-eu": 30
+    },
+    "credits_first_batch": {
+      "gemini-3.5-flash-eu": 1.418076,
+      "mistral-medium-3.5-eu": 1.040292,
+      "gemini-3.5-flash-eu (truncated, discarded)": 5.159088
+    },
+    "credits_total": 34.88
+  },
+  "subset": "bakeoff_subset",
+  "models": [
+    {
+      "model": "claude-haiku-4.5-eu",
+      "precision": 0.621,
+      "recall": 0.581,
+      "f1": 0.6,
+      "fpr_semeval_none": 0.167,
+      "mean_tokens_per_analysis": 0.0,
+      "mean_credits_per_analysis": 0.0,
+      "mean_latency_s": 0.0,
+      "symmetry_flip_rate": 0.5,
+      "validator_rejection_rate": 0.0,
+      "llm_failures": 0
+    },
+    {
+      "model": "gemini-3.5-flash-lite-eu",
+      "precision": 0.621,
+      "recall": 0.581,
+      "f1": 0.6,
+      "fpr_semeval_none": 0.0,
+      "mean_tokens_per_analysis": 1546.5,
+      "mean_credits_per_analysis": 0.0933,
+      "mean_latency_s": 1.11,
+      "symmetry_flip_rate": 0.0,
+      "validator_rejection_rate": 0.024,
+      "llm_failures": 0
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "precision": 0.45,
+      "recall": 0.581,
+      "f1": 0.507,
+      "fpr_semeval_none": 0.333,
+      "mean_tokens_per_analysis": 1510.6,
+      "mean_credits_per_analysis": 0.2111,
+      "mean_latency_s": 1.88,
+      "symmetry_flip_rate": 0.5,
+      "validator_rejection_rate": 0.0,
+      "llm_failures": 0
+    },
+    {
+      "model": "mistral-small-4-eu",
+      "precision": 0.5,
+      "recall": 0.032,
+      "f1": 0.061,
+      "fpr_semeval_none": 0.0,
+      "mean_tokens_per_analysis": 1452.9,
+      "mean_credits_per_analysis": 0.0292,
+      "mean_latency_s": 0.86,
+      "symmetry_flip_rate": 0.0,
+      "validator_rejection_rate": 0.0,
+      "llm_failures": 0
+    }
+  ]
+}

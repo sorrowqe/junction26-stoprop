@@ -4,5 +4,23 @@
   "credits_measured": 34.4048,
   "credits_per_call": 0.31,
   "updated": "2026-11-14T14:47:32+00:00"
+ },
+ "gemini-3.5-flash-lite-eu": {
+  "calls_measured": 30,
+  "credits_measured": 2.7982,
+  "credits_per_call": 0.0933,
+  "updated": "2026-11-14T14:48:48+00:00"
+ },
+ "gpt-5.4-mini": {
+  "calls_measured": 30,
+  "credits_measured": 6.3332,
+  "credits_per_call": 0.2111,
+  "updated": "2026-11-14T14:49:09+00:00"
+ },
+ "mistral-small-4-eu": {
+  "calls_measured": 30,
+  "credits_measured": 0.8746,
+  "credits_per_call": 0.0292,
+  "updated": "2026-11-14T14:49:18+00:00"
  }
 }

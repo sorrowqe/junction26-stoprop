@@ -60,12 +60,14 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   + 6 SemEval "none" + 2 synthetic hard negatives + 2 symmetry pairs = 30 analyses per model, same for every model).
   `run_eval.py --bakeoff` plans it; results go to bakeoff.json (shown on /metrics), never to latest.json, never gate.
   Cost guard: each model's first analysis runs alone; stop if it failed or cost > 2x the projected credits per call.
-- NEXT STEPS (each needs Aleksandr's OK for the calls):
-  3. Full dev run: `python eval/run_eval.py --yes` = 97 uncached Haiku calls, ~32.5 credits (writes latest.json,
-     updates dev_precision gating).
-  4. Bake-off: `python eval/run_eval.py --yes --bakeoff` = 90 calls for the 3 non-Haiku models (Haiku is then fully
-     cached), ~30 credits if they cost what Haiku costs (not measured yet; the guard stops at 2x).
-  5. Commit eval/results/*.json, deploy -> /metrics shows the numbers.
+- Full English dev run DONE (claude-haiku-4.5-eu, 97 calls, 29.7 credits, 0 failures): strict F1 synthetic 0.853,
+  SemEval 0.348; clean FPR (any flag) SemEval "none" 38% (8/21), synthetic hard negatives 25% (1/4); symmetry flip 36%
+  (4/11). "balanced" = "broad" on this data; "strict" cuts SemEval-none FPR to 4.8% but halves recall. Gating:
+  exaggeration_minimisation (0.857, n=7) and questionable_authority (0.8, n=5) are no longer experimental.
+- Bake-off DONE (fixed 30-analysis subset, 10.0 credits): gemini-3.5-flash-lite-eu F1 0.600 = Haiku 0.600 at 0.093
+  credits/analysis (Haiku ~0.31/call); gpt-5.4-mini F1 0.507 (0.211); mistral-small-4-eu F1 0.061 (abstains on 29/30).
+- NEXT: Aleksandr decides whether to switch MODEL_TAGGER to gemini-3.5-flash-lite-eu (needs a full dev re-run, ~111 calls
+  ~10 credits, for its own dev_precision gating); then deploy -> /metrics shows the numbers.
 
 ## M3 real-network check (local PC, no AI key)
 - 11 SSRF URLs via the running app with real DNS (incl. 127.0.0.1.nip.io, localtest.me) -> all 400.
