@@ -293,3 +293,17 @@ def test_api_metrics_and_page():
 
 def test_gold_csv_has_review_columns():
     assert goldcsv.GOLD_COLUMNS[-2:] == ["ai_ok", "ai_reasons"]
+
+
+def test_truncated_reply_is_not_cached(monkeypatch, tmp_path):
+    monkeypatch.setattr(ar, "CACHE_DIR", tmp_path)
+    rev = ar.Reviewer("gemini-3.5-flash-eu", call=lambda msgs: {
+        "text": '{"items": [{"item_id"', "input_tokens": 2000, "output_tokens": 8000, "credits": 5.0,
+        "credit_fields": {}, "finish_reason": "length"})
+    rev([{"role": "user", "content": "x"}])
+    assert rev.truncated == 1 and list(tmp_path.glob("*.json")) == []
+
+
+def test_gemini_gets_low_reasoning():
+    assert ar.MODEL_OPTIONS["gemini-3.5-flash-eu"] == {"reasoning_effort": "low"}
+    assert "mistral-medium-3.5-eu" not in ar.MODEL_OPTIONS

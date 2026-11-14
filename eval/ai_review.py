@@ -43,7 +43,10 @@ from app import taxonomy  # noqa: E402
 REVIEWERS = ["gemini-3.5-flash-eu", "mistral-medium-3.5-eu"]
 LANG = "en"
 BATCH = 6
-MAX_TOKENS = 4000
+MAX_TOKENS = 8000
+# Gemini 3.5 Flash "thinks" before answering; with the default budget the thinking used the whole output limit
+# and the JSON was cut off (first batch, 2026-11-14). Keep its reasoning low.
+MODEL_OPTIONS = {"gemini-3.5-flash-eu": {"reasoning_effort": "low"}}
 CACHE_DIR = ROOT / "eval" / "data" / "cache" / "ai_review"
 GOLD = ROOT / "eval" / "data" / "raw" / "synthetic_gold.csv"
 SYM = ROOT / "eval" / "data" / "raw" / "symmetry.csv"
@@ -195,7 +198,7 @@ def credits_value(found: dict) -> float | None:
 class Reviewer:
     def __init__(self, model: str, call=None):
         self.model = model
-        self.calls = self.cached = self.tokens_in = self.tokens_out = 0
+        self.calls = self.cached = self.tokens_in = self.tokens_out = self.truncated = 0
         self.credits: list[float] = []
         self.credit_fields: dict = {}
         self._call = call or self._router_call
@@ -204,7 +207,8 @@ class Reviewer:
         from openai import OpenAI
         client = OpenAI(base_url=os.environ["ROUTER_BASE_URL"], api_key=os.environ["ROUTER_API_KEY"],
                         timeout=180, max_retries=1)
-        kwargs = {"model": self.model, "messages": msgs, "max_tokens": MAX_TOKENS, "temperature": 0}
+        kwargs = {"model": self.model, "messages": msgs, "max_tokens": MAX_TOKENS, "temperature": 0,
+                  **MODEL_OPTIONS.get(self.model, {})}
         try:
             raw = client.chat.completions.with_raw_response.create(**kwargs, response_format={"type": "json_object"})
         except Exception as exc:  # optional parameter rejected (400 costs nothing): retry once without it
@@ -234,8 +238,13 @@ class Reviewer:
         if out.get("credits") is not None:
             self.credits.append(out["credits"])
         self.credit_fields.update(out.get("credit_fields") or {})
-        CACHE_DIR.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps({"model": self.model, **out}, ensure_ascii=False), encoding="utf-8")
+        if out.get("finish_reason") == "length":
+            self.truncated += 1
+            print(f"  WARNING: {self.model} reply was cut off by the output limit; not cached, items stay unreviewed",
+                  flush=True)
+        else:
+            CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            path.write_text(json.dumps({"model": self.model, **out}, ensure_ascii=False), encoding="utf-8")
         print(f"  {self.model} call {self.calls}: {out['input_tokens']} in / {out['output_tokens']} out tokens, "
               f"credits_charged={out.get('credits')}, finish={out.get('finish_reason')}, {out['seconds']}s", flush=True)
         return out
