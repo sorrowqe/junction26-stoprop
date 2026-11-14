@@ -300,15 +300,22 @@ def _load_env_local() -> None:
         os.environ.setdefault(k.strip(), v)
 
 
-class Generator:
-    """Calls the model with on-disk caching; records usage."""
+class CostGuardStop(Exception):
+    """The first real call cost more than allowed versus the estimate: stop and ask before continuing."""
 
-    def __init__(self, model: str, call=None):
+
+class Generator:
+    """Calls the model with on-disk caching; records usage; cost guard after the first real call."""
+
+    def __init__(self, model: str, call=None, est_tokens_per_call: float | None = None, max_ratio: float = 2.0):
         self.model = model
         self.calls = 0
         self.cached = 0
         self.tokens_in = 0
         self.tokens_out = 0
+        self.tokens_reasoning = 0
+        self.est_tokens_per_call = est_tokens_per_call
+        self.max_ratio = max_ratio
         self._call = call or self._openai_call
 
     def _openai_call(self, messages: list[dict]) -> tuple[str, int, int]:
@@ -325,6 +332,9 @@ class Generator:
             print(f"  note: router rejected optional parameters ({type(exc).__name__}); retrying without them")
             resp = client.chat.completions.create(**kwargs)
         u = resp.usage
+        details = getattr(u, "completion_tokens_details", None)
+        self._last_reasoning = getattr(details, "reasoning_tokens", 0) or 0
+        self._last_finish = resp.choices[0].finish_reason if resp.choices else None
         return resp.choices[0].message.content or "", getattr(u, "prompt_tokens", 0), getattr(u, "completion_tokens", 0)
 
     def __call__(self, messages: list[dict]) -> str:
@@ -334,14 +344,25 @@ class Generator:
             self.cached += 1
             return json.loads(path.read_text(encoding="utf-8"))["text"]
         t0 = time.monotonic()
+        self._last_reasoning, self._last_finish = 0, None
         text, tin, tout = self._call(messages)
+        reasoning = getattr(self, "_last_reasoning", 0)
         self.calls += 1
         self.tokens_in += tin
         self.tokens_out += tout
+        self.tokens_reasoning += reasoning
         CACHE_DIR.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps({"model": self.model, "text": text, "input_tokens": tin, "output_tokens": tout,
+                                    "reasoning_tokens": reasoning, "finish_reason": self._last_finish,
                                     "seconds": round(time.monotonic() - t0, 1)}, ensure_ascii=False), encoding="utf-8")
-        print(f"  call {self.calls}: {tin} in / {tout} out tokens, {time.monotonic() - t0:.1f}s", flush=True)
+        print(f"  call {self.calls}: {tin} in / {tout} out tokens (of which reasoning {reasoning}), "
+              f"finish={self._last_finish}, {time.monotonic() - t0:.1f}s", flush=True)
+        if self.calls == 1 and self.est_tokens_per_call:
+            ratio = (tin + tout) / self.est_tokens_per_call
+            print(f"  first-call check: {tin + tout:,} tokens vs estimate {self.est_tokens_per_call:,.0f} per call "
+                  f"= {ratio:.2f}x (limit {self.max_ratio}x)", flush=True)
+            if ratio > self.max_ratio:
+                raise CostGuardStop(f"first call used {ratio:.2f}x the estimated tokens")
         return text
 
 
@@ -487,11 +508,17 @@ def main(argv=None) -> int:
         print("ROUTER_API_KEY not set (.env.local missing?)")
         return 2
     os.environ.setdefault("ROUTER_BASE_URL", "https://router.hostinger.com/v1")
-    gen = Generator(args.model)
-    gold_rows, sym_rows, report = generate(gold_specs, sym_specs, gen)
+    est = estimate(gold_specs, sym_specs)
+    gen = Generator(args.model, est_tokens_per_call=(est["input_tokens"] + est["output_tokens"]) / est["calls"])
+    try:
+        gold_rows, sym_rows, report = generate(gold_specs, sym_specs, gen)
+    except CostGuardStop as exc:
+        print(f"\nSTOPPED: {exc}. Nothing else was called; the reply is cached. Ask before continuing.")
+        return 3
     goldcsv.write_csv(OUT_GOLD, goldcsv.GOLD_COLUMNS, gold_rows)
     goldcsv.write_csv(OUT_SYM, goldcsv.SYMMETRY_COLUMNS, sym_rows)
-    print(f"\nCalls made: {gen.calls} (cached: {gen.cached}); tokens: {gen.tokens_in:,} in / {gen.tokens_out:,} out")
+    print(f"\nCalls made: {gen.calls} (cached: {gen.cached}); tokens: {gen.tokens_in:,} in / {gen.tokens_out:,} out "
+          f"(reasoning {gen.tokens_reasoning:,})")
     print(f"Gold items accepted: {report['gold_ok']}/{len(gold_specs)} -> {OUT_GOLD.relative_to(ROOT)} ({len(gold_rows)} rows)")
     print(f"Symmetry pairs accepted: {report['pairs_ok']}/{len(sym_specs)} -> {OUT_SYM.relative_to(ROOT)} ({len(sym_rows)} rows)")
     for d in report["gold_dropped"] + report["pairs_dropped"]:

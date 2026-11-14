@@ -60,6 +60,8 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 ## Next
 - M4: `sheet_to_jsonl.py` (drop rows with ok=n, keep `source`), `run_eval.py` reporting every metric PER SOURCE
   (synthetic / semeval / human) + reported-speech rows excluded from FPR, `/metrics` showing sources separately,
+  SemEval reported as **strict** (our reported_speech spans don't count) AND **lenient** (they do, SemEval's
+  definition) with a one-sentence explanation on /metrics,
   small bake-off (announce calls), gating; prompt tuning for shorter quotes.
 - Later: "Report a wrong label" (`POST /api/feedback`, 30/h) and "Share result" (`/r/{id}`) - not in M2 scope.
 

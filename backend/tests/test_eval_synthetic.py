@@ -262,3 +262,25 @@ def test_semeval_candidates_and_rows(tmp_path):
 
 def test_semeval_label_map_targets_exist():
     assert set(sem.LABEL_MAP.values()) <= goldcsv.labels()
+
+
+def test_cost_guard_stops_after_expensive_first_call(monkeypatch, tmp_path):
+    monkeypatch.setattr(ms, "CACHE_DIR", tmp_path / "cache")
+    gold, sym = ms.build_specs(2026)
+    fake = FakeModel(gold, sym)
+
+    def pricey(messages):
+        text, _, _ = fake(messages)
+        return text, 9000, 9000  # 18k tokens vs an estimate of 5k
+    gen = ms.Generator("gpt-test", call=pricey, est_tokens_per_call=5000)
+    with pytest.raises(ms.CostGuardStop):
+        ms.generate(gold, sym, gen)
+    assert fake.calls == 1
+
+
+def test_cost_guard_allows_normal_first_call(monkeypatch, tmp_path):
+    monkeypatch.setattr(ms, "CACHE_DIR", tmp_path / "cache")
+    gold, sym = ms.build_specs(2026)
+    gen = ms.Generator("gpt-test", call=FakeModel(gold, sym), est_tokens_per_call=5000)
+    _, _, report = ms.generate(gold, sym, gen)
+    assert report["gold_ok"] == 90
