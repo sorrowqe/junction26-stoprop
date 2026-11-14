@@ -38,3 +38,4 @@ One line per decision (date, milestone, what, why).
 - 2026-11-14 M2: Pre-warm runs at startup in the background: the 3 demo samples (3 LLM calls the first time; then cached in SQLite for good as long as storage is "sqlite").
 - 2026-11-14 M2: `prompt_version` = first 10 hex chars of sha256 of the rendered system prompt, so any prompt or taxonomy text change invalidates the cache automatically.
 - 2026-11-14 M2: Innocent explanations are deterministic templates (per flagged label, genre, reported speech, rule-based source), shown only when something red/amber is flagged.
+- 2026-11-14 M2: Pre-warm is fully inside try/except (incl. the budget check) and only logs on failure; tests start the real lifespan with a hanging and a crashing router and require /api/health to answer immediately.

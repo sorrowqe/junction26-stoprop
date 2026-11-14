@@ -1,6 +1,7 @@
 """Run the pipeline: segment -> heuristics -> LLM tagger -> validate -> gate -> profile."""
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import json
 import logging
@@ -122,13 +123,21 @@ async def analyze_text(text: str, sensitivity: str = "balanced", lang: str = "au
 
 
 async def prewarm_samples() -> None:
-    """Analyze the demo samples once so judges' first clicks hit the cache (costs LLM calls only once)."""
-    if not budget.llm_available()[0]:
-        return
+    """Analyze the demo samples once so judges' first clicks hit the cache (costs LLM calls only once).
+
+    Runs as a background task after startup; it must never block startup or /api/health and never
+    raise: any failure is logged and the app keeps serving (otherwise the deploy health check could fail).
+    Already-cached samples cost nothing (cache key = paragraph hash + model + prompt + taxonomy version).
+    """
     try:
+        if not budget.llm_available()[0]:
+            log.info("pre-warm skipped (LLM not configured or budget used up)")
+            return
         samples = json.loads((config.WEB_DIR / "static" / "samples.json").read_text(encoding="utf-8"))
         for s in samples:
             await analyze_text(s["text"], count_seen=False)
         log.info("pre-warmed %d demo samples", len(samples))
+    except asyncio.CancelledError:
+        raise
     except Exception:  # noqa: BLE001 - never break startup
-        log.exception("pre-warm failed")
+        log.exception("pre-warm failed; the app keeps running")

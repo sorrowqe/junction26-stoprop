@@ -16,7 +16,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 
 from app import config  # noqa: E402
 from app.analyze import analyze_text  # noqa: E402
-from app.store import Store, set_store  # noqa: E402
+from app.store import Store, get_store, set_store  # noqa: E402
 
 
 def main() -> int:
@@ -38,6 +38,9 @@ def main() -> int:
         print("  (no spans)")
     for n in r["notes"]:
         print("  note:", n)
+    print("usage log (one row per HTTP attempt):")
+    for row in get_store().usage_log():
+        print("  ", json.dumps(row))
     return 0 if r["mode"] == "llm" else 1
 
 

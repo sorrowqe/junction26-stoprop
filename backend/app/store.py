@@ -149,6 +149,11 @@ class Store:
         i, o, calls, errors = rows[0] if rows else (0, 0, 0, 0)
         return {"input_tokens": i, "output_tokens": o, "tokens": i + o, "calls": calls, "errors": errors}
 
+    def usage_log(self) -> list[dict]:
+        cols = ("ts", "kind", "model", "input_tokens", "output_tokens", "latency_ms", "ok", "error")
+        rows = self._exec(f"SELECT {', '.join(cols)} FROM usage_log ORDER BY id")
+        return [dict(zip(cols, r)) for r in rows]
+
     def usage_rows(self) -> list[tuple]:
         return self._exec("SELECT kind, model, input_tokens, output_tokens, ok, error FROM usage_log ORDER BY id")
 
