@@ -10,9 +10,21 @@ TECHNIQUES_PATH = Path(__file__).resolve().parents[1] / "config" / "techniques.y
 SENSITIVITIES = ("strict", "balanced", "broad")
 
 
+VALIDATED_PRECISION = 0.70
+VALIDATED_MIN_PREDICTIONS = 15
+
+
+def validated(entry: dict) -> bool:
+    """Validated = measured dev precision >= 0.70 on >= 15 predictions. Everything else is "not yet validated"."""
+    p, n = entry.get("dev_precision"), entry.get("dev_predictions") or 0
+    return p is not None and p >= VALIDATED_PRECISION and n >= VALIDATED_MIN_PREDICTIONS
+
+
 @lru_cache(maxsize=1)
 def load() -> dict:
     data = yaml.safe_load(TECHNIQUES_PATH.read_text(encoding="utf-8"))
+    for t in data["techniques"]:
+        t["experimental"] = not validated(t)   # computed, never trusted from the file
     data["by_label"] = {t["label"]: t for t in data["techniques"]}
     return data
 
@@ -27,15 +39,17 @@ def names() -> dict[str, str]:
 
 def public() -> dict:
     """Taxonomy for the UI legend / tooltips."""
-    keys = ("label", "name", "kind", "color", "definition", "example", "experimental", "dev_precision")
+    keys = ("label", "name", "kind", "color", "definition", "example", "experimental", "dev_precision", "dev_predictions")
     return {"version": version(), "labels": [{k: t.get(k) for k in keys} for t in load()["techniques"]]}
 
 
 def gate(spans: list[dict], sensitivity: str) -> list[dict]:
     """Drop disabled / unknown / below-threshold spans; set color and experimental.
 
-    - heuristic spans: always amber + experimental; dropped at sensitivities in heuristics.drop_at
-    - llm spans: dropped below min_confidence[sensitivity]; red techniques below amber_below -> amber
+    - colour comes only from the label type (techniques red, unsupported claims amber, supported claims green,
+      balance blue); "experimental" means not yet validated (shown dashed in the UI, never hidden by default)
+    - heuristic spans: always experimental; dropped at sensitivities in heuristics.drop_at
+    - llm spans: dropped below min_confidence[sensitivity]
     """
     tax = load()
     if sensitivity not in SENSITIVITIES:
@@ -46,18 +60,14 @@ def gate(spans: list[dict], sensitivity: str) -> list[dict]:
         if entry is None or not entry.get("enabled", True):
             continue
         s = dict(s)
+        s["color"] = entry["color"]
         if s.get("source") == "heuristic":
             if sensitivity in tax.get("heuristics", {}).get("drop_at", []):
                 continue
-            s["color"] = "amber"
             s["experimental"] = True
         else:
             if s.get("confidence", 0.0) < entry["min_confidence"][sensitivity]:
                 continue
-            color = entry["color"]
-            if color == "red" and (entry.get("experimental") or s["confidence"] < tax.get("amber_below", 0.7)):
-                color = "amber"
-            s["color"] = color
             s["experimental"] = bool(entry.get("experimental"))
         out.append(s)
     return out

@@ -11,8 +11,8 @@
   };
 
   const COLORS = {
-    red:   { icon: "!", name: "Manipulation technique", desc: "A persuasion technique with high measured precision." },
-    amber: { icon: "?", name: "Unsupported claim / less certain technique", desc: "No source is given in the text, or the technique is less certain. Not “false”." },
+    red:   { icon: "!", name: "Manipulation technique", desc: "A persuasion technique. Solid underline: validated (measured precision at least 70% on 15+ examples); dashed: not yet validated." },
+    amber: { icon: "?", name: "Unsupported claim", desc: "No source is given in the text. Not “false”." },
     green: { icon: "↗", name: "Claim with a source", desc: "A link, named source or dated data appears in the text. Not “true”." },
     blue:  { icon: "≈", name: "Balance marker", desc: "A fair counter-argument or an acknowledged uncertainty." },
   };
@@ -53,7 +53,7 @@
 
   // ------------------------------------------------------------- bootstrap
   async function init() {
-    $("show-exp").checked = store.get("stoprop.showExp") === "1";
+    $("only-validated").checked = store.get("stoprop.onlyValidated") === "1";
     const sens = store.get("stoprop.sensitivity");
     if (["strict", "balanced", "broad"].includes(sens)) $("sensitivity").value = sens;
     loadTradeoff();
@@ -79,8 +79,8 @@
     $("text").addEventListener("keydown", (e) => {
       if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); analyze(); }
     });
-    $("show-exp").addEventListener("change", () => {
-      store.set("stoprop.showExp", $("show-exp").checked ? "1" : "0");
+    $("only-validated").addEventListener("change", () => {
+      store.set("stoprop.onlyValidated", $("only-validated").checked ? "1" : "0");
       if (current) render();
     });
     $("sensitivity").addEventListener("change", () => {
@@ -135,10 +135,10 @@
 
   // ---------------------------------------------------------------- render
   function visibleSpans() {
-    const showExp = $("show-exp").checked;
+    const onlyValidated = $("only-validated").checked;
     return current.result.spans
       .map((s, i) => ({ ...s, idx: i }))
-      .filter((s) => showExp || !s.experimental);
+      .filter((s) => !onlyValidated || !s.experimental);
   }
 
   function render() {
@@ -203,16 +203,11 @@
   }
 
   function bannerText(res) {
-    const rules = " Showing simple word-rule hints only; they are experimental and stay hidden unless you switch on “Show experimental labels”.";
+    const rules = " Showing simple word-rule hints only; they match words, not meaning, and are not validated.";
     if (res.mode === "heuristics_only") {
       if (res.mode_reason === "budget") return "Today's AI budget is used up." + rules;
       if (res.mode_reason === "llm_error") return "AI analysis is temporarily unavailable." + rules;
       return "AI analysis is not switched on on this server." + rules;
-    }
-    const hidden = res.spans.filter((s) => s.experimental).length;
-    if (hidden && !$("show-exp").checked) {
-      return "Every technique is still experimental until we have measured its precision on a labelled dataset, " +
-        "so AI findings are hidden by default. Switch on “Show experimental labels” to see them.";
     }
     return "";
   }
@@ -261,7 +256,7 @@
       const chunk = text.slice(a, b);
       const cover = items.filter((s) => s.a <= a && s.b >= b).sort(byPriority);
       if (!cover.length) { doc.append(chunk); continue; }
-      const m = el("mark", `hl c-${cover[0].color}`, chunk);
+      const m = el("mark", `hl c-${cover[0].color}${cover[0].experimental ? " exp" : ""}`, chunk);
       m.dataset.spans = cover.map((s) => s.idx).join(",");
       m.tabIndex = 0;
       m.setAttribute("role", "button");
@@ -280,17 +275,16 @@
     const empty = $("empty");
     list.textContent = "";
     empty.textContent = "";
-    const hiddenExp = res.spans.filter((s) => s.experimental).length - spans.filter((s) => s.experimental).length;
+    const hiddenExp = res.spans.length - spans.length;
 
     if (!spans.length) {
       empty.hidden = false;
       if (hiddenExp > 0) {
         empty.append(el("p", null,
-          `Nothing is flagged by default. ${hiddenExp} experimental ${hiddenExp === 1 ? "hint is" : "hints are"} hidden ` +
-          "because their precision has not been measured yet."));
-        const b = el("button", null, "Show experimental labels");
+          `${hiddenExp} ${hiddenExp === 1 ? "finding is" : "findings are"} hidden because “Only show validated techniques” is on.`));
+        const b = el("button", null, "Show all findings");
         b.type = "button";
-        b.addEventListener("click", () => { $("show-exp").checked = true; $("show-exp").dispatchEvent(new Event("change")); });
+        b.addEventListener("click", () => { $("only-validated").checked = false; $("only-validated").dispatchEvent(new Event("change")); });
         empty.append(b);
       } else {
         empty.append(el("p", null,
@@ -309,7 +303,7 @@
       head.append(el("span", "q", `“${s.quote}”`));
       b.append(head);
       const meta = [`confidence ${Math.round(s.confidence * 100)}%`];
-      if (s.experimental) meta.push("experimental");
+      if (s.experimental) meta.push("not yet validated");
       if (s.reported_speech) meta.push("reported speech, not counted");
       b.append(el("span", "meta", meta.join(" · ")));
       b.addEventListener("click", (e) => {
@@ -334,8 +328,8 @@
       ["Words", p.words.toLocaleString("en")],
       ["Text flagged", `${Math.round(p.flagged_share * 100)}%`],
       ["Density", `${p.density_per_1000} per 1,000 words`],
-      ["Techniques", counts.length ? counts.map(([l, n]) => `${labelName(l)} × ${n}`).join(", ") : "none by default"],
-      ["Experimental", `${p.experimental.count} ${$("show-exp").checked ? "(shown)" : "(hidden)"}`],
+      ["Findings", counts.length ? counts.map(([l, n]) => `${labelName(l)} × ${n}`).join(", ") : "none"],
+      ["Techniques", p.techniques ? `${p.techniques.found} found, ${p.techniques.not_yet_validated} not yet validated` : "–"],
       ["Reported speech", `${p.reported_speech} (not counted)`],
       ["Mode", modeText(res)],
     ];
@@ -379,7 +373,13 @@
       item.append(el("p", "small", `Confidence: ${Math.round(s.confidence * 100)}% · ${COLORS[s.color].name}`));
       const badges = el("div", "badges");
       if (s.reported_speech) badges.append(el("span", "badge rs", "Reported speech: quoted from someone else, not counted against the source"));
-      if (s.experimental) badges.append(el("span", "badge exp", "Experimental: precision not yet measured"));
+      if (s.experimental) {
+        badges.append(el("span", "badge exp", s.source === "heuristic"
+          ? "Not yet validated: a word-rule hint, not an AI finding"
+          : "Not yet validated: measured precision is below 70% or based on fewer than 15 examples"));
+      } else if (t.dev_precision != null) {
+        badges.append(el("span", "badge ok", `Validated: ${Math.round(t.dev_precision * 100)}% precision on ${t.dev_predictions} examples`));
+      }
       if (badges.childNodes.length) item.append(badges);
       frag.append(item);
     });

@@ -55,14 +55,24 @@ def test_counts_density_and_share():
     assert prof["counts"] == {"loaded_language": 1, "fear_appeal": 1}
     assert prof["flagged_share"] == 0.3
     assert prof["density_per_1000"] == 200.0
-    assert "2 passages flagged" in prof["summary"]
+    assert "1 technique found" in prof["summary"] and "1 claim without a source" in prof["summary"]
 
 
-def test_experimental_reported_and_green_are_not_flagged():
+def test_not_yet_validated_is_shown_and_counted():
+    text = "alpha beta gamma delta epsilon zeta eta theta iota kappa"
+    seg = segment(text)
+    spans = [span(text, "alpha", experimental=True), span(text, "gamma", label="name_calling", experimental=True),
+             span(text, "epsilon", label="fear_appeal")]
+    prof = build_profile(seg, spans, [])
+    assert prof["techniques"] == {"found": 3, "not_yet_validated": 2}
+    assert prof["counts"] == {"loaded_language": 1, "name_calling": 1, "fear_appeal": 1} and prof["flagged_share"] == 0.3
+    assert "3 techniques found" in prof["summary"] and "2 not yet validated" in prof["summary"]
+
+
+def test_reported_and_green_are_not_flagged():
     text = "alpha beta gamma delta epsilon zeta eta theta iota kappa"
     seg = segment(text)
     spans = [
-        span(text, "alpha", experimental=True, color="amber"),
         span(text, "gamma", reported=True),
         span(text, "epsilon", label="supported_claim", color="green"),
         span(text, "eta", label="balance", color="blue"),
@@ -71,10 +81,9 @@ def test_experimental_reported_and_green_are_not_flagged():
     assert prof["flagged_share"] == 0.0
     assert prof["density_per_1000"] == 0.0
     assert prof["counts"] == {"supported_claim": 1, "balance": 1}
-    assert prof["experimental"] == {"count": 1, "counts": {"loaded_language": 1}}
+    assert prof["experimental"] == {"count": 0, "counts": {}}
     assert prof["reported_speech"] == 1
-    assert "Nothing is flagged by default" in prof["summary"]
-    assert "1 experimental hint hidden" in prof["summary"]
+    assert "Nothing is flagged." in prof["summary"]
     assert "1 quoted passage" in prof["summary"]
 
 

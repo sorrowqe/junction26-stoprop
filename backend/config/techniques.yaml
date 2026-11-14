@@ -1,12 +1,11 @@
 # Technique taxonomy v1 (CLAUDE.md section 4). Keep it to these labels.
-# run_eval.py (M4) writes dev_precision; experimental becomes false when dev_precision >= 0.70.
+# run_eval.py / calibrate.py write dev_precision + dev_predictions. A technique is VALIDATED when
+# dev_precision >= 0.70 on >= 15 predictions (taxonomy.validated); otherwise it is shown as
+# "not yet validated" (dashed). `experimental` below mirrors that rule and is recomputed on load.
 # Colours are descriptive, never truth claims.
 version: 1
 
-# A red technique proposed by the LLM with confidence below this is shown amber.
-amber_below: 0.7
-
-# Rule-based (heuristic) spans are always amber + experimental, and are dropped entirely
+# Rule-based (heuristic) spans are always "not yet validated", and are dropped entirely
 # at these sensitivities.
 heuristics:
   drop_at: [strict]
@@ -21,6 +20,7 @@ techniques:
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: 0.615
+    dev_predictions: 26
     experimental: true
 
   - label: name_calling
@@ -54,7 +54,8 @@ techniques:
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: 0.857
-    experimental: false
+    dev_predictions: 7
+    experimental: true
 
   - label: whataboutism
     name: Whataboutism
@@ -120,6 +121,7 @@ techniques:
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: 0.6
+    dev_predictions: 5
     experimental: true
 
   - label: unsupported_claim
@@ -131,6 +133,7 @@ techniques:
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: 0.077
+    dev_predictions: 13
     experimental: true
 
   - label: supported_claim
@@ -142,6 +145,7 @@ techniques:
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: 0.25
+    dev_predictions: 16
     experimental: true
 
   - label: balance

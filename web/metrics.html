@@ -50,7 +50,7 @@
 
     <div id="no-results" class="card" hidden>
       <h2>No evaluation published yet</h2>
-      <p>Until the first run, every technique is marked experimental and hidden by default in the analyzer.</p>
+      <p>Until the first run, every technique is shown as “not yet validated” in the analyzer.</p>
     </div>
 
     <div id="results" hidden>
@@ -69,7 +69,7 @@
 
       <section class="card" aria-labelledby="h-labels">
         <h2 id="h-labels">Per technique (strict, all sources)</h2>
-        <p class="muted small">A technique is shown by default only when its measured precision is at least 70% (measured with no confidence filter, on at least 5 predictions). The rows below are the model with no confidence filter (“broad”); see the sensitivity table above for the other levels.</p>
+        <p class="muted small">A technique counts as validated (solid underline in the analyzer) when its measured precision is at least 70% on at least 15 predictions (measured with no confidence filter); all others are shown dashed as “not yet validated”. The rows below are the model with no confidence filter (“broad”); see the sensitivity table above for the other levels.</p>
         <div class="table-wrap"><table id="per-label"><thead><tr><th>Label</th><th>Precision</th><th>Recall</th><th>F1</th><th>Predicted</th><th>Gold</th></tr></thead><tbody></tbody></table></div>
         <h3>What we don't detect well</h3>
         <ul id="weak"></ul>

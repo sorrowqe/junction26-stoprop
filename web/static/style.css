@@ -250,3 +250,6 @@ tbody th { font-weight: 600; }
 .principle { font-size: .95rem; }
 .copies li { margin-bottom: .5rem; overflow-wrap: anywhere; }
 .copies li.unconfirmed { opacity: .7; }
+/* validated = solid underline (per colour style); not yet validated = dashed, any colour */
+.hl.exp { text-decoration-style: dashed; }
+.badge.ok { border-color: var(--green); color: var(--green); }

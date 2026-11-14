@@ -45,8 +45,8 @@ def test_llm_mode_end_to_end(monkeypatch):
     for s in body["spans"]:
         assert SAMPLES["manipulative"][s["start"]:s["end"]] == s["quote"]
         assert s["source"] == "llm"
-        # every technique is experimental until M4 -> amber, hidden by default in the UI
-        assert s["experimental"] is True and s["color"] == "amber"
+        # techniques are red; not yet validated is a separate flag (dashed, still shown)
+        assert s["experimental"] is True and s["color"] == "red"
     assert body["cost"] == {"input_tokens": 800, "output_tokens": 60, "llm_calls": 1, "credits": 0.0, "cached": False}
     assert body["innocent_explanations"]
     assert body["stats"]["model"] == "test-model"
@@ -177,10 +177,13 @@ def test_innocent_explanations_rules():
     assert innocent_explanations([], "news") == []
     assert innocent_explanations([span(color="green", label="supported_claim")], "news") == []
     out = innocent_explanations([span(reported_speech=True), span(label="unsupported_claim"), span(source="heuristic")], "opinion")
-    assert any("quoted from someone else" in x for x in out)
-    assert any("opinion piece" in x for x in out)
-    assert any("source may be given elsewhere" in x for x in out)
-    assert any("Rule-based hints" in x for x in out)
+    # only explanations for labels actually found (reported speech does not count), no genre/generic lines
+    assert out == ["A source may be given elsewhere: in a link, an earlier paragraph, or the original article this text came from.",
+                   "Strong wording can reflect genuine feeling or a writing style, not only an attempt to steer the reader."]
+    many = [span(label=lbl, confidence=c) for lbl, c in (("name_calling", 0.9), ("fear_appeal", 0.8), ("bandwagon", 0.7),
+                                                         ("loaded_language", 0.6))]
+    out = innocent_explanations(many, "news")
+    assert len(out) == 3 and "Labels can be shorthand" in out[0] and not any("Strong wording" in x for x in out)
     for x in out:
         for word in ("propaganda", "liar", "bot", "fake"):
             assert word not in x.lower().split()

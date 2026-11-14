@@ -76,8 +76,9 @@ happy-path demo. Must run live on Hostinger (our KVM 2 VPS) with a public URL: h
 5. **Two independent signals before a strong verdict.** A swarm cluster is "likely coordinated"
    only with text-reuse evidence **plus** at least one independent family (timing or account
    similarity). One family alone = "worth watching".
-6. **Only show what we can measure.** A technique is shown by default only if its measured
-   `dev_precision >= 0.70`; otherwise `experimental` and hidden by default.
+6. **Say what we have measured.** A technique is *validated* only if its measured `dev_precision >= 0.70`
+   on >= 15 dev predictions; otherwise it is shown as *not yet validated* (dashed underline, tooltip note).
+   All findings are shown by default; users can switch on "Only show validated techniques".
 7. **No single "propaganda score".** Show profiles and evidence, not one number.
 8. **Colour labels are descriptive, never truth claims.**
    `red` = manipulation technique · `amber` = unsupported claim (no source given in the text;

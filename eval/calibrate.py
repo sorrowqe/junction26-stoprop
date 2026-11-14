@@ -13,9 +13,9 @@ Rule per level: the LOWEST min_confidence that meets the target AND removes at l
 compared with the next looser level (so the three levels really differ). One threshold for all labels.
 If no candidate meets a target, the highest candidate is used and the result says target_met = false.
 
-Shown by default (CLAUDE.md §1 rule 6): per-label precision with NO confidence filter (broad; the most data,
-and stricter levels only remove lower-confidence spans), on labels with >= 5 predictions; every other label
-is reset to experimental. Reports P/R/F1 and FPRs with 95 % Wilson intervals, the symmetry flip rate and
+Validated (CLAUDE.md §1 rule 6): per-label precision with NO confidence filter (broad; the most data, and
+stricter levels only remove lower-confidence spans) >= 0.70 on >= 15 predictions; precision is recorded for
+labels with >= 5 predictions; every other label is reset to "not yet validated". Reports P/R/F1 and FPRs with 95 % Wilson intervals, the symmetry flip rate and
 the self-flip rate (eval/self_consistency.py) per level. Calibrated AND measured on dev, so these numbers
 are optimistic; the locked test split (run_eval.py --final) is the check.
 """
@@ -108,7 +108,7 @@ def regate(per_label: dict, path: Path | None = None) -> dict:
     """Reset every label to dev_precision null / experimental true, then apply measured precision
     (>= MIN_PRED_FOR_PRECISION predictions). Text edit keeps comments."""
     path = path or r.TECHNIQUES_YAML
-    lines = path.read_text(encoding="utf-8").splitlines()
+    lines = [ln for ln in path.read_text(encoding="utf-8").splitlines() if not re.match(r"\s+dev_predictions:", ln)]
     for i, line in enumerate(lines):
         if re.match(r"\s+dev_precision:", line):
             lines[i] = re.sub(r"dev_precision:.*", "dev_precision: null", line)

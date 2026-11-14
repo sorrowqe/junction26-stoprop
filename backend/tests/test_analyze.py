@@ -33,11 +33,12 @@ def test_response_schema():
         assert SAMPLES["manipulative"][s["start"]:s["end"]] == s["quote"]
 
 
-def test_heuristic_spans_are_amber_experimental_low_confidence():
+def test_heuristic_spans_are_not_validated_and_coloured_by_type():
     spans = analyze(SAMPLES["manipulative"], sensitivity="balanced")["spans"]
     assert len(spans) >= 3
+    colors = {t["label"]: t["color"] for t in taxonomy.load()["techniques"]}
     for s in spans:
-        assert s["color"] == "amber" and s["experimental"] is True and s["confidence"] < 0.5
+        assert s["color"] == colors[s["label"]] and s["experimental"] is True and s["confidence"] < 0.5
 
 
 def test_neutral_sample_is_clean():
@@ -123,8 +124,15 @@ def test_gate_llm_spans_by_confidence_and_colour():
     assert [s["confidence"] for s in balanced] == [0.9]
     broad = taxonomy.gate(spans, "broad")  # broad = no confidence filter (calibration 2026-11-14)
     assert [s["confidence"] for s in broad] == [0.9, 0.5, 0.3]
-    # every technique is experimental until M4 measures it -> amber, never red yet
-    assert all(s["color"] == "amber" and s["experimental"] for s in broad)
+    # colour comes from the label type only; not yet validated is a separate flag (dashed in the UI)
+    assert all(s["color"] == "red" and s["experimental"] for s in broad)
+
+
+def test_validated_needs_precision_and_15_predictions():
+    assert taxonomy.validated({"dev_precision": 0.8, "dev_predictions": 15})
+    assert not taxonomy.validated({"dev_precision": 0.86, "dev_predictions": 7})
+    assert not taxonomy.validated({"dev_precision": 0.6, "dev_predictions": 40})
+    assert not taxonomy.validated({"dev_precision": None, "dev_predictions": None})
 
 
 def test_static_files_served():

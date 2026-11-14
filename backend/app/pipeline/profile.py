@@ -1,7 +1,7 @@
 """Genre, density, coverage, neutral summary (template, no LLM call). CLAUDE.md §4 step 6.
 
-What counts against the source: spans shown by default (not experimental) that are not
-reported speech. "Flagged" means red or amber. Green/blue spans are counted but not flagged.
+Every gated span is shown (validated or "not yet validated"); reported speech is not counted against the
+source. "Flagged" means red (technique) or amber (unsupported claim). Green/blue spans are counted, not flagged.
 """
 from __future__ import annotations
 
@@ -83,9 +83,9 @@ def build_profile(seg: Segmented, spans: list[dict], hints: list[dict], names: d
     words = len(wspans)
     genre = guess_genre(seg, hints, words)
 
-    shown = [s for s in spans if not s.get("experimental") and not s.get("reported_speech")]
+    shown = [s for s in spans if not s.get("reported_speech")]
     flagged = [s for s in shown if s.get("color") in ("red", "amber")]
-    experimental = [s for s in spans if s.get("experimental") and not s.get("reported_speech")]
+    experimental = [s for s in shown if s.get("experimental")]
     reported = [s for s in spans if s.get("reported_speech")]
 
     counts = dict(Counter(s["label"] for s in shown))
@@ -100,6 +100,8 @@ def build_profile(seg: Segmented, spans: list[dict], hints: list[dict], names: d
         "counts": counts,
         "experimental": {"count": len(experimental), "counts": dict(Counter(s["label"] for s in experimental))},
         "reported_speech": len(reported),
+        "techniques": {"found": sum(s.get("color") == "red" for s in shown),
+                       "not_yet_validated": sum(s.get("color") == "red" and s.get("experimental") for s in shown)},
         "summary": summary(seg.lang, genre, words, flagged, len(experimental), len(reported), flagged_share, density, names),
     }
 
@@ -108,17 +110,20 @@ def summary(lang, genre, words, flagged, n_experimental, n_reported, share, dens
     """One or two neutral sentences. Describes the text, never the author."""
     lang_name = LANG_NAMES.get(lang, "a language without word lists yet")
     parts = [f"{GENRE_PHRASES[genre]} ({lang_name}, {words:,} words)."]
-    if flagged:
-        by_label = Counter(s["label"] for s in flagged).most_common()
+    techniques = [s for s in flagged if s.get("color") == "red"]
+    claims = [s for s in flagged if s.get("color") == "amber"]
+    if techniques:
+        unvalidated = sum(bool(s.get("experimental")) for s in techniques)
+        by_label = Counter(s["label"] for s in techniques).most_common()
         listing = ", ".join(f"{n} × {names.get(lbl, lbl.replace('_', ' ')).lower()}" for lbl, n in by_label)
-        parts.append(
-            f"{_plural(len(flagged), 'passage')} flagged ({listing}), about {density:g} per 1,000 words, "
-            f"covering {share:.0%} of the words."
-        )
+        parts.append(f"{_plural(len(techniques), 'technique')} found ({listing})"
+                     + (f", {unvalidated} not yet validated" if unvalidated else "") + ".")
+    if claims:
+        parts.append(f"{_plural(len(claims), 'claim')} without a source in the text.")
+    if flagged:
+        parts.append(f"About {density:g} flags per 1,000 words, covering {share:.0%} of the words.")
     else:
-        parts.append("Nothing is flagged by default.")
-    if n_experimental:
-        parts.append(f"{_plural(n_experimental, 'experimental hint')} hidden by default (lower measured precision).")
+        parts.append("Nothing is flagged.")
     if n_reported:
         parts.append(f"{_plural(n_reported, 'quoted passage')} attributed to someone else, not counted.")
     return " ".join(parts)
@@ -139,6 +144,7 @@ _INNOCENT_BY_LABEL = {
     "doubt_casting": "Questioning credibility can be legitimate if the evidence is given elsewhere.",
     "unsupported_claim": "A source may be given elsewhere: in a link, an earlier paragraph, or the original article this text came from.",
 }
+MAX_INNOCENT = 3
 _INNOCENT_BY_GENRE = {
     "opinion": "This reads as an opinion piece; arguing for a position with persuasive language is expected there.",
     "social": "Social media posts are often informal and emotional without any intent to mislead.",
@@ -146,21 +152,12 @@ _INNOCENT_BY_GENRE = {
 
 
 def innocent_explanations(spans: list[dict], genre: str) -> list[str]:
-    """Plausible non-malicious explanations for what was flagged (principle 9). Empty if nothing flagged."""
-    flagged = [s for s in spans if s.get("color") in ("red", "amber")]
-    if not flagged:
-        return []
+    """Plausible non-malicious explanations (principle 9): only for labels actually found (not reported speech),
+    most confident label first, at most 3. Empty if nothing is flagged."""
+    flagged = [s for s in spans if s.get("color") in ("red", "amber") and not s.get("reported_speech")]
     out: list[str] = []
-    if any(s.get("reported_speech") for s in flagged):
-        out.append("Some of the flagged wording is quoted from someone else; reporting what others said is normal journalism.")
-    if genre in _INNOCENT_BY_GENRE:
-        out.append(_INNOCENT_BY_GENRE[genre])
-    seen = set()
     for s in sorted(flagged, key=lambda s: -s.get("confidence", 0)):
-        label = s.get("label")
-        if label in _INNOCENT_BY_LABEL and label not in seen:
-            seen.add(label)
-            out.append(_INNOCENT_BY_LABEL[label])
-    if any(s.get("source") == "heuristic" for s in flagged):
-        out.append("Rule-based hints match words, not meaning, and can misfire on ordinary text.")
-    return out[:6]
+        text = _INNOCENT_BY_LABEL.get(s.get("label"))
+        if text and text not in out:
+            out.append(text)
+    return out[:MAX_INNOCENT]

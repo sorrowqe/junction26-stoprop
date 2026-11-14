@@ -254,14 +254,16 @@ def test_update_dev_precision_keeps_comments(tmp_path, monkeypatch):
     src = (re_.TECHNIQUES_YAML).read_text(encoding="utf-8")
     path = tmp_path / "techniques.yaml"
     path.write_text(src, encoding="utf-8")
-    per = {"loaded_language": {"predicted": 10, "precision": 0.8}, "fear_appeal": {"predicted": 6, "precision": 0.5},
-           "bandwagon": {"predicted": 2, "precision": 1.0}}
+    per = {"loaded_language": {"predicted": 20, "precision": 0.8}, "fear_appeal": {"predicted": 6, "precision": 0.5},
+           "bandwagon": {"predicted": 2, "precision": 1.0}, "name_calling": {"predicted": 9, "precision": 0.9}}
     monkeypatch.setattr(re_.taxonomy, "TECHNIQUES_PATH", path)
     upd = re_.update_dev_precision(per, path)
-    assert upd == {"loaded_language": 0.8, "fear_appeal": 0.5}
+    assert upd == {"loaded_language": 0.8, "fear_appeal": 0.5, "name_calling": 0.9}
     import yaml
     data = {t["label"]: t for t in yaml.safe_load(path.read_text(encoding="utf-8"))["techniques"]}
     assert data["loaded_language"]["dev_precision"] == 0.8 and data["loaded_language"]["experimental"] is False
+    assert data["loaded_language"]["dev_predictions"] == 20
+    assert data["name_calling"]["experimental"] is True    # 0.9 precision but only 9 predictions (< 15)
     assert data["fear_appeal"]["experimental"] is True and data["bandwagon"]["dev_precision"] is None
     assert path.read_text(encoding="utf-8").startswith("# Technique taxonomy v1")
     re_.taxonomy.load.cache_clear()
@@ -457,12 +459,12 @@ def test_regate_resets_old_values_and_writes_thresholds(tmp_path):
                     "  - label: fear_appeal\n    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}\n"
                     "    dev_precision: 0.8\n    experimental: false\n", encoding="utf-8")
     cal.write_thresholds({"strict": {"t": 0.9}, "balanced": {"t": 0.85}, "broad": {"t": 0.0}}, path)
-    updates = cal.regate({"loaded_language": {"predicted": 6, "precision": 0.75}}, path)
+    updates = cal.regate({"loaded_language": {"predicted": 16, "precision": 0.75}}, path)
     text = path.read_text(encoding="utf-8")
     assert updates == {"loaded_language": 0.75}
     assert text.count("min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}") == 2
     # fear_appeal had an old (other model) value: reset to unmeasured + experimental
-    assert "dev_precision: 0.75\n    experimental: false" in text
+    assert "dev_precision: 0.75\n    dev_predictions: 16\n    experimental: false" in text
     assert "dev_precision: null\n    experimental: true" in text
     cal.r.taxonomy.load.cache_clear()
 

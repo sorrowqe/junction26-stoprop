@@ -56,7 +56,8 @@ TECHNIQUES_YAML = ROOT / "backend" / "config" / "techniques.yaml"
 LANG = "en"
 EST_IN, EST_OUT = 1700, 450   # tokens per tagger call (real smoke test: 1632 in / 429 out)
 MIN_PRED_FOR_PRECISION = 5
-PRECISION_THRESHOLD = 0.70
+PRECISION_THRESHOLD = 0.70        # validated = precision >= 0.70 AND >= 15 predictions (taxonomy.validated)
+MIN_PRED_FOR_VALIDATION = 15
 FLAGGED = ("red", "amber")
 BAKEOFF_SUBSET = ROOT / "eval" / "data" / "bakeoff_subset.json"
 CREDIT_RATES = RESULTS / "credit_rates.json"
@@ -344,17 +345,25 @@ def update_dev_precision(per_label: dict, path: Path | None = None) -> dict:
                if s["predicted"] >= MIN_PRED_FOR_PRECISION and s["precision"] is not None}
     if not updates:
         return {}
+    counts = {lbl: per_label[lbl]["predicted"] for lbl in updates}
     lines = path.read_text(encoding="utf-8").splitlines()
-    current = None
-    for i, line in enumerate(lines):
+    out, current = [], None
+    for line in lines:
         m = re.match(r"\s*- label: (\w+)", line)
         if m:
             current = m.group(1)
-        elif current in updates and re.match(r"\s+dev_precision:", line):
-            lines[i] = re.sub(r"dev_precision:.*", f"dev_precision: {updates[current]}", line)
-        elif current in updates and re.match(r"\s+experimental:", line):
-            lines[i] = re.sub(r"experimental:.*", f"experimental: {str(updates[current] < PRECISION_THRESHOLD).lower()}", line)
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+        if current in updates and re.match(r"\s+dev_predictions:", line):
+            continue  # rewritten right after dev_precision
+        if current in updates and re.match(r"\s+dev_precision:", line):
+            indent = line[:len(line) - len(line.lstrip())]
+            out.append(f"{indent}dev_precision: {updates[current]}")
+            out.append(f"{indent}dev_predictions: {counts[current]}")
+            continue
+        if current in updates and re.match(r"\s+experimental:", line):
+            ok = updates[current] >= PRECISION_THRESHOLD and counts[current] >= MIN_PRED_FOR_VALIDATION
+            line = re.sub(r"experimental:.*", f"experimental: {str(not ok).lower()}", line)
+        out.append(line)
+    path.write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
     taxonomy.load.cache_clear()
     return updates
 
