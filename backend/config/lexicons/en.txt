@@ -4,6 +4,7 @@ shocking
 outrageous
 disgusting
 disgraceful
+disgraced
 horrific
 terrifying
 catastroph*
@@ -11,6 +12,15 @@ disaster*
 scandal*
 insane
 unbelievable
+reckless
+betrayal
+corrupt*
+puppet*
+extremist*
+brainwash*
+plunder*
+tyrann*
+slaughter*
 
 [intensifier]
 very
@@ -124,17 +134,45 @@ everyone is talking about
 experts say
 experts agree
 experts warn
+top experts
+leading experts
 scientists say
 scientists agree
+top scientists
+leading scientists
 doctors agree
 studies show
 studies have shown
+studies prove
 research shows
 research proves
 sources say
+sources claim
+anonymous sources
+unnamed officials
 insiders say
+insiders claim
+senior insiders
+policy insiders
+independent analysts
+well-placed sources
+well-placed voices
 many people are saying
 people are saying
+
+[whataboutism]
+what about when
+why complain about
+where was the outrage
+what about their
+hypocritical coming from
+
+[false_dilemma]
+either we
+the only choice is
+the only option is
+no other choice
+with us or against us
 
 [balance]
 however

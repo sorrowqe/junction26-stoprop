@@ -30,7 +30,8 @@ MAX_CONCURRENT_CALLS = 3
 WAIT_TIMEOUT_S = 120
 MAX_OUTPUT_TOKENS = 2000
 HINT_TYPES = (
-    "bandwagon_phrase", "vague_authority", "emotive", "intensifier", "absolutist", "us_them", "all_caps",
+    "bandwagon_phrase", "vague_authority", "whataboutism_phrase", "false_dilemma_phrase",
+    "emotive", "intensifier", "absolutist", "us_them", "all_caps",
     "exclamation", "number_unattributed", "number_attributed", "attribution", "link", "quotation",
     "balance_marker",
 )

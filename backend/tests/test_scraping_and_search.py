@@ -456,3 +456,28 @@ def test_source_upgrades_certspotter_watchdogs_context_and_pagecheck(monkeypatch
     assert info["signals"]["about_link"] is True and info["signals"]["contact_link"] is True and info["signals"]["policy_link"] is False
     assert info["brand_warning"] is not None and "err.ee" in info["brand_warning"]["official_domain"]
     assert info["sample_quote"] and "forty-one million" in info["sample_quote"]
+
+
+def test_analyzer_taxonomy_prompt_hints_and_ellipsis_validation():
+    from app import taxonomy
+    from app.pipeline import heuristics, segment, tagger, validate
+
+    pub = {t["label"]: t for t in taxonomy.public()["labels"]}
+    assert pub["questionable_authority"]["name"] == "Questionable / fabricated authority"
+    assert pub["name_calling"]["name"] == "Name-calling / labelling"
+    assert pub["fear_appeal"]["name"] == "Fear / threat appeal"
+    assert pub["whataboutism"]["name"] == "Whataboutism / deflection"
+
+    sp = tagger.system_prompt()
+    assert "0.90 to 0.98" in sp and "name_calling vs loaded_language" in sp and "fear_appeal" in sp
+
+    seg = segment.segment("Why complain about our budget when they wasted millions? Either we pass this today or the city collapses.")
+    hints = heuristics.extract_hints(seg)
+    spans = heuristics.spans_from_hints(hints)
+    found_labels = {s["label"] for s in spans}
+    assert "whataboutism" in found_labels and "false_dilemma" in found_labels
+
+    # Ellipsis-wrapped model quotes still map to exact character offsets
+    s2 = segment.segment("Experts say they can switch meters off, leaving families freezing in the dark!")
+    loc = validate.locate(s2, "p1s1", "...leaving families freezing in the dark...")
+    assert loc is not None and s2.text[loc[0]:loc[1]] == "leaving families freezing in the dark"

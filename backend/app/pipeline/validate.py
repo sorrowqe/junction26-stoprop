@@ -74,13 +74,17 @@ def normalize_with_map(s: str, fold_case: bool = False) -> tuple[str, list[tuple
 def _quote_variants(quote: str) -> list[str]:
     q = normalize_with_map(quote)[0].strip()
     variants = [q]
-    # models sometimes wrap the quote in quote marks or add trailing sentence punctuation
-    if len(q) > 2 and q[0] in "\"'" and q[-1] in "\"'":
-        variants.append(q[1:-1].strip())
-    stripped = q.rstrip(".,;:!?")
-    if stripped != q:
-        variants.append(stripped)
-    return [v for v in variants if len(v) >= MIN_QUOTE_CHARS]
+    # models sometimes wrap the quote in quote marks, ellipses, or trailing sentence punctuation
+    trimmed = re.sub(r"^(?:\.{2,}|…|\[\.{2,}\])\s*|\s*(?:\.{2,}|…|\[\.{2,}\])$", "", q).strip()
+    if trimmed and trimmed != q:
+        variants.append(trimmed)
+    for base in list(variants):
+        if len(base) > 2 and base[0] in "\"'" and base[-1] in "\"'":
+            variants.append(base[1:-1].strip())
+        stripped = base.rstrip(".,;:!?")
+        if stripped != base:
+            variants.append(stripped)
+    return [v for v in dict.fromkeys(variants) if len(v) >= MIN_QUOTE_CHARS]
 
 
 def locate_in(text: str, start: int, end: int, quote: str, occurrence: int = 1) -> tuple[int, int] | None:

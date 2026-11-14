@@ -164,7 +164,16 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
     `syndication.py` ("Copies elsewhere") receipt on Analyze URL, and `RATE_LIMIT_MULTIPLIER` for shared venue Wi-Fi.
   - Verified live via `scripts/live_web_smoke.py` (0 AI Router calls): Brave `site:err.ee` 5 hits in 1.75 s, Oxylabs
     scrape `bbc.com/news` 1,419 words in 8.6 s, Bluesky post URL in 0.91 s, `err.ee` domain age `2010-07-04` in 2.95 s.
-  - Unit tests: **601 passed** (all network/LLM mocked).
+  - Unit tests: **602 passed** (all network/LLM mocked).
+- **Analyzer Recall, Taxonomy & Inline Explanations Upgrade**:
+  - Offline error analysis on `eval.db` found old prompt Rule 10 ("0.8 or more") caused `gemini-3.5-flash-lite-eu` to
+    score clear detections at `0.80-0.85`, so `strict: 0.90` discarded 73% of detections, while narrow definitions
+    missed `fear_appeal` (0/4) and `name_calling` (4/24) and over-triggered `unsupported_claim`.
+  - Sharpened `techniques.yaml` definitions + `display_name`s (`Questionable / fabricated authority`, `Name-calling /
+    labelling`, `Fear / threat appeal`, `Whataboutism / deflection`, `Causal oversimplification / scapegoating`, `Doubt
+    casting / insinuation`), rewrote `tagger_system.md` with explicit boundary rules + calibrated `0.90-0.98` rubric +
+    tight `unsupported_claim` rules, added `whataboutism` & `false_dilemma` hints across EN/ET/RU lexicons, added
+    ellipsis quote recovery in `validate.py`, and displayed plain-language explanations directly inside Findings on `/`.
 - **Check a Source v2** (`/source` + `POST /api/receipts` + IPv4-first `GuardedBackend`):
   - Fixed a major network stall in `extract.py` where `GuardedBackend` tried up to 3 IPv6 `AAAA` records before IPv4 on
     dual-stack domains (stalling on IPv4-only Docker bridges and venue Wi-Fi).

@@ -98,13 +98,27 @@ kogu maailm teab
 eksperdid ütlevad
 eksperdid hoiatavad
 eksperdid on ühel meelel
+juhtivad eksperdid
 teadlased ütlevad
 teadlased on tõestanud
 uuringud näitavad
 uuringud on näidanud
 allikad väidavad
+anonüümsed allikad
+siseringi allikad
+sõltumatud analüütikud
 paljud ütlevad
 inimesed räägivad
+
+[whataboutism]
+aga miks keegi ei räägi
+miks kaevata
+kus oli pahameel siis
+
+[false_dilemma]
+kas me teeme
+ainus valik on
+muud valikut ei ole
 
 [balance]
 samas

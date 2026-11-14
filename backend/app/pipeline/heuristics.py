@@ -20,6 +20,8 @@ _LEXICON_HINTS = {
     "attribution": "attribution",
     "bandwagon": "bandwagon_phrase",
     "vague_authority": "vague_authority",
+    "whataboutism": "whataboutism_phrase",
+    "false_dilemma": "false_dilemma_phrase",
     "balance": "balance_marker",
     "opinion": "opinion_marker",
 }
@@ -126,7 +128,9 @@ def extract_hints(seg: Segmented) -> list[dict]:
 
 _EXPLAIN = {
     "bandwagon": "Points to what “everyone” supposedly knows or agrees on, instead of giving evidence.",
-    "questionable_authority": "Cites unnamed experts, studies or sources without saying who they are.",
+    "questionable_authority": "Cites unnamed experts, insiders or studies without saying who they are so they can be checked.",
+    "whataboutism": "Deflects criticism by pointing to someone else's actions instead of answering the point.",
+    "false_dilemma": "Frames the issue as only two extreme options when other choices may exist.",
     "unsupported_claim": (
         "States a figure without naming where it comes from in this sentence. "
         "That does not make it false; the text just gives no source for it here."
@@ -139,6 +143,8 @@ _SPAN_RULES = {
     # hint type -> (label, confidence)
     "bandwagon_phrase": ("bandwagon", 0.45),
     "vague_authority": ("questionable_authority", 0.35),
+    "whataboutism_phrase": ("whataboutism", 0.4),
+    "false_dilemma_phrase": ("false_dilemma", 0.35),
     "number_unattributed": ("unsupported_claim", 0.3),
     "all_caps": ("loaded_language", 0.3),
 }

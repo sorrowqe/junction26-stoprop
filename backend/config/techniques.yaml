@@ -15,7 +15,7 @@ techniques:
     name: Loaded language
     kind: technique
     color: red
-    definition: Emotionally charged words used to sway the reader rather than inform.
+    definition: Emotionally charged verbs, adjectives or phrasing used to provoke outrage, disgust or excitement rather than inform.
     example: "The council's reckless scheme will gut our neighbourhood."
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
@@ -25,10 +25,11 @@ techniques:
 
   - label: name_calling
     name: Name-calling
+    display_name: Name-calling / labelling
     kind: technique
     color: red
-    definition: Labelling a person or group to discredit them instead of addressing their argument.
-    example: "Only clueless bureaucrats could support this plan."
+    definition: Attaching a derogatory, ideological or loaded noun-phrase label or epithet to a person, group, institution or policy so the reader reacts to the label instead of arguments.
+    example: "Only clueless bureaucrats and corrupt elites could back this puppet regime."
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
@@ -36,10 +37,11 @@ techniques:
 
   - label: fear_appeal
     name: Fear appeal
+    display_name: Fear / threat appeal
     kind: technique
     color: red
-    definition: Invoking threat or danger to push a conclusion or action.
-    example: "If this passes, your family will not be safe in its own home."
+    definition: Invoking danger, violence, panic, collapse or loss of safety to push a conclusion - whether conditional ("if X, then Y") or catastrophic threat framing.
+    example: "Leaving families freezing in the dark while streets become unsafe to walk."
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
@@ -49,8 +51,8 @@ techniques:
     name: Exaggeration / minimisation
     kind: technique
     color: red
-    definition: Overstating or downplaying something beyond what the evidence supports.
-    example: "A few delayed trains have brought the entire country to a standstill."
+    definition: Overstating scale or harm beyond what evidence supports, or trivialising serious facts as nothing.
+    example: "A few delayed trains have brought the entire country to a complete standstill."
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: 0.857
@@ -59,10 +61,11 @@ techniques:
 
   - label: whataboutism
     name: Whataboutism
+    display_name: Whataboutism / deflection
     kind: technique
     color: red
-    definition: Deflecting criticism by pointing to someone else's wrongdoing instead of answering it.
-    example: "Why complain about our budget overrun when the last government did worse?"
+    definition: Deflecting criticism or shifting blame by pointing to someone else's wrongdoing instead of answering the point.
+    example: "Why complain about our budget overrun when the previous government wasted even more?"
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
@@ -72,8 +75,8 @@ techniques:
     name: False dilemma
     kind: technique
     color: red
-    definition: Presenting only two options when more exist.
-    example: "Either we close the border completely or we give up our country."
+    definition: Presenting complex choices as only two extreme outcomes ("either A or B", "the only option left") when other paths exist.
+    example: "Either we close the border completely or we surrender our country."
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
@@ -81,10 +84,11 @@ techniques:
 
   - label: questionable_authority
     name: Questionable authority
+    display_name: Questionable / fabricated authority
     kind: technique
     color: red
-    definition: Appealing to a vague, unnamed, irrelevant or made-up authority instead of evidence.
-    example: "Experts say the new vaccine changes your DNA."
+    definition: Appealing to unnamed, vague, irrelevant or fabricated authorities ("experts say", "senior insiders claim", invented studies) instead of verifiable sources.
+    example: "Top independent insiders confirm the new meters secretly record conversations."
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
@@ -92,9 +96,10 @@ techniques:
 
   - label: causal_oversimplification
     name: Causal oversimplification
+    display_name: Causal oversimplification / scapegoating
     kind: technique
     color: red
-    definition: Blaming a single cause for a complex outcome.
+    definition: Blaming a single cause or scapegoat for a complex outcome with multiple factors.
     example: "Prices went up for one reason only: the new mayor."
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
@@ -105,7 +110,7 @@ techniques:
     name: Bandwagon
     kind: technique
     color: red
-    definition: Using "everyone knows" or "everyone agrees" as the argument itself.
+    definition: Treating "everyone knows", "every sensible person agrees" or supposed majority belief as proof in itself.
     example: "Everybody knows this policy has failed."
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
@@ -114,10 +119,11 @@ techniques:
 
   - label: doubt_casting
     name: Doubt casting
+    display_name: Doubt casting / insinuation
     kind: technique
     color: red
-    definition: Undermining someone's credibility without giving evidence.
-    example: "Can we really trust a report written by these so-called scientists?"
+    definition: Undermining credibility or motives via unsubstantiated insinuation, scare quotes or leading rhetorical questions ("just asking").
+    example: "Can we really trust figures written by these so-called 'independent' scientists?"
     enabled: true
     min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: 0.6

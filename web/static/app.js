@@ -395,6 +395,9 @@
       head.append(el("span", `ico c-${s.color}`, COLORS[s.color].icon), " ", el("strong", null, labelName(s.label)), " ");
       head.append(el("span", "q", `“${s.quote}”`));
       b.append(head);
+      if (s.explanation) {
+        b.append(el("span", "finding-exp", s.explanation));
+      }
       const meta = [`confidence ${Math.round(s.confidence * 100)}%`];
       if (s.experimental) meta.push("not yet validated");
       if (s.reported_speech) meta.push("reported speech, not counted");
