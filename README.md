@@ -21,19 +21,19 @@ Stoprop is an open-web anti-propaganda & coordinated-amplification intelligence 
 ## Architecture
 
 ```text
-  Browser / API Client ──► FastAPI (/, /source, /swarm, /metrics, /docs)
-                               │
-     ┌─────────────────────────┼──────────────────────────┐
-     ▼                         ▼                          ▼
-  1. Text & Claim Pipeline  2. Provenance Engine      3. Swarm & Spread Engine
-  • Segment + Lexicon Hints • Lookalike / TLD-Swap    • Reddit/TG/BSky/HN/YT
-  • Hostinger AI Router     • RDAP + Port-43 WHOIS    • Brave + Oxylabs Search
-  • Verbatim Quote Rescue   • Wayback + CT Logs       • 5-gram MinHash Jaccard
-  • Overlap Deduplication   • Live HTML & Link Graph  • Poisson Burst Scan
-  • Live Claim Corroborate  • 8-Watchdog Fact-Checks  • Innocent Crowd Filters
-     └─────────────────────────┼──────────────────────────┘
-                               ▼
-                     SQLite (WAL) Cache & Caps
+  Browser / API Client ──► FastAPI (/, /source, /swarm, /traffic, /metrics, /docs)
+                                     │
+   ┌───────────────────────┬─────────┴──────────────┬────────────────────────┐
+   ▼                       ▼                        ▼                        ▼
+1. Text & Claim Engine  2. Provenance Engine     3. Swarm & Spread        4. Clean-Traffic Logs
+• Segment + Hints       • Lookalike / TLD-Swap   • Reddit/TG/BSky/HN/YT   • Nginx/Apache/Caddy/CSV
+• Hostinger AI Router   • RDAP + Port-43 WHOIS   • Brave + Oxylabs Search • Shodan InternetDB
+• Verbatim Quote Rescue • Wayback + CT Logs      • 5-gram MinHash Jaccard • RIPE NCC ASN Check
+• Overlap Deduplication • Live HTML & Link Graph • Poisson Burst Scan     • VirusTotal Reputation
+• Live Claim Verify     • 8-Watchdog Fact-Checks • Innocent Crowd Filters • .htaccess / Nginx / UFW
+   └───────────────────────┴─────────┬──────────────┴────────────────────────┘
+                                     ▼
+                           SQLite (WAL) Cache & Caps
 ```
 - **SSRF-Safe Multi-Tier Fetching (`backend/app/pipeline/extract.py`):** Validates DNS answers on every hop (blocking RFC1918, loopback, link-local, and cloud metadata IPs), orders IPv4 ahead of IPv6 to prevent dual-stack stalls, extracts article text via `trafilatura`, and fails over to Oxylabs AI Studio on bot-blocked pages with a daily cap.
 - **Resilient Search Failover (`backend/app/pipeline/websearch.py`):** Uses Brave Search API (`extra_snippets=true`, 1-QPS pacing) as primary with automatic failover to Oxylabs Instant Search and GDELT DOC 2.0.
@@ -75,6 +75,10 @@ curl -s https://stoprop.tech/api/swarm \
 curl -s https://stoprop.tech/api/trace \
   -H 'Content-Type: application/json' \
   -d '{"text": "Russia GPS jamming Baltic flights"}'
+
+# 5. Inspect web-server access logs for credential stuffers, spoofed crawlers & AI scrapers
+curl -s -X POST https://stoprop.tech/api/traffic \
+  -H 'Content-Type: text/plain' --data-binary @/var/log/nginx/access.log
 ```
 
 ---
@@ -87,7 +91,7 @@ python -m venv .venv
 cp .env.example .env.local                               # set ROUTER_API_KEY (optional: BRAVE_API_KEY)
 PYTHONPATH=backend .venv/Scripts/uvicorn app.main:app --reload --port 8000
 
-# Offline test suite (604+ tests, 0 live network or AI calls)
+# Offline test suite (606+ tests, 0 live network or AI calls)
 .venv/Scripts/python -m pytest -q
 
 # Production deployment (Hostinger VPS via Docker Compose + Traefik TLS)

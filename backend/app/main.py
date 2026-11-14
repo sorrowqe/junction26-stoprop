@@ -34,7 +34,25 @@ async def lifespan(_app: FastAPI):
     task.cancel()
 
 
-app = FastAPI(title="Stoprop", version=config.VERSION, docs_url="/docs", redoc_url=None, lifespan=lifespan)
+OPENAPI_DESC = (
+    "Public JSON API for **Stoprop** ([stoprop.tech](https://stoprop.tech)) — covering all four anti-propaganda "
+    "& bad-actor tracks:\n"
+    "- **Name the technique** (`POST /api/analyze`, `POST /api/verify`, `GET /api/techniques`)\n"
+    "- **Trust the source** (`POST /api/receipts`)\n"
+    "- **Spot the swarm** (`POST /api/swarm`, `POST /api/trace`)\n"
+    "- **Clean the traffic** (`POST /api/traffic` — Shodan InternetDB + RIPE NCC ASN + VirusTotal)\n\n"
+    "All quote offsets are Unicode code points; every highlighted quote is verified character-for-character."
+)
+
+app = FastAPI(
+    title="Stoprop API",
+    summary="Detect manipulation tactics, source clones, coordinated swarms, and malicious server-log bots.",
+    description=OPENAPI_DESC,
+    version=config.VERSION,
+    docs_url="/docs",
+    redoc_url=None,
+    lifespan=lifespan,
+)
 app.mount("/static", StaticFiles(directory=config.WEB_DIR / "static"), name="static")
 
 
@@ -417,7 +435,31 @@ async def trace_post(req: TraceRequest, request: Request):
     return await _respond(run, error, req.stream)
 
 
-@app.post("/api/traffic")
+@app.post(
+    "/api/traffic",
+    openapi_extra={
+        "requestBody": {
+            "required": True,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "data": {"type": "string", "description": "Raw Nginx/Apache Combined, Caddy JSON, or CSV log lines."},
+                            "enrich": {"type": "boolean", "default": True, "description": "Query Shodan InternetDB, RIPE NCC ASN, and VirusTotal."},
+                        },
+                        "required": ["data"],
+                    },
+                    "example": {
+                        "data": '66.249.66.1 - - [14/Nov/2026:18:20:10 +0000] "GET /robots.txt HTTP/1.1" 200 180 "-" "Mozilla/5.0 (compatible; Googlebot/2.1)"\n185.220.101.1 - - [14/Nov/2026:18:20:25 +0000] "POST /wp-login.php HTTP/1.1" 401 512 "-" "Mozilla/5.0"',
+                        "enrich": True,
+                    },
+                },
+                "text/plain": {"schema": {"type": "string"}},
+            },
+        }
+    },
+)
 async def traffic_post(request: Request) -> dict:
     """Clean the traffic: inspect Nginx/Apache/Caddy/CSV server logs for malicious bots, credential stuffing,
     spoofed crawlers, and AI scrapers, enriched with Shodan InternetDB + RIPE ASN + optional VirusTotal."""

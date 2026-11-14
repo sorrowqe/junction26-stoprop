@@ -1,8 +1,6 @@
 # Methodology
 
-The full write-up (pipeline, principles, caching, privacy, evaluation protocol, why there is no
-AI-generated-text detection, known limitations) is completed in M6. This file already documents the
-swarm-mode data sources.
+Stoprop covers all four tracks of the Hostinger anti-propaganda & bad-actor challenge — **Name the technique** (`/`), **Trust the source** (`/source`), **Spot the swarm** (`/swarm`), and **Clean the traffic** (`/traffic`) — governed by strict false-positive guardrails and exact-quote verification. See [`web/methodology.html`](../web/methodology.html) (live at [`/methodology`](https://stoprop.tech/methodology)) for the reader-facing overview.
 
 ## Swarm mode: where the posts come from
 
@@ -11,6 +9,9 @@ becomes the same list of posts (id, author, time, text, optional link and accoun
 
 | Input | How Stoprop reads it | What we get | Limits |
 |---|---|---|---|
+| **Reddit** thread or subreddit link | Public Atom `.rss` feed (`reddit.com/r/….rss`, XXE-safe XML parser, no login) | Post + comment tree or latest subreddit posts with authors & UTC timestamps | Public posts only |
+| **Telegram** channel link(s) (`t.me/…`) | Public channel web preview (`t.me/s/…`, single channel or multi-channel batch) | Recent public channel messages, timestamps, forwarded/shared links | Public channels with web preview enabled |
+| **Hacker News** item link | Official Algolia HN Search API (`hn.algolia.com/api/v1/items/{id}`) | Story + nested comment tree with authors & timestamps | Public items |
 | **Bluesky** post link | Public AppView API `public.api.bsky.app` (no login): `getPostThread` (depth 1000; branches the server cuts short are re-fetched), `getQuotes` (up to 300 quote posts), `getProfiles` only for missing creation dates | The post, all replies, quote posts, account creation dates | Times are the post's own `createdAt` (set by the author's app) |
 | **Mastodon** post link (any server) | That server's public REST API: `/api/v1/statuses/{id}` and `/context` | The post and its replies, account creation dates (date only for remote accounts) | Many servers share at most **60 replies** with visitors who are not logged in; we say so when the cap is hit. Servers that require login are reported as such. |
 | **YouTube** video link | YouTube Data API v3 with the server's `GOOGLE_API_KEY`: `videos`, `commentThreads` (100 per page, newest first), `comments` for up to 5 long reply threads, `channels` for creation dates | Comments, replies, channel creation dates | Needs a key on the server (otherwise "not configured"); each call uses 1 unit of the key's daily quota (10,000 by default) |
@@ -33,15 +34,13 @@ example "a real Bluesky thread" is a stored snapshot (taken 2026-11-14 of a publ
 Bluesky account) so demos never fetch live; account names other than the original poster are replaced by
 pseudonyms, texts and times are unchanged.
 
-### What we cannot access, and why
+### What we cannot access directly, and why
 
 - **X (Twitter)**: no free public access to posts and replies; reading requires a paid developer account and login.
 - **Facebook, Instagram, Threads (Meta)**: no access to posts and comments without login and approved app access.
 - **TikTok**: the research API is open only to approved academic researchers.
-- **Reddit**: requires registered API access and blocks anonymous automated reading.
 
-For these platforms users can export posts themselves (or use a research data export) and upload a CSV/JSON
-file. We do not scrape logged-in pages or work around access rules.
+For these login-walled platforms, users can paste a post's text into `/swarm` to trace where copies spread across the open web and public forums, or upload a research CSV/JSON export. We do not scrape logged-in pages or work around access rules.
 
 ### Campaigns
 
@@ -119,6 +118,16 @@ also adds a red "unverifiable attribution" span on the attribution phrase), **co
 may be too recent or not indexed), **could not check** (search busy or failed, or no articles from the cited outlet
 on the topic at all; never turned into "not found"). Results are cached for one hour; 10 checks per hour per IP.
 
-Lesson from live testing (2026-11-14): a true ERR report published the same day was not yet in the index; an
-exact-keyword search would have marked it "not found". Hence the lenient outlet search and the rule that zero
-articles from the outlet means "could not check".
+Lessons from live testing (2026-11-14): a true ERR report published the same day was not yet in the index; an
+exact-keyword search would have marked it "not found". Hence the lenient outlet search, the rule that zero
+articles from the outlet means "could not check", and an automatic undated open-web fallback when the recent
+14-day window returns zero hits on older claims or archived hoaxes.
+
+## Clean the traffic (`/traffic` & `POST /api/traffic`)
+
+Parses Nginx/Apache Combined & Common access logs, Caddy/Traefik structured JSON logs, or CSV exports in memory (up to 10,000 lines / 2 MB, never stored). Top candidate public IPs are enriched concurrently (24h SQLite cache) via:
+- **Shodan InternetDB** (`internetdb.shodan.io/{ip}`): open ports, threat tags (`tor`, `scanner`, `vpn`, `proxy`, `compromised`, `cloud`), rDNS hostnames, and CVE vulnerabilities.
+- **RIPE NCC RIPEstat** (`stat.ripe.net`): Autonomous System Number (ASN) and network holder, used to verify whether `Googlebot` (`AS15169`), `Bingbot` (`AS8075`), or `Applebot` (`AS714`) User-Agents actually originate from their official networks.
+- **VirusTotal v3** (optional when `VIRUSTOTAL_API_KEY` is set): malicious/suspicious security-engine votes.
+
+Actors are classified into `credential_stuffing`, `vuln_scanner`, `spoofed_crawler`, `ai_or_bulk_scraper`, `verified_crawler`, or `human_visitor`. Shared office/campus NAT IPs, browsers loading static CSS/JS/image assets, and ASN-verified search crawlers are protected from false blocks (`12/12` innocent controls protected in `eval/traffic/run_traffic_eval.py`). Ready-to-paste Hostinger `.htaccess`, Nginx, and Linux `ufw` block rules are generated only for `malicious` (`block`) actors.

@@ -83,7 +83,7 @@ curl -s -N -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/
     <h2>Health and AI budget</h2>
     <pre><code>curl -s https://stoprop.tech/api/health</code></pre>
     <h2>Rate limits</h2>
-    <p>Per client IP, per hour: analyze 30, receipts 60, swarm 10, feedback 30. Over the limit you get HTTP 429 with a plain message.</p>
+    <p>Per client IP, per hour: analyze 30, receipts 60, verify 10, swarm 10, trace 5, traffic 30, feedback 30. Over the limit you get HTTP 429 with a plain message.</p>
     <p>Evaluation results: <code>GET /api/metrics</code>.</p>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>

@@ -1,8 +1,8 @@
 # Progress
 
-_Last updated: 2026-11-14 (M5 Part A + A2 deployed; Part A3 (Trace a post) done, not yet deployed; Part B next)_
+_Last updated: 2026-11-14 (v1.0.0 live on https://stoprop.tech — all milestones M0–M6 & all 4 Hostinger challenge tracks deployed; 606/606 tests passing)_
 
-Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
+Spec: CLAUDE.md **v2** + full 4-track Hostinger suite (`/`, `/source`, `/swarm`, `/traffic`, `/metrics`, `/methodology`, `/api`, `/docs`).
 
 ## Done
 - **M0** walking skeleton + pull-based deploy (`deploy.sh` -> `live` -> cron `server-deploy.sh`).
@@ -197,35 +197,24 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
     histogram + labeled platform swimlanes, 4-tile `T/S/A/M` signal scorecards, account-labeled cluster swimlanes with
     shaded Poisson burst-window bands and relative `+0s..+Nm` axes, and hover/click post inspectors.
 
-## Next
-- M5 Part B: benchmark generator + run_swarm_eval.py + /metrics swarm section (announce calls/credits first).
-- YouTube live check once GOOGLE_API_KEY (YouTube Data API v3 enabled) is in .env.local and the server .env.
-- Later: "Report a wrong label" (`POST /api/feedback`, 30/h) and "Share result" (`/r/{id}`).
-- Sunday morning: `run_eval.py --final` (announce calls).
+## M6 — Production Hardening, Full Benchmarks, UI Redesign & Clean the Traffic (deployed live)
+- **Detector & Validator Hardening:** raised `MAX_OUTPUT_TOKENS` to `4000`, added off-by-one same-paragraph unique quote rescue + generic `loaded_language` overlap deduplication in `validate.py`, added structural lexicon pre-anchors (`causal_oversimplification`, `exaggeration`, `false_dilemma`, `whataboutism`), and added undated open-web fallback to `verify/news.py`.
+- **Outbound Link-Network Provenance (`pagecheck.py`):** classifies external `<a href>` domains on `/source` into verified public/wire outlets, state-funded media, and look-alike domains.
+- **Clean the Traffic (`/traffic`, `POST /api/traffic`):** Nginx/Apache Combined, Caddy/Traefik JSON, and CSV server-log inspector enriched live with **Shodan InternetDB**, **RIPE NCC ASN**, and optional **VirusTotal v3**, generating ready-to-paste Hostinger `.htaccess`, Nginx, and `ufw` rules while protecting shared office NAT and ASN-verified search crawlers.
+- **Complete Benchmarks Published on `/metrics`:**
+  - 89-passage Dev Split refreshed (`Strict` precision `65.4%`, recall `30.2%`, F1 `41.3%`; `24/25` clean controls passed `96%`).
+  - 49-passage Locked Held-Out Test Split (`test_final.json`): `60.0%` overall precision (`80.0%` on multi-technique), `47.2%` F1, `11/11 (100%)` clean controls passed.
+  - 40-scenario Swarm Stress Benchmark (`swarm_latest.json`): `100%` precision, `85.0%` recall (`17/20`), `91.9%` F1, `20/20 (100%)` organic crowds passed.
+  - 24-scenario Clean-Traffic Benchmark (`traffic_latest.json`): `100%` precision, `100%` recall (`12/12`), `100%` F1, `12/12 (100%)` innocent visitor controls protected.
+- **Persistent SQLite Volume & UI Redesign:** switched `docker-compose.yml` to named volume `stoprop_data:/app/data` (`storage: "sqlite"` verified live), redesigned `style.css` across all pages, added `Copy brief` export across all tools, 1-click cross-tool handoffs, and draggable browser bookmarklet.
 
-## Known issues / limits
-- Only exaggeration_minimisation is shown by default (measured precision >= 0.70 with >= 5 predictions); the rest
-  are experimental (UI offers "Show experimental labels").
-- Swarm: headline sharing within an hour also fires the timing signal, so it is downgraded to "worth watching",
-  not "looks organic" (spec: organic_looking only without S/A). Clusters are per message: one campaign posting
-  three different messages shows as three clusters, linked by "the same accounts also posted ...".
-- Rate limits are in memory: they reset on every deploy.
-- Genre/language detection are simple rules; Finnish may be detected as Estonian.
-- The model tends to quote whole sentences (inflates flagged_share); prompt tuning planned for M4.
-- Receipts: `crt.sh` is often overloaded (capped at 4.5 s so it never stalls `/source`); `.ee` and major European ccTLDs without RDAP now use a port-43 WHOIS registration-date fallback; hard paywalls that also block residential browser rendering fall back to search excerpts or paste-text.
-- Lookalike can flag dictionary words one letter away from an outlet name (e.g. lemonade vs lemonde).
-- Rate limit is per IP: set `RATE_LIMIT_MULTIPLIER=3` in server `.env` when many users share one venue Wi-Fi IP.
+## Known boundaries (documented on `/methodology`)
+- Quantitative text accuracy benchmarks are measured on English (`dev` 89 + `test` 49 passages); other languages use the same conservative `Strict` default.
+- Rate limits are per-IP in-memory sliding windows (set `RATE_LIMIT_MULTIPLIER=3` in server `.env` on shared venue Wi-Fi).
+- Login-walled social platforms (X/Twitter, Meta, TikTok) are not scraped directly; paste post text into `/swarm` spread search or import CSV/JSON exports.
 
-## How to verify (PC, Git Bash, in the repo folder)
+## How to verify
 ```bash
-.venv/Scripts/python -m pip install -r backend/requirements-dev.txt   # if requirements changed
-.venv/Scripts/python -m pytest -q                                     # expect: 420 passed
-GIT_COMMIT=test1234 PYTHONPATH=backend .venv/Scripts/python -m uvicorn app.main:app --port 8000
-# browser: http://127.0.0.1:8000 (without a key: rules-only mode + banner)
+.venv/Scripts/python -m pytest -q                                     # 606 passed
+curl -s https://stoprop.tech/api/health                               # version 1.0.0, storage: sqlite
 ```
-Server (after deploy):
-```bash
-curl -s https://stoprop.tech/api/health        # budget.tokens_today, llm.configured, storage
-cd /docker/stoprop && docker compose exec stoprop python scripts/tagger_smoke.py   # ONE real call
-```
-(On Mac/Linux use `.venv/bin/python` instead of `.venv/Scripts/python`.)

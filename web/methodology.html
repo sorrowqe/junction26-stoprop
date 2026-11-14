@@ -40,14 +40,16 @@
 
     <h2>2. Claim verification &amp; Check a Source</h2>
     <p><strong>Verify claims</strong> extracts up to 3 check-worthy factual assertions (prioritising attributed claims and statistics), searches live news and open-web indexes, reads independent reporting, verifies verbatim evidence quotes, and reports one of five transparent statuses: <em>corroborated</em>, <em>contradicted</em>, <em>cited source not found</em>, <em>no independent reports found</em>, or <em>could not check</em> — never “true” or “false”.</p>
-    <p><strong><a href="/source">Check a source</a></strong> inspects domain registration age (RDAP + port-43 WHOIS fallback), earliest Wayback Machine archive, Certificate Transparency logs (crt.sh + CertSpotter), brand/homoglyph/TLD-swap impersonation against known outlets, declared satire and state-media context, live newsroom transparency links (About, Contact, Editorial policy, author bylines), independent fact-checker/watchdog mentions, and verbatim syndication across other websites.</p>
+    <p><strong><a href="/source">Check a source</a></strong> inspects domain registration age (RDAP + port-43 WHOIS fallback), earliest Wayback Machine archive, Certificate Transparency logs (crt.sh + CertSpotter), brand/homoglyph/TLD-swap impersonation against known outlets, declared satire and state-media context, live newsroom transparency links (About, Contact, Editorial policy, author bylines), outbound external link networks (classifying verified public/wire outlets, state-funded media, and look-alike domains), independent fact-checker/watchdog mentions, and verbatim syndication across other websites.</p>
     <p><strong>Language coverage:</strong> English and other languages are accepted; quantitative accuracy benchmarks
       are currently measured on English, while other languages use the same conservative defaults (see <a href="/metrics">Metrics</a>).</p>
-    <p><strong>Sensitivity levels</strong> are calibrated on the English development set: <em>strict</em> (the default)
+    <p><strong>Sensitivity levels</strong> are calibrated on the English development set and verified on a locked 49-passage held-out test split: <em>strict</em> (the default)
       targets at most 5% of clean news paragraphs flagged with a technique, <em>balanced</em> at most 15%, and
       <em>broad</em> shows every label the AI proposes. The measured trade-off for each level, with confidence
       intervals, is on the <a href="/metrics">Metrics</a> page.</p>
-    <p><strong>Swarm mode</strong> looks at a batch of posts, never a single one. Four independent signal families:
+
+    <h2>3. Swarm mode &amp; narrative spread</h2>
+    <p><strong><a href="/swarm">Swarm mode</a></strong> looks at a batch of posts, never a single one. Four independent signal families:
       <em>text reuse</em> (character 5-gram MinHash, ≥ 60% overlap, posts of at least 8 words, different accounts only),
       <em>timing</em> (60% of a group's posts in a window far tighter than the batch's normal pace, Poisson p &lt; 0.001,
       at least 3 accounts), <em>accounts</em> (shared name pattern, creation dates within 7 days, single-purpose
@@ -72,6 +74,10 @@
       swarm detector on dated copies. It does no identity research, never looks up profiles, never links accounts
       across platforms, and stores nothing.</p>
     <p class="muted">No AI-generated-text detection: such detectors are unreliable and known to be biased against non-native writers.</p>
+
+    <h2>4. Clean the traffic (server-log bot &amp; scraper inspector)</h2>
+    <p><strong><a href="/traffic">Clean traffic</a></strong> parses Nginx/Apache Combined &amp; Common logs, Caddy/Traefik structured JSON logs, or CSV exports in memory (never written to disk). Candidate public IPs are enriched live against <strong>Shodan InternetDB</strong> (open ports, threat tags such as <code>tor</code> / <code>scanner</code> / <code>vpn</code>, rDNS hostnames, and CVE vulnerabilities), <strong>RIPE NCC RIPEstat</strong> (Autonomous System Number and network holder), and optional <strong>VirusTotal v3</strong> reputation.</p>
+    <p>Each IP is classified deterministically into <em>credential stuffing</em>, <em>vulnerability scanner</em>, <em>spoofed search crawler</em> (e.g. claiming <code>Googlebot</code> from a non-Google ASN), <em>AI / bulk scraper</em>, <em>verified crawler</em>, or <em>real visitor</em>. Shared office/campus NAT IPs, browsers loading static CSS/JS/image assets, and ASN-verified crawlers are protected from false blocks, so generated Hostinger <code>.htaccess</code>, Nginx, and <code>ufw</code> rules target only malicious automation.</p>
 
     <h2>Known limitations &amp; boundaries</h2>
     <ul>
