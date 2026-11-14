@@ -1,0 +1,117 @@
+{
+  "per_label": {
+    "balance": {
+      "excluded": 7,
+      "accepted": 7,
+      "kappa": 1.0
+    },
+    "bandwagon": {
+      "accepted": 4,
+      "kappa": 1.0
+    },
+    "causal_oversimplification": {
+      "accepted": 8,
+      "kappa": 1.0
+    },
+    "doubt_casting": {
+      "accepted": 14,
+      "kappa": 1.0
+    },
+    "exaggeration_minimisation": {
+      "accepted": 5,
+      "kappa": 1.0
+    },
+    "false_dilemma": {
+      "accepted": 10,
+      "kappa": 1.0
+    },
+    "fear_appeal": {
+      "accepted": 5,
+      "kappa": 1.0
+    },
+    "loaded_language": {
+      "accepted": 13,
+      "kappa": 1.0
+    },
+    "name_calling": {
+      "accepted": 6,
+      "kappa": 1.0
+    },
+    "none": {
+      "accepted": 6,
+      "kappa": 1.0
+    },
+    "questionable_authority": {
+      "excluded": 3,
+      "accepted": 5,
+      "kappa": 0.0
+    },
+    "supported_claim": {
+      "excluded": 13,
+      "accepted": 11,
+      "kappa": 0.0
+    },
+    "unsupported_claim": {
+      "accepted": 8,
+      "kappa": 1.0
+    },
+    "whataboutism": {
+      "accepted": 5,
+      "kappa": 1.0
+    }
+  },
+  "kappa": 0.0,
+  "rows": 130,
+  "items": {
+    "gold:accepted": 38,
+    "gold:excluded": 12,
+    "sym:accepted": 11,
+    "sym:excluded": 1
+  },
+  "reported_speech_corrections": 25,
+  "unmarked_technique_items": {
+    "one": 29,
+    "both": 1
+  },
+  "reviewers": [
+    "gemini-3.5-flash-eu",
+    "mistral-medium-3.5-eu"
+  ],
+  "language": "en",
+  "method": "two model families, consensus only, not human-verified",
+  "timestamp": "2026-11-14T14:27:04+00:00",
+  "git_commit": "da9ef7b8",
+  "calls": {
+    "gemini-3.5-flash-eu": 12,
+    "mistral-medium-3.5-eu": 11
+  },
+  "tokens": {
+    "gemini-3.5-flash-eu": {
+      "in": 22476,
+      "out": 9293
+    },
+    "mistral-medium-3.5-eu": {
+      "in": 21892,
+      "out": 7515
+    }
+  },
+  "credits": {
+    "gemini-3.5-flash-eu": 15.4903,
+    "mistral-medium-3.5-eu": 11.7745
+  },
+  "raw_agreement": 0.877,
+  "accept_rate": {
+    "gemini-3.5-flash-eu": 1.0,
+    "mistral-medium-3.5-eu": 0.877
+  },
+  "items_with_unmarked_techniques": {
+    "gemini-3.5-flash-eu": 1,
+    "mistral-medium-3.5-eu": 30
+  },
+  "credits_first_batch": {
+    "gemini-3.5-flash-eu": 1.418076,
+    "mistral-medium-3.5-eu": 1.040292,
+    "gemini-3.5-flash-eu (truncated, discarded)": 5.159088
+  },
+  "credits_total": 34.88
+}

@@ -38,7 +38,15 @@
       }
       if (review) {
         bits.push(`Synthetic rows validated by ${review.reviewers.join(" and ")} (${review.method}). ` +
-          `Overall reviewer agreement κ = ${num(review.kappa)}; reported-speech corrections applied: ${review.reported_speech_corrections}.`);
+          `Raw agreement ${pct(review.raw_agreement)}, Cohen's κ = ${num(review.kappa)}; ` +
+          `reported-speech corrections applied: ${review.reported_speech_corrections}.`);
+        const rates = review.accept_rate || {};
+        bits.push(`Acceptance rate: ${Object.entries(rates).map(([m, r]) => `${m} ${pct(r)}`).join(", ")}.`);
+        const rubber = Object.entries(rates).filter(([, r]) => r === 1);
+        if (rubber.length) {
+          bits.push(`Note: ${rubber.map(([m]) => m).join(", ")} accepted every row, so κ is 0 despite the high raw ` +
+            "agreement; in practice the other reviewer's rejections decided which items were removed.");
+        }
         Object.entries(review.per_label || {}).forEach(([lbl, c]) => body("gold-labels").append(
           row([nice(lbl), num(c.accepted || 0), num(c.dropped || 0), num(c.excluded || 0), num(c.kappa)])));
       }

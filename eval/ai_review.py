@@ -315,6 +315,39 @@ def consensus(item: dict, a: dict | None, b: dict | None) -> dict:
     return {"rows": out, "item": item_flags}
 
 
+def reviewer_stats(results: dict[str, list]) -> dict:
+    """Raw agreement, acceptance rate per reviewer, items with unmarked techniques per reviewer.
+    Needed next to kappa: if one reviewer accepts everything, kappa is 0 even at high raw agreement."""
+    pairs, accept, unmarked = [], Counter(), Counter()
+    totals = Counter()
+    for a, b in results.values():
+        ra = {int(r.get("n", 0)): _yn(r.get("verdict")) for r in (a or {}).get("rows", []) if isinstance(r, dict)}
+        rb = {int(r.get("n", 0)): _yn(r.get("verdict")) for r in (b or {}).get("rows", []) if isinstance(r, dict)}
+        for k, (rev, rows) in enumerate(((a, ra), (b, rb))):
+            unmarked[REVIEWERS[k]] += bool((rev or {}).get("unmarked"))
+            totals[REVIEWERS[k]] += len(rows)
+            accept[REVIEWERS[k]] += sum(v == "y" for v in rows.values())
+        for n in set(ra) | set(rb):
+            pairs.append((ra.get(n), rb.get(n)))
+    valid = [(x, y) for x, y in pairs if x in ("y", "n") and y in ("y", "n")]
+    return {
+        "raw_agreement": round(sum(x == y for x, y in valid) / len(valid), 3) if valid else None,
+        "kappa": cohen_kappa(pairs),
+        "accept_rate": {m: round(accept[m] / totals[m], 3) if totals[m] else None for m in REVIEWERS},
+        "items_with_unmarked_techniques": {m: unmarked[m] for m in REVIEWERS},
+    }
+
+
+def load_cached_reviews(items: list[dict]) -> dict[str, list]:
+    """Reviews from the on-disk cache, by item id (independent of later CSV edits)."""
+    by_model: dict[str, dict] = {m: {} for m in REVIEWERS}
+    for f in CACHE_DIR.glob("*.json"):
+        d = json.loads(f.read_text(encoding="utf-8"))
+        if d.get("model") in by_model:
+            by_model[d["model"]].update(parse_reply(d.get("text", "")))
+    return {i["item_id"]: [by_model[REVIEWERS[0]].get(i["item_id"]), by_model[REVIEWERS[1]].get(i["item_id"])] for i in items}
+
+
 def cohen_kappa(pairs: list[tuple[str, str]]) -> float | None:
     pairs = [(x, y) for x, y in pairs if x in ("y", "n") and y in ("y", "n")]
     if not pairs:
@@ -371,7 +404,7 @@ def apply(items, results, gold_rows, sym_rows) -> dict:
         item_counter[f"{item['file']}:{status}"] += 1
     return {
         "per_label": {lbl: {**dict(cnt), "kappa": cohen_kappa(pairs_by_label[lbl])} for lbl, cnt in sorted(per_label.items())},
-        "kappa": cohen_kappa(pairs_all),
+        **reviewer_stats(results),
         "rows": sum(sum(c.values()) for c in per_label.values()),
         "items": dict(item_counter),
         "reported_speech_corrections": rs_fixes,
@@ -390,6 +423,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--first-batch", action="store_true", help="run only the first batch (both reviewers) and stop")
     ap.add_argument("--yes", action="store_true", help="run everything and write the CSVs + report")
+    ap.add_argument("--force", action="store_true", help="allow --yes although rows were already reviewed")
+    ap.add_argument("--stats-only", action="store_true", help="recompute reviewer statistics from the cache (no calls)")
     args = ap.parse_args(argv)
 
     gold_rows, sym_rows = goldcsv.read_csv(GOLD), goldcsv.read_csv(SYM)
@@ -402,6 +437,18 @@ def main(argv=None) -> int:
     print(f"Calls: {n_batches} batches x {len(REVIEWERS)} reviewers = {n_batches * len(REVIEWERS)} "
           f"(~{EST_IN_PER_CALL:,} in / ~{EST_OUT_PER_CALL:,} out tokens per call, "
           f"~{n_batches * len(REVIEWERS) * (EST_IN_PER_CALL + EST_OUT_PER_CALL):,} tokens total)")
+    if args.stats_only:
+        stats = reviewer_stats(load_cached_reviews(items))
+        report = json.loads(REPORT.read_text(encoding="utf-8")) if REPORT.exists() else {}
+        report.update(stats)
+        REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(json.dumps(stats, indent=1))
+        return 0
+    already = sum(1 for r in gold_rows + sym_rows if r.get("lang") == LANG and (r.get("ai_ok") or r.get("ai_reasons")))
+    if args.yes and already and not args.force:
+        print(f"\n{already} English rows already have review results. A re-run would miss the cache (the corrected "
+              "reported_speech values change the prompts) and spend the credits again. Use --stats-only, or --force.")
+        return 2
     if not (args.first_batch or args.yes):
         print("\nDry run only. --first-batch runs 2 calls and prints credits; --yes runs everything.")
         return 0

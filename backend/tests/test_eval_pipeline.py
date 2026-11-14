@@ -307,3 +307,24 @@ def test_truncated_reply_is_not_cached(monkeypatch, tmp_path):
 def test_gemini_gets_low_reasoning():
     assert ar.MODEL_OPTIONS["gemini-3.5-flash-eu"] == {"reasoning_effort": "low"}
     assert "mistral-medium-3.5-eu" not in ar.MODEL_OPTIONS
+
+
+def test_reviewer_stats_kappa_paradox():
+    a = {"rows": [{"n": 1, "verdict": "y"}, {"n": 2, "verdict": "y"}], "unmarked": []}
+    b = {"rows": [{"n": 1, "verdict": "y"}, {"n": 2, "verdict": "n"}], "unmarked": [{"quote": "x", "label": "y"}]}
+    s = ar.reviewer_stats({"i1": [a, b]})
+    assert s["raw_agreement"] == 0.5 and s["kappa"] == 0.0
+    assert s["accept_rate"] == {"gemini-3.5-flash-eu": 1.0, "mistral-medium-3.5-eu": 0.5}
+    assert s["items_with_unmarked_techniques"] == {"gemini-3.5-flash-eu": 0, "mistral-medium-3.5-eu": 1}
+
+
+def test_yes_refuses_when_already_reviewed(monkeypatch, tmp_path, capsys):
+    gold = tmp_path / "g.csv"
+    goldcsv.write_csv(gold, goldcsv.GOLD_COLUMNS, [gold_row(ai_ok="y", ai_reasons="x")])
+    sym = tmp_path / "s.csv"
+    goldcsv.write_csv(sym, goldcsv.SYMMETRY_COLUMNS, [])
+    monkeypatch.setattr(ar, "GOLD", gold)
+    monkeypatch.setattr(ar, "SYM", sym)
+    monkeypatch.setattr(ar.Reviewer, "__call__", lambda *a, **k: (_ for _ in ()).throw(AssertionError("called")))
+    assert ar.main(["--yes"]) == 2
+    assert "already have review results" in capsys.readouterr().out

@@ -1,0 +1,73 @@
+{
+  "language": "en",
+  "items": {
+    "dev": 89,
+    "test": 49
+  },
+  "per_source": {
+    "semeval": {
+      "accepted": 100
+    },
+    "synthetic": {
+      "accepted": 38,
+      "excluded": 12
+    }
+  },
+  "per_label": {
+    "balance": {
+      "excluded": 7,
+      "accepted": 7
+    },
+    "bandwagon": {
+      "accepted": 4
+    },
+    "causal_oversimplification": {
+      "accepted": 11
+    },
+    "doubt_casting": {
+      "accepted": 12
+    },
+    "exaggeration_minimisation": {
+      "accepted": 18
+    },
+    "false_dilemma": {
+      "accepted": 4
+    },
+    "fear_appeal": {
+      "accepted": 9
+    },
+    "loaded_language": {
+      "accepted": 54
+    },
+    "name_calling": {
+      "accepted": 34
+    },
+    "none": {
+      "accepted": 30
+    },
+    "questionable_authority": {
+      "accepted": 8,
+      "excluded": 1
+    },
+    "supported_claim": {
+      "excluded": 13,
+      "accepted": 11
+    },
+    "unsupported_claim": {
+      "accepted": 8
+    },
+    "whataboutism": {
+      "accepted": 5
+    }
+  },
+  "clean_sets": {
+    "semeval_none": 30,
+    "synthetic_hard_negative": 6
+  },
+  "symmetry_pairs": {
+    "accepted": 11,
+    "excluded": 1
+  },
+  "not_evaluated_language_rows": 63,
+  "problems": []
+}

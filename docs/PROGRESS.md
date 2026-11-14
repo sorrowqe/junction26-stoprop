@@ -47,9 +47,11 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   CLAUDE.md §1.3), `eval/ai_review.py` (Gemini + Mistral consensus), `eval/sheet_to_jsonl.py`, `eval/run_eval.py`,
   `/api/metrics` + `/metrics` (disclosures, language coverage, results, test-set quality). Tests: 416 passed.
 - Synthetic gold GENERATED (gpt-5.5-eu, 23 calls, ~49k tokens): 90 items (157 rows) + 20 symmetry pairs.
+- AI review DONE (34.88 credits): 38/50 English synthetic paragraphs accepted, 12 excluded (mostly hard negatives:
+  Mistral found unmarked techniques or rejected rows; Gemini accepted everything -> kappa 0.0, raw agreement 87.7%),
+  11/12 symmetry pairs kept, 25 reported-speech corrections. sheet_to_jsonl: 89 dev / 49 test items (English),
+  clean sets: 30 SemEval "none" + 6 synthetic hard negatives (all splits), 63 ET/RU rows not evaluated.
 - NEXT STEPS (each needs Aleksandr's OK for the calls):
-  1. `python eval/ai_review.py --first-batch` (2 calls) -> credits + projection -> OK -> `--yes` (22 calls total).
-  2. `python eval/sheet_to_jsonl.py` (no calls).
   3. `python eval/run_eval.py` (plan) -> OK -> `--yes` (dev, ~67+ calls with Haiku on the dev key), then bake-off.
   4. Commit eval/results/*.json, deploy -> /metrics shows the numbers.
 
@@ -86,7 +88,7 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 ## How to verify (PC, Git Bash, in the repo folder)
 ```bash
 .venv/Scripts/python -m pip install -r backend/requirements-dev.txt   # if requirements changed
-.venv/Scripts/python -m pytest -q                                     # expect: 416 passed
+.venv/Scripts/python -m pytest -q                                     # expect: 420 passed
 GIT_COMMIT=test1234 PYTHONPATH=backend .venv/Scripts/python -m uvicorn app.main:app --port 8000
 # browser: http://127.0.0.1:8000 (without a key: rules-only mode + banner)
 ```
