@@ -1,0 +1,1 @@
+"""rdap receipt. (M3)"""

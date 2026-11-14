@@ -1,0 +1,1 @@
+"""factcheck receipt. (M3)"""

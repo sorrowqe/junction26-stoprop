@@ -1,0 +1,12 @@
+# secrets
+.env
+.env.local
+# runtime data (SQLite cache etc.) - root only, so eval/data/{dev,clean,symmetry} stay tracked
+/data/
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# locked gold test split (never committed)
+eval/data/test/

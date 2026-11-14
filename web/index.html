@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stoprop</title>
+  <meta name="description" content="Stoprop highlights manipulation techniques in text and explains them in plain language.">
+  <style>
+    :root { --bg: #fafaf7; --fg: #1d1d1b; --muted: #5c5c57; --accent: #b3261e; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #141413; --fg: #ececea; --muted: #a3a39e; --accent: #f2b8b5; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg);
+           font: 18px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 42rem; margin: 0 auto; padding: 18vh 16px 4rem; }
+    h1 { font-size: clamp(2rem, 6vw, 3rem); margin: 0 0 .5rem; letter-spacing: -.02em; }
+    h1 span { color: var(--accent); }
+    .tagline { font-size: 1.25rem; margin: 0 0 2rem; }
+    p { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Stop<span>rop</span></h1>
+    <p class="tagline">Stoprop: see the spin before it sees you. We flag the tactics, not the opinions.</p>
+    <p>Paste a text or a link and Stoprop highlights manipulation techniques, explains each one
+       in plain language, and shows provenance receipts for the source. The analyzer is coming soon.</p>
+  </main>
+</body>
+</html>

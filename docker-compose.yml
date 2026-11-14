@@ -1,0 +1,23 @@
+services:
+  stoprop:
+    build:
+      context: .
+      args:
+        - GIT_COMMIT          # taken from the environment of server-deploy.sh
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+    expose:
+      - "8000"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.stoprop.rule=Host(`stoprop.tech`) || Host(`www.stoprop.tech`) || Host(`stoprop.srv2159153.hstgr.cloud`)
+      - traefik.http.routers.stoprop.entrypoints=websecure
+      - traefik.http.routers.stoprop.tls.certresolver=letsencrypt
+      - traefik.http.services.stoprop.loadbalancer.server.port=8000
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
