@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-14 (M3 done; ready to deploy)_
+_Last updated: 2026-11-14 (M3 deployed; gold-set tooling for M4 built, generation awaiting OK)_
 
 Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 
@@ -37,8 +37,13 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   - Tests: 340 passed (101 SSRF cases incl. rebinding + redirect to private; receipts with HTTP mocked; real
     DNS/HTTP forbidden in tests).
 
+- **Gold-set tooling (pre-M4)**: `eval/goldcsv.py` (CSV format, `[[label|phrase|rs]]` markers, validation),
+  `eval/make_synthetic.py` (seeded specs, gpt-5.5-eu, dry run by default), `eval/semeval_sample.py`
+  (Zenodo download, md5 check, label mapping) -> `eval/data/raw/semeval_sample.csv` (100 paragraphs, 112 spans).
+
 ## In progress
-- Deploy M3 + checklist.
+- Synthetic generation: dry run shows 22 calls (+<=7 repair), ~110k tokens estimated (upper bound ~147k) on the
+  DEV key. Waiting for Aleksandr's OK, then `python eval/make_synthetic.py --yes`, then human review (`ok` column).
 
 ## M3 real-network check (local PC, no AI key)
 - 11 SSRF URLs via the running app with real DNS (incl. 127.0.0.1.nip.io, localtest.me) -> all 400.
@@ -53,7 +58,9 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 - Observation: quotes are often whole sentences instead of the shortest passage -> tune in M4 with eval data.
 
 ## Next
-- M4: `sheet_to_jsonl.py`, `run_eval.py`, `/metrics`, small bake-off (announce calls), gating; prompt tuning for shorter quotes.
+- M4: `sheet_to_jsonl.py` (drop rows with ok=n, keep `source`), `run_eval.py` reporting every metric PER SOURCE
+  (synthetic / semeval / human) + reported-speech rows excluded from FPR, `/metrics` showing sources separately,
+  small bake-off (announce calls), gating; prompt tuning for shorter quotes.
 - Later: "Report a wrong label" (`POST /api/feedback`, 30/h) and "Share result" (`/r/{id}`) - not in M2 scope.
 
 ## Known issues / limits
@@ -69,7 +76,7 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 ## How to verify (PC, Git Bash, in the repo folder)
 ```bash
 .venv/Scripts/python -m pip install -r backend/requirements-dev.txt   # if requirements changed
-.venv/Scripts/python -m pytest -q                                     # expect: 340 passed
+.venv/Scripts/python -m pytest -q                                     # expect: 364 passed
 GIT_COMMIT=test1234 PYTHONPATH=backend .venv/Scripts/python -m uvicorn app.main:app --port 8000
 # browser: http://127.0.0.1:8000 (without a key: rules-only mode + banner)
 ```

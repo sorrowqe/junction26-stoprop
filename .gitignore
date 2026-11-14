@@ -10,3 +10,5 @@ __pycache__/
 .pytest_cache/
 # locked gold test split (never committed)
 eval/data/test/
+# downloaded corpora and cached generator replies (re-creatable)
+eval/data/cache/
