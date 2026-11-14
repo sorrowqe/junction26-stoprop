@@ -315,13 +315,14 @@ class Generator:
         from openai import OpenAI
         client = OpenAI(base_url=os.environ["ROUTER_BASE_URL"], api_key=os.environ["ROUTER_API_KEY"],
                         timeout=180, max_retries=1)
-        kwargs = {"model": self.model, "messages": messages, "max_completion_tokens": MAX_OUTPUT_TOKENS,
-                  "response_format": {"type": "json_object"}}
+        kwargs = {"model": self.model, "messages": messages, "max_completion_tokens": MAX_OUTPUT_TOKENS}
+        extras = {"response_format": {"type": "json_object"}, "reasoning_effort": "low"}
         try:
-            resp = client.chat.completions.create(**kwargs, reasoning_effort="low")
-        except Exception as exc:  # router may not accept reasoning_effort: retry once without it
-            if "reasoning" not in str(exc).lower():
+            resp = client.chat.completions.create(**kwargs, **extras)
+        except Exception as exc:  # router may reject an optional parameter (a 400 costs no tokens): retry once without
+            if not any(k in str(exc).lower() for k in ("reasoning", "response_format", "unsupported", "unknown parameter")):
                 raise
+            print(f"  note: router rejected optional parameters ({type(exc).__name__}); retrying without them")
             resp = client.chat.completions.create(**kwargs)
         u = resp.usage
         return resp.choices[0].message.content or "", getattr(u, "prompt_tokens", 0), getattr(u, "completion_tokens", 0)
