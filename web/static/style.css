@@ -304,6 +304,18 @@ tbody th { font-weight: 600; }
 .sig-tile.on { border-color: var(--red); background: var(--red-bg); }
 .sig-tile.k-t.on { border-color: var(--border); background: var(--bg); }
 .sig-tile.k-t.on .sig-name { color: var(--muted); }
+.source-summary-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem 1rem; }
+.page-inspect { border: 1px solid var(--border); border-radius: 10px; padding: .75rem .9rem; margin: .75rem 0; background: var(--bg); }
+.page-inspect h3 { margin: 0 0 .35rem; font-size: .96rem; }
+.r-sublist { margin: .35rem 0 .2rem; padding-left: 1.15rem; }
+.r-sublist li { margin-bottom: .2rem; overflow-wrap: anywhere; }
+.pill.ok { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+.pill.warn { border-color: var(--amber); color: var(--amber); background: var(--amber-bg); }
+.btn-link {
+  display: inline-block; text-decoration: none; border: 1px solid var(--border);
+  border-radius: 8px; padding: .45rem .85rem; font-size: .9rem; color: var(--fg); background: transparent;
+}
+.btn-link:hover { border-color: var(--fg); }
 .sig-tile .sig-name { font-size: .74rem; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); font-weight: 700; }
 .sig-tile.on .sig-name { color: var(--red); }
 .sig-tile .sig-val { font-size: .84rem; font-weight: 600; margin-top: .12rem; }

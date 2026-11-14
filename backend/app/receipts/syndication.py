@@ -19,7 +19,7 @@ def configured() -> bool:
 def not_checked(*, domain_only: bool = False) -> dict:
     if domain_only and configured():
         return {"status": "not_checked", "flag": "neutral", "evidence_url": None,
-                "text": "Enter a specific article link on Analyze (or use Trace a post) to check whether its wording appears on other sites."}
+                "text": "Paste a specific article link (instead of just a domain name) to check whether its wording appears verbatim on other sites."}
     return {"status": "not_checked", "flag": "neutral", "evidence_url": None,
             "text": "Search for copies of this text on other sites is not configured on this server, so it was not checked."}
 

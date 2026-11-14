@@ -39,7 +39,7 @@ def _isolated(monkeypatch):
     monkeypatch.setattr(extract, "resolver", _no_dns)
     monkeypatch.setattr(receipts_http, "client_factory", _no_http)
     from app.pipeline import oxylabs, websearch
-    from app.receipts import rdap
+    from app.receipts import pagecheck, rdap
     from app.swarm import collectors
     from app.swarm.collectors import http as collectors_http
     monkeypatch.setattr(collectors_http, "client_factory", _no_http)
@@ -48,7 +48,11 @@ def _isolated(monkeypatch):
     async def _no_whois(_domain: str):
         return None
 
+    async def _no_pagecheck(_target: str):
+        return None
+
     monkeypatch.setattr(rdap, "whois_lookup", _no_whois)
+    monkeypatch.setattr(pagecheck, "inspect_target", _no_pagecheck)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
     monkeypatch.delenv("SEARCH_API_KEY", raising=False)
     monkeypatch.delenv("BRAVE_API_KEY", raising=False)

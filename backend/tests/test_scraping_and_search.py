@@ -400,3 +400,59 @@ def test_swarm_activity_histogram_and_burst_timeline_telemetry():
     assert likely["burst_windows"] and likely["burst_windows"][0]["posts"] >= 3
     pt0 = likely["timeline"][0]
     assert "snippet" in pt0 and "in_burst" in pt0 and "name_pattern" in pt0
+
+
+def test_source_upgrades_certspotter_watchdogs_context_and_pagecheck(monkeypatch):
+    from app.receipts import crtsh, factcheck, lookalike, pagecheck
+
+    # 1. Dictionary false-positive fix + satire + state-media context
+    assert lookalike.check("lemonade.com")["status"] == "not_found"
+    sat = lookalike.check("theonion.com")
+    assert sat["flag"] == "warning" and "satire" in sat["text"].lower()
+    st = lookalike.check("rt.com")
+    assert st["flag"] == "warning" and "state-funded" in st["text"].lower()
+
+    # 2. CertSpotter fallback when crt.sh fails with 503
+    def ct_handler(req: httpx2.Request):
+        if req.url.host == "crt.sh":
+            return httpx2.Response(503)
+        if req.url.host == "api.certspotter.com":
+            return httpx2.Response(200, json=[{"not_before": "2024-05-01T00:00:00Z"}, {"not_before": "2025-01-10T00:00:00Z"}])
+        return httpx2.Response(404)
+
+    monkeypatch.setattr(rhttp, "client_factory", lambda: httpx2.AsyncClient(transport=httpx2.MockTransport(ct_handler)))
+    ct_res = run(crtsh.check("err.ee", now=NOW))
+    assert ct_res["status"] == "found" and ct_res["details"]["source"] == "certspotter" and "2024-05-01" in ct_res["text"]
+
+    # 3. Brave watchdog & IFCN fact-check fallback (EUvsDisinfo + Propastop)
+    monkeypatch.setenv("SEARCH_PROVIDER", "brave")
+    monkeypatch.setenv("BRAVE_API_KEY", "bsa-key")
+    monkeypatch.setattr(websearch, "BRAVE_MIN_INTERVAL_S", 0.0)
+
+    def brave_fc(req: httpx2.Request):
+        return httpx2.Response(200, json={"web": {"results": [
+            {"url": "https://euvsdisinfo.eu/report/example/", "title": "Disinfo: Fabricated port claim", "description": "Debunked."},
+            {"url": "https://www.propastop.org/2026/clone-check/", "title": "Clone site network exposed", "description": "Analysis."},
+        ]}})
+
+    monkeypatch.setattr(chttp, "client_factory", lambda: httpx2.AsyncClient(transport=httpx2.MockTransport(brave_fc)))
+    fc_res = run(factcheck.check("rt.com"))
+    assert fc_res["status"] == "found" and fc_res["flag"] == "neutral" and len(fc_res["details"]["items"]) == 2
+    assert fc_res["details"]["items"][1]["publisher"] == "Propastop (Estonia)"
+
+    # 4. Live page transparency & brand impersonation check
+    impersonator_html = (
+        '<html><head><title>Breaking Story | ERR</title>'
+        '<meta property="og:site_name" content="ERR">'
+        '<meta name="author" content="Jane Doe">'
+        '<meta property="article:published_time" content="2026-11-12T10:00:00Z"></head>'
+        '<body><a href="/about">About us</a><a href="mailto:ed@example.org">Contact</a>'
+        '<article><p>The Harbourton municipal council approved a forty-one million euro port dredging contract '
+        'without holding a public tender on Tuesday evening, documents show.</p></article></body></html>'
+    )
+    info = pagecheck.analyze_html(impersonator_html, "https://baltic-daily24.org/news/port-deal",
+                                  "https://baltic-daily24.org/news/port-deal", [])
+    assert info["is_article"] is True and info["author"] == "Jane Doe" and info["published_date"] == "2026-11-12"
+    assert info["signals"]["about_link"] is True and info["signals"]["contact_link"] is True and info["signals"]["policy_link"] is False
+    assert info["brand_warning"] is not None and "err.ee" in info["brand_warning"]["official_domain"]
+    assert info["sample_quote"] and "forty-one million" in info["sample_quote"]

@@ -19,6 +19,11 @@ EXTRA_WORDS = {
     "uk", "us", "eu", "int", "global", "official", "real", "the", "my", "24", "247", "now", "tv", "press",
     "uudised", "novosti", "nachrichten", "info24", "update", "updates", "web", "site",
 }
+# Common unrelated dictionary words that sit 1 edit away from short outlet labels (e.g. lemonade vs lemonde).
+_DICTIONARY_SAFE = {
+    "lemonade", "lemonades", "build", "builds", "guild", "wild", "mild", "child", "belt", "melt", "felt",
+    "zest", "zeitgeist", "times", "timer", "timed", "focus", "postal", "poster",
+}
 _CONFUSABLE = {
     # Cyrillic / Greek look-alikes -> Latin
     "а": "a", "в": "b", "е": "e", "к": "k", "м": "m", "н": "h", "о": "o", "р": "p", "с": "c", "т": "t",
@@ -40,6 +45,16 @@ def outlets() -> list[dict]:
     for o in data["outlets"]:
         doms = [d.lower() for d in o["domains"]]
         out.append({"name": o["name"], "domains": doms, "labels": sorted({split_registrable(d)[1] for d in doms})})
+    return out
+
+
+@lru_cache(maxsize=1)
+def context_domains() -> dict[str, dict]:
+    data = yaml.safe_load(OUTLETS_PATH.read_text(encoding="utf-8"))
+    out: dict[str, dict] = {}
+    for item in data.get("context_domains") or []:
+        for d in item.get("domains") or []:
+            out[d.lower()] = {"name": item["name"], "kind": item.get("kind", "context"), "note": item.get("note", "")}
     return out
 
 
@@ -83,7 +98,7 @@ def _reasons(host: str, reg: str, label: str, outlet: dict) -> list[str]:
             reasons.append("uses the same name under a different domain ending")
         elif ol in host_labels[:-1]:
             reasons.append("puts the outlet's name in front of a different domain")
-        if len(ol) >= 5 and label != ol:
+        if len(ol) >= 5 and label != ol and label not in _DICTIONARY_SAFE:
             d = damerau(label, ol)
             if d == 1 or (len(ol) >= 9 and d == 2):
                 reasons.append("differs by one or two letters")
@@ -109,6 +124,19 @@ def check(host: str) -> dict:
             "status": "found", "flag": "ok",
             "text": f"This is an official domain of {official[reg]}.",
             "evidence_url": None, "details": {"official": official[reg]},
+        }
+    ctx = context_domains().get(reg)
+    if ctx:
+        if ctx["kind"] == "satire":
+            return {
+                "status": "found", "flag": "warning",
+                "text": f"Known satire / parody site — {ctx['name']}: {ctx['note']}",
+                "evidence_url": None, "details": {"context": ctx},
+            }
+        return {
+            "status": "found", "flag": "warning",
+            "text": f"Public-record ownership / funding note — {ctx['name']}: {ctx['note']}",
+            "evidence_url": None, "details": {"context": ctx},
         }
     matches = []
     for o in outlets():

@@ -170,7 +170,18 @@ async def get_receipts(target: str, *, title: str | None = None, quote: str | No
         results["fact_checks"] = _shape("fact_checks", factcheck.not_checked(), None, cached=False)
     if "syndication" not in results:
         results["syndication"] = _shape("syndication", syndication.not_checked(domain_only=not quote), None, cached=False)
-    return {"domain": host, "registrable_domain": reg, "receipts": [results[t] for t in ORDER]}
+    ordered = [results[t] for t in ORDER]
+    milestones = []
+    for rtype, label, dkey in (
+        ("first_seen_archive", "First archived", "first_capture"),
+        ("domain_age", "Domain registered", "registered"),
+        ("first_certificate", "First TLS cert", "first_certificate"),
+    ):
+        det = results[rtype].get("details") or {}
+        if det.get(dkey):
+            milestones.append({"type": rtype, "label": label, "date": det[dkey], "days": det.get("days")})
+    milestones.sort(key=lambda m: m["date"])
+    return {"domain": host, "registrable_domain": reg, "receipts": ordered, "milestones": milestones}
 
 
 async def domain_receipts(target: str) -> dict:

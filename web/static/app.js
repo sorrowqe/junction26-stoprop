@@ -91,6 +91,8 @@
     $("refresh-receipts").addEventListener("click", refreshReceipts);
     $("verify-btn").addEventListener("click", verifyClaims);
     wireTooltip();
+    const preUrl = new URLSearchParams(location.search).get("url");
+    if (preUrl) { $("url").value = preUrl; analyze(); }
   }
 
   // --------------------------------------------------------------- analyze

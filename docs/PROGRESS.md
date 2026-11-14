@@ -164,7 +164,17 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
     `syndication.py` ("Copies elsewhere") receipt on Analyze URL, and `RATE_LIMIT_MULTIPLIER` for shared venue Wi-Fi.
   - Verified live via `scripts/live_web_smoke.py` (0 AI Router calls): Brave `site:err.ee` 5 hits in 1.75 s, Oxylabs
     scrape `bbc.com/news` 1,419 words in 8.6 s, Bluesky post URL in 0.91 s, `err.ee` domain age `2010-07-04` in 2.95 s.
-  - Unit tests: **600 passed** (all network/LLM mocked).
+  - Unit tests: **601 passed** (all network/LLM mocked).
+- **Check a Source v2** (`/source` + `POST /api/receipts` + IPv4-first `GuardedBackend`):
+  - Fixed a major network stall in `extract.py` where `GuardedBackend` tried up to 3 IPv6 `AAAA` records before IPv4 on
+    dual-stack domains (stalling on IPv4-only Docker bridges and venue Wi-Fi).
+  - Added CertSpotter CT fallback (`crtsh.py`), Brave watchdog/fact-checker search (`factcheck.py`: EUvsDisinfo,
+    Propastop, Snopes, PolitiFact, Full Fact, FactCheck.org, Lead Stories, Correctiv), satire & public state-media
+    context (`outlets.yaml` + `lookalike.py`), dictionary allowlist (`lemonade.com`), and live page/accountability
+    inspection (`pagecheck.py`: redirects, HTTPS, About/Contact/Policy links, article byline/date, brand impersonation,
+    automatic article `syndication` check on `/source`).
+  - Upgraded `/source` UI with Domain History Timeline SVG, signal summary pills, Live Page & Transparency card,
+    expandable watchdog/mirror links, and 1-click bridges to Analyze and Swarm mode.
 - Unified **Swarm Mode** + Analyst Charts (`/swarm`, `/trace` -> 302 `/swarm`):
   - Replaced the 3-tab CSV UI and separate `Trace a post` nav tab with a single auto-detecting `/swarm` box (CSV/JSON
     moved into a collapsed *Advanced* drawer; 1-click demos never dump raw CSV).

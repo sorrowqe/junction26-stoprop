@@ -170,13 +170,13 @@ async def resolve_public(host: str, port: int) -> list[str]:
         raise FetchError("dns", "That website could not be found (DNS lookup failed).", 400) from None
     if not addrs:
         raise FetchError("dns", "That website could not be found (DNS lookup failed).", 400)
-    ips = []
+    v4, v6 = [], []
     for a in addrs:
         ip = ipaddress.ip_address(a.split("%")[0])
         if not ip_is_public(ip):
             raise FetchError("blocked", BLOCKED_MSG)
-        ips.append(str(ip))
-    return list(dict.fromkeys(ips))
+        (v4 if isinstance(ip, ipaddress.IPv4Address) else v6).append(str(ip))
+    return list(dict.fromkeys(v4 + v6))
 
 
 class GuardedBackend(httpcore2.AsyncNetworkBackend):
@@ -189,9 +189,11 @@ class GuardedBackend(httpcore2.AsyncNetworkBackend):
     async def connect_tcp(self, host, port, timeout=None, local_address=None, socket_options=None):
         ips = await resolve_public(host, port)
         last: Exception | None = None
-        for ip in ips[:3]:
+        candidates = ips[:4]
+        per_ip = (min(float(timeout), 2.5) if (timeout and len(candidates) > 1) else timeout)
+        for ip in candidates:
             try:
-                stream = await self._inner.connect_tcp(ip, port, timeout=timeout, local_address=local_address,
+                stream = await self._inner.connect_tcp(ip, port, timeout=per_ip, local_address=local_address,
                                                        socket_options=socket_options)
                 self.connected.append((ip, port))
                 return stream

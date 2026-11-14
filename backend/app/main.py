@@ -163,14 +163,28 @@ async def analyze(req: AnalyzeRequest, request: Request) -> dict:
 
 @app.post("/api/receipts")
 async def receipts(req: ReceiptsRequest, request: Request) -> dict:
+    from app.receipts import pagecheck
     target = (req.url or req.domain or "").strip()
     if not target:
         raise HTTPException(400, "Please enter a link or a domain name.")
-    ratelimit.enforce("receipts", request)
+    if len(target) > 2048:
+        raise HTTPException(400, "That link is too long.")
     try:
-        return await receipts_service.get_receipts(target, title=req.title, refresh=req.refresh)
+        normalize_host(target)
     except DomainError as exc:
         raise HTTPException(400, str(exc)) from None
+    ratelimit.enforce("receipts", request)
+    page = await pagecheck.inspect_target(req.url.strip() if (req.url and req.url.strip()) else target)
+    eff_title = (req.title or "").strip() or ((page or {}).get("title") if (page or {}).get("is_article") else None)
+    eff_quote = (page or {}).get("sample_quote") if page else None
+    eff_target = (page or {}).get("final_url") if (page and page.get("reachable") and req.url) else target
+    try:
+        out = await receipts_service.get_receipts(eff_target, title=eff_title, quote=eff_quote, refresh=req.refresh)
+    except DomainError as exc:
+        raise HTTPException(400, str(exc)) from None
+    if page is not None:
+        out["page"] = {k: v for k, v in page.items() if k != "sample_quote"}
+    return out
 
 
 _SWARM_BODY = {"requestBody": {"content": {

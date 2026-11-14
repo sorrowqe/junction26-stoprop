@@ -57,3 +57,21 @@ outlets:
   - {name: The Kyiv Independent, domains: [kyivindependent.com], country: UA}
   - {name: Meduza, domains: [meduza.io], country: LV}
   - {name: RFE/RL, domains: [rferl.org], country: INT}
+
+# Public-record context domains (satire publications & state-controlled/funded international outlets).
+# Used on /source for factual provenance context; NOT treated as mainstream news in swarm amplification.
+context_domains:
+  # Declared satire / parody publications
+  - {name: Lugejakiri, domains: [lugejakiri.ee], kind: satire, note: "Declared Estonian satire and humour publication (stories are fictional)."}
+  - {name: The Onion, domains: [theonion.com], kind: satire, note: "Declared US satire publication (stories are fictional humour)."}
+  - {name: The Babylon Bee, domains: [babylonbee.com], kind: satire, note: "Declared US satire publication (stories are fictional humour)."}
+  - {name: Der Postillon, domains: [der-postillon.com], kind: satire, note: "Declared German satire publication (stories are fictional humour)."}
+  - {name: NewsThump, domains: [newsthump.com], kind: satire, note: "Declared UK satire publication (stories are fictional humour)."}
+  # State-controlled / state-agency media (public ownership / registry facts)
+  - {name: RT (Russia Today), domains: [rt.com, swentr.site], kind: state_media, note: "Russian state-funded international network (ANO TV-Novosti; subject to EU council broadcast sanctions since 2022)."}
+  - {name: Sputnik, domains: [sputnikglobe.com, sputniknews.com], kind: state_media, note: "Russian state-owned international agency operated by Rossiya Segodnya."}
+  - {name: TASS, domains: [tass.com, tass.ru], kind: state_media, note: "Russian state-owned news agency."}
+  - {name: RIA Novosti, domains: [ria.ru], kind: state_media, note: "Russian state-owned domestic news agency (Rossiya Segodnya)."}
+  - {name: Xinhua, domains: [xinhuanet.com, news.cn], kind: state_media, note: "Official state news agency of the People's Republic of China."}
+  - {name: Global Times, domains: [globaltimes.cn], kind: state_media, note: "Chinese state-affiliated tabloid published under the People's Daily."}
+  - {name: Press TV, domains: [presstv.ir], kind: state_media, note: "Iranian state-owned international broadcast network (IRIB)."}

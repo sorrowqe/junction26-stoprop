@@ -43,6 +43,28 @@ window.StopropReceipts = (() => {
       const head = el("div", "r-head");
       head.append(el("strong", null, r.title), el("span", "r-kind", LOOK[kind].label));
       body.append(head, el("p", "r-text", r.text));
+      if (r.details && Array.isArray(r.details.items) && r.details.items.length > 0) {
+        const sub = el("ul", "r-sublist small");
+        r.details.items.slice(0, 5).forEach((it) => {
+          const sli = el("li", null, null);
+          sli.append(el("strong", null, `${it.publisher || "Report"}: `));
+          if (it.url && /^https?:\/\//.test(it.url)) {
+            const a = el("a", null, it.claim || it.url);
+            a.href = it.url; a.target = "_blank"; a.rel = "noopener noreferrer nofollow";
+            sli.append(a);
+          } else {
+            sli.append(document.createTextNode(it.claim || ""));
+          }
+          if (it.rating) sli.append(document.createTextNode(` (${it.rating})`));
+          sub.append(sli);
+        });
+        body.append(sub);
+      }
+      if (r.details && Array.isArray(r.details.domains) && r.details.domains.length > 0) {
+        const pills = el("div", "chart-meta-pills");
+        r.details.domains.slice(0, 8).forEach((d) => pills.append(el("span", "pill", d)));
+        body.append(pills);
+      }
       const meta = el("p", "r-meta");
       const when = el("span", "r-when", ago(r.checked_at));
       if (r.checked_at) when.dataset.checked = r.checked_at;
