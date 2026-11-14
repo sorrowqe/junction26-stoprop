@@ -345,7 +345,7 @@ def main(argv=None) -> int:
         "gold_report": _read(RESULTS / "gold_report.json"),
         "ai_review": _read(RESULTS / "ai_review.json"),
     }
-    if not args.final and len(models) == 1:
+    if not args.final and len(models) == 1 and not args.limit:  # never from a small sample
         out["dev_precision_updates"] = update_dev_precision(results[primary]["scores"]["strict"]["all"]["per_label"])
     RESULTS.mkdir(parents=True, exist_ok=True)
     for m in models:
