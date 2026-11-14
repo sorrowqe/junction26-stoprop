@@ -481,3 +481,21 @@ def test_analyzer_taxonomy_prompt_hints_and_ellipsis_validation():
     s2 = segment.segment("Experts say they can switch meters off, leaving families freezing in the dark!")
     loc = validate.locate(s2, "p1s1", "...leaving families freezing in the dark...")
     assert loc is not None and s2.text[loc[0]:loc[1]] == "leaving families freezing in the dark"
+
+
+def test_clean_analyzer_ui_and_user_focused_metrics_with_swarm():
+    # 1. No confusing "Only show validated techniques" checkbox or "not yet validated" copy
+    idx = client.get("/").text
+    assert "only-validated" not in idx and "Only show validated techniques" not in idx
+    app_js = client.get("/static/app.js").text
+    assert "not yet validated" not in app_js.lower() and "only-validated" not in app_js
+
+    # 2. /metrics removes internal token/credit/bake-off noise and publishes Swarm benchmark
+    metrics_html = client.get("/metrics").text
+    metrics_js = client.get("/static/metrics.js").text
+    for internal_leak in ("Credits (router)", "Mean tokens", "Model bake-off", "not yet validated", "git_commit"):
+        assert internal_leak not in metrics_html and internal_leak not in metrics_js
+
+    m = client.get("/api/metrics").json()
+    assert m["swarm"] is not None
+    assert m["swarm"]["precision"] == 1.0 and m["swarm"]["recall"] == 1.0 and m["swarm"]["innocent_fpr"] == 0.0

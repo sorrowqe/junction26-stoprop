@@ -113,11 +113,9 @@ def summary(lang, genre, words, flagged, n_experimental, n_reported, share, dens
     techniques = [s for s in flagged if s.get("color") == "red"]
     claims = [s for s in flagged if s.get("color") == "amber"]
     if techniques:
-        unvalidated = sum(bool(s.get("experimental")) for s in techniques)
         by_label = Counter(s["label"] for s in techniques).most_common()
         listing = ", ".join(f"{n} × {names.get(lbl, lbl.replace('_', ' ')).lower()}" for lbl, n in by_label)
-        parts.append(f"{_plural(len(techniques), 'technique')} found ({listing})"
-                     + (f", {unvalidated} not yet validated" if unvalidated else "") + ".")
+        parts.append(f"{_plural(len(techniques), 'technique')} found ({listing}).")
     if claims:
         parts.append(f"{_plural(len(claims), 'claim')} without a source in the text.")
     if flagged:

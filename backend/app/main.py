@@ -92,7 +92,7 @@ def metrics() -> dict:
     """Latest evaluation results (eval/results/*.json, committed) + language coverage."""
     return {"latest": _read_result("latest.json"), "bakeoff": _read_result("bakeoff.json"),
             "calibration": _read_result("calibration.json"), "self_consistency": _read_result("self_consistency.json"),
-            "ai_review": _read_result("ai_review.json"),
+            "ai_review": _read_result("ai_review.json"), "swarm": _read_result("swarm_latest.json"),
             "gold_report": _read_result("gold_report.json"), "languages": languages.coverage()}
 
 

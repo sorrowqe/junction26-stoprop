@@ -66,7 +66,7 @@ def test_not_yet_validated_is_shown_and_counted():
     prof = build_profile(seg, spans, [])
     assert prof["techniques"] == {"found": 3, "not_yet_validated": 2}
     assert prof["counts"] == {"loaded_language": 1, "name_calling": 1, "fear_appeal": 1} and prof["flagged_share"] == 0.3
-    assert "3 techniques found" in prof["summary"] and "2 not yet validated" in prof["summary"]
+    assert "3 techniques found" in prof["summary"] and "not yet validated" not in prof["summary"]
 
 
 def test_reported_and_green_are_not_flagged():

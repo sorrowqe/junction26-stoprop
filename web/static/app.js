@@ -11,7 +11,7 @@
   };
 
   const COLORS = {
-    red:   { icon: "!", name: "Manipulation technique", desc: "A persuasion technique. Solid underline: validated (measured precision at least 70% on 15+ examples); dashed: not yet validated." },
+    red:   { icon: "!", name: "Manipulation technique", desc: "A persuasion technique highlighted in the text, with a plain-language explanation of how it works." },
     amber: { icon: "?", name: "Unsupported claim", desc: "No source is given in the text. Not “false”." },
     green: { icon: "↗", name: "Cites a source (not yet verified)", desc: "A named source, link or dated data appears in the text. Use “Verify claims” to check it. Not “true”." },
     blue:  { icon: "≈", name: "Balance marker", desc: "A fair counter-argument or an acknowledged uncertainty." },
@@ -53,7 +53,6 @@
 
   // ------------------------------------------------------------- bootstrap
   async function init() {
-    $("only-validated").checked = store.get("stoprop.onlyValidated") === "1";
     const sens = store.get("stoprop.sensitivity");
     if (["strict", "balanced", "broad"].includes(sens)) $("sensitivity").value = sens;
     loadTradeoff();
@@ -78,10 +77,6 @@
     $("form").addEventListener("submit", (e) => { e.preventDefault(); analyze(); });
     $("text").addEventListener("keydown", (e) => {
       if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); analyze(); }
-    });
-    $("only-validated").addEventListener("change", () => {
-      store.set("stoprop.onlyValidated", $("only-validated").checked ? "1" : "0");
-      if (current) render();
     });
     $("sensitivity").addEventListener("change", () => {
       store.set("stoprop.sensitivity", $("sensitivity").value);
@@ -140,10 +135,7 @@
 
   // ---------------------------------------------------------------- render
   function visibleSpans() {
-    const onlyValidated = $("only-validated").checked;
-    return current.result.spans
-      .map((s, i) => ({ ...s, idx: i }))
-      .filter((s) => !onlyValidated || !s.experimental);
+    return current.result.spans.map((s, i) => ({ ...s, idx: i }));
   }
 
   function render() {
@@ -316,11 +308,9 @@
   }
 
   function modeText(res) {
-    if (res.mode !== "llm") return "Rules only";
-    if (res.cost && res.cost.cached) return "AI, from cache (no new cost)";
-    const c = res.cost || {};
-    const tokens = (c.input_tokens || 0) + (c.output_tokens || 0);
-    return `AI, ${c.llm_calls || 0} call${c.llm_calls === 1 ? "" : "s"}, ${tokens.toLocaleString("en")} tokens`;
+    if (res.mode !== "llm") return "Rule-based fallback";
+    if (res.cost && res.cost.cached) return "AI analysis (cached)";
+    return "AI analysis";
   }
 
   // Server offsets are Unicode code points; JS strings index UTF-16 units.
@@ -349,7 +339,7 @@
       const chunk = text.slice(a, b);
       const cover = items.filter((s) => s.a <= a && s.b >= b).sort(byPriority);
       if (!cover.length) { doc.append(chunk); continue; }
-      const m = el("mark", `hl c-${cover[0].color}${cover[0].experimental ? " exp" : ""}`, chunk);
+      const m = el("mark", `hl c-${cover[0].color}${cover[0].source === "heuristic" ? " exp" : ""}`, chunk);
       m.dataset.spans = cover.map((s) => s.idx).join(",");
       m.tabIndex = 0;
       m.setAttribute("role", "button");
@@ -368,21 +358,11 @@
     const empty = $("empty");
     list.textContent = "";
     empty.textContent = "";
-    const hiddenExp = res.spans.length - spans.length;
 
     if (!spans.length) {
       empty.hidden = false;
-      if (hiddenExp > 0) {
-        empty.append(el("p", null,
-          `${hiddenExp} ${hiddenExp === 1 ? "finding is" : "findings are"} hidden because “Only show validated techniques” is on.`));
-        const b = el("button", null, "Show all findings");
-        b.type = "button";
-        b.addEventListener("click", () => { $("only-validated").checked = false; $("only-validated").dispatchEvent(new Event("change")); });
-        empty.append(b);
-      } else {
-        empty.append(el("p", null,
-          "Nothing found. That is a valid result: Stoprop would rather say nothing than guess."));
-      }
+      empty.append(el("p", null,
+        "Nothing found. That is a valid result: Stoprop would rather say nothing than guess."));
       return;
     }
     empty.hidden = true;
@@ -399,7 +379,7 @@
         b.append(el("span", "finding-exp", s.explanation));
       }
       const meta = [`confidence ${Math.round(s.confidence * 100)}%`];
-      if (s.experimental) meta.push("not yet validated");
+      if (s.source === "heuristic") meta.push("rule-based hint");
       if (s.reported_speech) meta.push("reported speech, not counted");
       b.append(el("span", "meta", meta.join(" · ")));
       b.addEventListener("click", (e) => {
@@ -425,7 +405,7 @@
       ["Text flagged", `${Math.round(p.flagged_share * 100)}%`],
       ["Density", `${p.density_per_1000} per 1,000 words`],
       ["Findings", counts.length ? counts.map(([l, n]) => `${labelName(l)} × ${n}`).join(", ") : "none"],
-      ["Techniques", p.techniques ? `${p.techniques.found} found, ${p.techniques.not_yet_validated} not yet validated` : "–"],
+      ["Techniques", p.techniques ? `${p.techniques.found} found` : "–"],
       ["Reported speech", `${p.reported_speech} (not counted)`],
       ["Mode", modeText(res)],
     ];
@@ -469,12 +449,8 @@
       item.append(el("p", "small", `Confidence: ${Math.round(s.confidence * 100)}% · ${COLORS[s.color].name}`));
       const badges = el("div", "badges");
       if (s.reported_speech) badges.append(el("span", "badge rs", "Reported speech: quoted from someone else, not counted against the source"));
-      if (s.experimental) {
-        badges.append(el("span", "badge exp", s.source === "heuristic"
-          ? "Not yet validated: a word-rule hint, not an AI finding"
-          : "Not yet validated: measured precision is below 70% or based on fewer than 15 examples"));
-      } else if (t.dev_precision != null) {
-        badges.append(el("span", "badge ok", `Validated: ${Math.round(t.dev_precision * 100)}% precision on ${t.dev_predictions} examples`));
+      if (s.source === "heuristic") {
+        badges.append(el("span", "badge exp", "Rule-based hint (AI unavailable)"));
       }
       if (badges.childNodes.length) item.append(badges);
       frag.append(item);

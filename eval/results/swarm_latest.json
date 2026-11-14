@@ -1,0 +1,123 @@
+{
+  "scenarios": 12,
+  "coordinated_scenarios": 6,
+  "innocent_scenarios": 6,
+  "tp": 6,
+  "fp": 0,
+  "fn": 0,
+  "tn": 6,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "innocent_fpr": 0.0,
+  "details": [
+    {
+      "id": "coord_timing_burst",
+      "kind": "coordinated",
+      "label": "Synchronized 2-minute copy burst",
+      "posts": 83,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_account_pattern",
+      "kind": "coordinated",
+      "label": "Look-alike + newly created accounts",
+      "posts": 76,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_link_push",
+      "kind": "coordinated",
+      "label": "Coordinated non-mainstream link push",
+      "posts": 76,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_template_near",
+      "kind": "coordinated",
+      "label": "Near-duplicate template burst",
+      "posts": 82,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_cross_channel",
+      "kind": "coordinated",
+      "label": "Cross-channel mirror wave",
+      "posts": 66,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_multi_message",
+      "kind": "coordinated",
+      "label": "Two-message campaign by same accounts",
+      "posts": 92,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "clean_organic_thread",
+      "kind": "innocent",
+      "label": "Organic neighbourhood discussion",
+      "posts": 90,
+      "top_verdict": "none",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_headline_sharing",
+      "kind": "innocent",
+      "label": "Mainstream news headline sharing",
+      "posts": 76,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_quoted_statement",
+      "kind": "innocent",
+      "label": "Shared official quoted statement",
+      "posts": 75,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_event_hashtag",
+      "kind": "innocent",
+      "label": "Live-event hashtag crowd",
+      "posts": 63,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_wire_syndication",
+      "kind": "innocent",
+      "label": "News-agency wire syndication",
+      "posts": 65,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_short_generic",
+      "kind": "innocent",
+      "label": "Short generic courtesy replies",
+      "posts": 68,
+      "top_verdict": "worth_watching",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    }
+  ]
+}

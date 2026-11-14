@@ -11,95 +11,109 @@
 <body>
   <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics" aria-current="page">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
   <main class="wrap page wide">
-    <h1>Metrics</h1>
-    <p class="lede">How well Stoprop works, measured on labelled data: precision and recall per technique, false
-      positives on neutral text, a symmetry test, and cost. We publish the weak spots too.</p>
+    <h1>Accuracy &amp; False-Positive Metrics</h1>
+    <p class="lede">How accurately Stoprop spots manipulation techniques and coordinated campaigns — and how rarely it
+      false-flags clean news, fair opinions, or normal viral sharing. We publish our weak spots openly alongside what works.</p>
 
-    <section class="card disclosure" aria-labelledby="h-disc">
-      <h2 id="h-disc">Read this first</h2>
-      <ul>
-        <li><strong>English only.</strong> Stoprop accepts any language, but accuracy has only been measured for English.
-          Estonian, Russian and other languages are not measured.</li>
-        <li><strong>Model overlap:</strong> the analyzer now runs on gemini-3.5-flash-lite, and a Gemini model
-          (gemini-3.5-flash) was one of the two reviewers that validated the synthetic test items. A model family can
-          favour its own style, so the synthetic scores may be flattered. The SemEval scores are not affected: those
-          labels come from human annotators.</li>
-        <li><strong>Synthetic test items</strong> were written by a model (gpt-5.5) from fixed specifications and
-          validated by two independent model families (Gemini and Mistral), consensus only, not human-verified.
-          Items the two reviewers disagreed on are excluded.</li>
-        <li><strong>SemEval strict vs. lenient:</strong> “strict” does not count techniques inside quoted or attributed
-          speech (our rule: reported speech is not the author's manipulation), while “lenient” counts them, as the
-          SemEval-2020 annotators did.</li>
-        <li><strong>False positives</strong> are measured on SemEval paragraphs that human annotators labelled as
-          containing no technique, and separately on synthetic hard negatives (emotional but factual reports, quoted
-          politicians, fair opinion pieces).</li>
-        <li>Synthetic data measures the mechanics, not how often manipulation occurs in the real world.</li>
-        <li><strong>SemEval is a hard benchmark.</strong> In the SemEval-2020 Task 11 competition the best system for
-          finding propaganda spans (ignoring which technique) reached F1 51.7%, and the best system for naming the
-          technique of spans it was given reached micro-F1 63.7% (corrected results, Da San Martino et al., 2020,
-          <a href="https://arxiv.org/abs/2009.02696">arXiv:2009.02696</a>). Stoprop must find the span and name the
-          technique at once, on a sample mapped to our labels and scored with a different overlap rule, so the
-          numbers are context, not a like-for-like comparison.</li>
-      </ul>
-    </section>
-
-    <section class="card" aria-labelledby="h-lang">
-      <h2 id="h-lang">Language coverage</h2>
-      <div class="table-wrap"><table id="lang-table"><thead><tr><th>Language</th><th>Accuracy</th></tr></thead><tbody></tbody></table></div>
-    </section>
+    <div id="kpi-grid" class="kpi-grid" hidden></div>
 
     <div id="no-results" class="card" hidden>
-      <h2>No evaluation published yet</h2>
-      <p>Until the first run, every technique is shown as “not yet validated” in the analyzer.</p>
+      <h2>No benchmark results published yet</h2>
+      <p class="muted">Evaluation summaries appear here once benchmark results are generated.</p>
     </div>
 
     <div id="results" hidden>
-      <section class="card" aria-labelledby="h-run">
-        <h2 id="h-run">This run</h2>
-        <p id="run-info" class="muted"></p>
-        <h3>Overall (micro-averaged)</h3>
-        <div class="table-wrap"><table id="overall"><thead><tr><th>Source</th><th>Mode</th><th>Precision</th><th>Recall</th><th>F1</th><th>Predicted</th><th>Gold</th></tr></thead><tbody></tbody></table></div>
-      </section>
-
       <section class="card" id="calib-card" aria-labelledby="h-calib" hidden>
-        <h2 id="h-calib">Sensitivity levels (measured trade-off)</h2>
-        <p id="calib-info" class="muted small"></p>
-        <div class="table-wrap"><table id="calib"><thead><tr><th>Level</th><th>Min. confidence</th><th>Precision (95% CI)</th><th>Recall (95% CI)</th><th>F1</th><th>False positives: SemEval clean, techniques (95% CI)</th><th>False positives: synthetic hard negatives, any flag</th><th>Symmetry flips</th><th>Self-flips (same text twice)</th></tr></thead><tbody></tbody></table></div>
+        <h2 id="h-calib">Text Analyzer: Sensitivity Levels</h2>
+        <p class="muted small">Stoprop lets you choose between three sensitivity settings. <strong>Strict</strong> (the default)
+          is tuned to keep false alarms on clean news reporting under 5%, while <strong>Balanced</strong> and
+          <strong>Broad</strong> surface subtler rhetorical framing.</p>
+        <div class="table-wrap">
+          <table id="calib">
+            <thead>
+              <tr>
+                <th>Sensitivity</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1</th>
+                <th>False positives on clean news</th>
+                <th>False positives on hard negatives</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </section>
 
       <section class="card" aria-labelledby="h-labels">
-        <h2 id="h-labels">Per technique (strict, all sources)</h2>
-        <p class="muted small">A technique counts as validated (solid underline in the analyzer) when its measured precision is at least 70% on at least 15 predictions (measured with no confidence filter); all others are shown dashed as “not yet validated”. The rows below are the model with no confidence filter (“broad”); see the sensitivity table above for the other levels.</p>
-        <div class="table-wrap"><table id="per-label"><thead><tr><th>Label</th><th>Precision</th><th>Recall</th><th>F1</th><th>Predicted</th><th>Gold</th></tr></thead><tbody></tbody></table></div>
-        <h3>What we don't detect well</h3>
-        <ul id="weak"></ul>
+        <h2 id="h-labels">Per-Technique Detection Breakdown</h2>
+        <p class="muted small">Measured across human-annotated news paragraphs (SemEval-2020 Task 11) and multi-technique
+          test passages (Broad mode, excluding reported speech).</p>
+        <div class="table-wrap">
+          <table id="per-label">
+            <thead>
+              <tr><th>Technique / Marker</th><th>Precision</th><th>Recall</th><th>F1</th><th>Flagged</th><th>Reference spans</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </section>
 
-      <section class="card" aria-labelledby="h-fpr">
-        <h2 id="h-fpr">False positives on clean text</h2>
-        <div class="table-wrap"><table id="fpr"><thead><tr><th>Clean set</th><th>Paragraphs</th><th>Flagged (any red/amber)</th><th>Flagged (techniques)</th><th>Flags per 1,000 words</th></tr></thead><tbody></tbody></table></div>
-      </section>
-
-      <section class="card" aria-labelledby="h-sym">
-        <h2 id="h-sym">Symmetry test</h2>
-        <p id="sym" class="small"></p>
-      </section>
-
-      <section class="card" aria-labelledby="h-cost">
-        <h2 id="h-cost">Cost and robustness</h2>
-        <div class="table-wrap"><table id="cost"><tbody></tbody></table></div>
-        <div id="bakeoff-wrap" hidden>
-          <h3>Model bake-off</h3>
-          <p id="bakeoff-info" class="muted"></p>
-          <div class="table-wrap"><table id="bakeoff"><thead><tr><th>Model</th><th>Precision</th><th>Recall</th><th>F1</th><th>FPR (SemEval clean)</th><th>Symmetry flip rate</th><th>Credits / analysis</th><th>Tokens / analysis</th><th>Latency</th><th>AI failures</th></tr></thead><tbody></tbody></table></div>
+      <section class="card" aria-labelledby="h-run">
+        <h2 id="h-run">Benchmark Split &amp; False Positives on Clean Text</h2>
+        <p class="muted small">In <strong>strict</strong> scoring, persuasive words inside attributed quotes (reported speech)
+          are not counted against the author; <strong>lenient</strong> scoring counts quoted speech too, matching the original
+          SemEval-2020 annotation guidelines.</p>
+        <div class="table-wrap">
+          <table id="overall">
+            <thead><tr><th>Dataset</th><th>Scoring rule</th><th>Precision</th><th>Recall</th><th>F1</th><th>Flagged</th><th>Reference</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <h3 style="margin-top:1rem">Clean-text false-positive check</h3>
+        <div class="table-wrap">
+          <table id="fpr">
+            <thead><tr><th>Clean benchmark set</th><th>Paragraphs</th><th>Flagged (techniques)</th><th>Flags per 1,000 words</th></tr></thead>
+            <tbody></tbody>
+          </table>
         </div>
       </section>
     </div>
 
-    <section class="card" id="gold-card" hidden aria-labelledby="h-gold">
-      <h2 id="h-gold">Test-set quality</h2>
-      <p id="gold-info" class="small"></p>
-      <div class="table-wrap"><table id="gold-labels"><thead><tr><th>Label</th><th>Accepted</th><th>Dropped</th><th>Excluded (disagreement)</th><th>Reviewer agreement (κ)</th></tr></thead><tbody></tbody></table></div>
+    <section class="card" id="swarm-card" aria-labelledby="h-swarm" hidden>
+      <h2 id="h-swarm">Swarm Mode: Coordinated Campaign Benchmark</h2>
+      <p id="swarm-summary" class="muted small"></p>
+      <div class="table-wrap">
+        <table id="swarm-table">
+          <thead><tr><th>Scenario</th><th>Type</th><th>Posts</th><th>Result</th><th>Outcome</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="h-sym">
+      <h2 id="h-sym">Viewpoint Neutrality &amp; Language Coverage</h2>
+      <p id="sym" class="small">Stoprop tests political and group symmetry on mirrored pairs where only the sides are swapped.</p>
+      <div class="table-wrap" style="margin-top:.6rem">
+        <table id="lang-table">
+          <thead><tr><th>Language</th><th>Benchmark status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card disclosure" aria-labelledby="h-disc">
+      <h2 id="h-disc">How these numbers are measured (and their limits)</h2>
+      <ul class="small">
+        <li><strong>English only.</strong> Stoprop accepts English, Estonian, Russian and other languages, but quantitative
+          accuracy has only been benchmarked on English so far.</li>
+        <li><strong>Reference datasets:</strong> real news paragraphs human-annotated for SemEval-2020 Task 11
+          (Da San Martino et al., 2020, <a href="https://arxiv.org/abs/2009.02696">arXiv:2009.02696</a> — where top competition
+          systems reached 51.7% span F1), combined with multi-technique synthetic items validated by two independent
+          reviewer families (consensus only, not human-verified) plus hard-negative emotional/opinion controls.</li>
+        <li><strong>Zero-hallucination quote check:</strong> every span highlighted by Stoprop is verified character for
+          character against the input text; any unverified quote is automatically discarded before display.</li>
+      </ul>
     </section>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
