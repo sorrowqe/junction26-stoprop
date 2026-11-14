@@ -421,7 +421,7 @@ def main(argv=None) -> int:
         return 2
     if args.bakeoff:
         items, pairs = load_bakeoff(items, pairs)
-    default_models = DEFAULT_BAKEOFF_MODELS if args.bakeoff else os.environ.get("MODEL_TAGGER", "claude-haiku-4.5-eu")
+    default_models = DEFAULT_BAKEOFF_MODELS if args.bakeoff else os.environ.get("MODEL_TAGGER", "gemini-3.5-flash-lite-eu")
     models = [m.strip() for m in (args.models or default_models).split(",") if m.strip()]
     bakeoff_mode = args.bakeoff or len(models) > 1
     texts = texts_to_run(items, pairs)

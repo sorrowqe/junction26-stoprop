@@ -1,0 +1,13 @@
+{
+  "model": "gemini-3.5-flash-lite-eu",
+  "timestamp": "2026-11-14T14:54:59+00:00",
+  "git_commit": "8fa21391",
+  "llm_calls": 11,
+  "credits": 1.116,
+  "broad": {
+    "texts": 11,
+    "flipped": 0,
+    "self_flip_rate": 0.0,
+    "examples": []
+  }
+}

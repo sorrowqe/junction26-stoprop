@@ -19,13 +19,15 @@
 
   function render(data) {
     (data.languages || []).forEach((l) => body("lang-table").append(
-      row([l.name, l.evaluated ? "Measured" : "Not measured (strict sensitivity by default)"])));
+      row([l.name, l.evaluated ? "Measured" : "Not measured"])));
 
     const latest = data.latest;
     $("no-results").hidden = !!latest;
     $("results").hidden = !latest;
     if (latest) renderLatest(latest);
     renderBakeoff(data.bakeoff);
+    renderCalibration(data.calibration);
+    renderSelf(data.self_consistency, latest);
 
     const review = data.ai_review;
     const gold = data.gold_report;
@@ -94,6 +96,39 @@
       ["Mean latency", `${num(c.mean_latency_s)} s`], ["Credits (router) per analysis", num(c.mean_credits_per_analysis)], ["Validator rejection rate (AI quotes not found verbatim)", pct(r.validator_rejection_rate)],
       ["Abstention rate (nothing flagged)", pct(r.abstention_rate)], ["AI failures (fell back to rules)", num(r.llm_failures)]]
       .forEach((x) => body("cost").append(row(x)));
+  }
+
+  const ci = (c) => (c ? ` [${pct(c[0])}–${pct(c[1])}]` : "");
+  const frac = (o) => (o && o.paragraphs !== undefined ? `${num(o.flagged)}/${num(o.paragraphs)} (${pct(o.rate)})${ci(o.ci)}` : "–");
+
+  function renderCalibration(c) {
+    if (!c || !c.levels) return;
+    $("calib-card").hidden = false;
+    $("calib-info").textContent = `Model ${c.model}, English dev split. Targets for technique false positives on the ` +
+      "human-labelled SemEval “no technique” paragraphs: strict at most 5%, balanced at most 15%, broad = no confidence " +
+      "filter. Each level uses the lowest confidence threshold that meets its target and still differs from the looser " +
+      "level. Claim labels (amber) are not counted on SemEval, which does not annotate claims; on the synthetic hard " +
+      `negatives every flag counts. The site default is ${c.default_level}. Thresholds were chosen and measured on the ` +
+      "same small set, so these numbers are optimistic and the intervals are wide; the locked test split is the check.";
+    ["strict", "balanced", "broad"].forEach((lvl) => {
+      const v = c.levels[lvl];
+      if (!v) return;
+      const a = v.scores.all;
+      const sym = v.symmetry || {}, self = v.self_flip || {};
+      body("calib").append(row([lvl + (lvl === c.default_level ? " (default)" : ""),
+        v.min_confidence ? String(v.min_confidence) : "none",
+        `${pct(a.precision)}${ci(a.precision_ci)}`, `${pct(a.recall)}${ci(a.recall_ci)}`, pct(a.f1),
+        frac(v.fpr_semeval_none), frac(v.fpr_synthetic_hard_negative),
+        sym.pairs ? `${sym.flipped}/${sym.pairs}` : "–", self.texts ? `${self.flipped}/${self.texts}` : "–"]));
+    });
+  }
+
+  function renderSelf(s, latest) {
+    if (!s || !s.broad || !latest || !latest.symmetry) return;
+    const sym = latest.symmetry, self = s.broad;
+    $("sym").textContent += ` Noise baseline: the same ${self.texts} texts analysed twice gave different labels ` +
+      `${self.flipped} times (self-flip rate ${pct(self.self_flip_rate)}). Symmetry flips clearly above the self-flip ` +
+      "rate would point to a lean; at or below it they look like noise. With so few pairs, neither can be ruled out.";
   }
 
   function renderBakeoff(b) {

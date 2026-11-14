@@ -19,8 +19,8 @@ techniques:
     definition: Emotionally charged words used to sway the reader rather than inform.
     example: "The council's reckless scheme will gut our neighbourhood."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: 0.526
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    dev_precision: 0.615
     experimental: true
 
   - label: name_calling
@@ -30,7 +30,7 @@ techniques:
     definition: Labelling a person or group to discredit them instead of addressing their argument.
     example: "Only clueless bureaucrats could support this plan."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -41,7 +41,7 @@ techniques:
     definition: Invoking threat or danger to push a conclusion or action.
     example: "If this passes, your family will not be safe in its own home."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -52,7 +52,7 @@ techniques:
     definition: Overstating or downplaying something beyond what the evidence supports.
     example: "A few delayed trains have brought the entire country to a standstill."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: 0.857
     experimental: false
 
@@ -63,7 +63,7 @@ techniques:
     definition: Deflecting criticism by pointing to someone else's wrongdoing instead of answering it.
     example: "Why complain about our budget overrun when the last government did worse?"
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -74,7 +74,7 @@ techniques:
     definition: Presenting only two options when more exist.
     example: "Either we close the border completely or we give up our country."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -85,9 +85,9 @@ techniques:
     definition: Appealing to a vague, unnamed, irrelevant or made-up authority instead of evidence.
     example: "Experts say the new vaccine changes your DNA."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: 0.8
-    experimental: false
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    dev_precision: null
+    experimental: true
 
   - label: causal_oversimplification
     name: Causal oversimplification
@@ -96,8 +96,8 @@ techniques:
     definition: Blaming a single cause for a complex outcome.
     example: "Prices went up for one reason only: the new mayor."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: 0.667
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    dev_precision: null
     experimental: true
 
   - label: bandwagon
@@ -107,7 +107,7 @@ techniques:
     definition: Using "everyone knows" or "everyone agrees" as the argument itself.
     example: "Everybody knows this policy has failed."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
     experimental: true
 
@@ -118,8 +118,8 @@ techniques:
     definition: Undermining someone's credibility without giving evidence.
     example: "Can we really trust a report written by these so-called scientists?"
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: 0.417
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    dev_precision: 0.6
     experimental: true
 
   - label: unsupported_claim
@@ -129,8 +129,8 @@ techniques:
     definition: A check-worthy factual claim with no source given in the text. This does not mean it is false.
     example: "Crime in the city has doubled since last year."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: 0.125
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    dev_precision: 0.077
     experimental: true
 
   - label: supported_claim
@@ -140,8 +140,8 @@ techniques:
     definition: A factual claim that comes with a link, a named source or dated data in the text. This does not mean it is true.
     example: "Unemployment fell to 6.1% in October, Statistics Estonia said."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
-    dev_precision: 0.375
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
+    dev_precision: 0.25
     experimental: true
 
   - label: balance
@@ -151,6 +151,6 @@ techniques:
     definition: A fair counter-argument or an acknowledged uncertainty.
     example: "Critics argue the cost estimate is too optimistic, and the final figure is not yet known."
     enabled: true
-    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}
+    min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}
     dev_precision: null
     experimental: true

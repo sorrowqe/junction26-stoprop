@@ -66,8 +66,17 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   exaggeration_minimisation (0.857, n=7) and questionable_authority (0.8, n=5) are no longer experimental.
 - Bake-off DONE (fixed 30-analysis subset, 10.0 credits): gemini-3.5-flash-lite-eu F1 0.600 = Haiku 0.600 at 0.093
   credits/analysis (Haiku ~0.31/call); gpt-5.4-mini F1 0.507 (0.211); mistral-small-4-eu F1 0.061 (abstains on 29/30).
-- NEXT: Aleksandr decides whether to switch MODEL_TAGGER to gemini-3.5-flash-lite-eu (needs a full dev re-run, ~111 calls
-  ~10 credits, for its own dev_precision gating); then deploy -> /metrics shows the numbers.
+- Tagger SWITCHED to gemini-3.5-flash-lite-eu (temperature 0). Full dev run: 82 calls, 7.61 credits, 1 failure
+  (unusable JSON twice -> rules), strict F1 synthetic 0.778, SemEval 0.286; SemEval-none technique FPR 1/21 at broad.
+- Self-consistency (`eval/self_consistency.py`, 11 calls, 1.12 credits, separate cache selfcons.db): 0/11 self-flips
+  at broad (1/11 at strict/balanced); symmetry flips 1/11 at broad.
+- Calibration (`eval/calibrate.py`, 0 calls): strict >= 0.9, balanced >= 0.85, broad = no filter; SemEval-none
+  technique FPR 0/21, 1/21, 1/21 (Wilson CIs on /metrics). Site default = strict for every language. Shown by default
+  (precision >= 0.70 at broad, >= 5 predictions): exaggeration_minimisation only; all other labels experimental.
+- /metrics: sensitivity trade-off table with CIs, self-flip baseline, SemEval-2020 context (verified: best SI F1 51.74,
+  best TC micro-F1 63.74, corrected, arXiv:2009.02696), Gemini-overlap disclosure. Analyzer shows the measured
+  trade-off under the sensitivity select.
+- NEXT: deploy (server .env MODEL_TAGGER change first). Sunday morning: `run_eval.py --final` (announce calls).
 
 ## M3 real-network check (local PC, no AI key)
 - 11 SSRF URLs via the running app with real DNS (incl. 127.0.0.1.nip.io, localtest.me) -> all 400.

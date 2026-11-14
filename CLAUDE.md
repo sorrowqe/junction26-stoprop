@@ -149,7 +149,7 @@ stoprop/
 DOMAIN=stoprop.tech
 ROUTER_BASE_URL=https://router.hostinger.com/v1
 ROUTER_API_KEY=                          # server: stoprop-prod key; PC .env.local: stoprop-dev key
-MODEL_TAGGER=claude-haiku-4.5-eu         # until the bake-off decides
+MODEL_TAGGER=gemini-3.5-flash-lite-eu    # bake-off 2026-11-14 (same F1 as Haiku, ~1/3 credits)
 MODEL_SUMMARY=claude-haiku-4.5-eu
 MODEL_EMBED=text-embedding-3-small-eu    # swarm deep mode only
 BAKEOFF_MODELS=claude-haiku-4.5-eu,gemini-3.5-flash-lite-eu,gpt-5.4-mini,mistral-small-4-eu

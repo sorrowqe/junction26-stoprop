@@ -20,7 +20,8 @@
     <p>Returns highlighted <code>spans</code> (start/end offsets, label, colour, confidence, plain-language explanation,
       <code>reported_speech</code>, <code>experimental</code>), a <code>profile</code>, <code>innocent_explanations</code>,
       <code>mode</code> (<code>llm</code> or <code>heuristics_only</code>) and token <code>cost</code>.
-      <code>sensitivity</code>: <code>strict</code> | <code>balanced</code> | <code>broad</code>.
+      <code>sensitivity</code>: <code>strict</code> (default) | <code>balanced</code> | <code>broad</code>
+      (no confidence filter); measured trade-offs on <a href="/metrics">Metrics</a>.
       <code>private: true</code> means the text is not written to the shared cache.</p>
     <p class="muted small">Offsets are Unicode code points (Python string indices). In JavaScript, convert them before slicing
       strings that contain emoji or other characters outside the Basic Multilingual Plane.</p>

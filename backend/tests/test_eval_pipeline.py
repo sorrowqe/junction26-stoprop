@@ -367,7 +367,7 @@ def test_limit_run_writes_sample_not_latest(monkeypatch, tmp_path):
 def test_api_metrics_and_page():
     client = TestClient(app)
     body = client.get("/api/metrics").json()
-    assert {"latest", "ai_review", "gold_report", "languages"} <= set(body)
+    assert {"latest", "bakeoff", "calibration", "self_consistency", "ai_review", "gold_report", "languages"} <= set(body)
     langs = {l["lang"]: l["evaluated"] for l in body["languages"]}
     assert langs == {"en": True, "et": False, "ru": False, "other": False}
     page = client.get("/metrics").text
@@ -411,3 +411,76 @@ def test_yes_refuses_when_already_reviewed(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(ar.Reviewer, "__call__", lambda *a, **k: (_ for _ in ()).throw(AssertionError("called")))
     assert ar.main(["--yes"]) == 2
     assert "already have review results" in capsys.readouterr().out
+
+
+# ------------------------------------------------- calibration + self-consistency
+
+import calibrate as cal  # noqa: E402
+import self_consistency as scons  # noqa: E402
+
+
+def test_wilson_interval():
+    assert cal.wilson(0, 0) is None
+    lo, hi = cal.wilson(1, 21)
+    assert lo == 0.008 and hi == 0.227
+    assert cal.wilson(0, 21)[0] == 0.0 and cal.wilson(21, 21)[1] == 1.0
+
+
+def test_choose_thresholds_levels_differ_even_when_targets_are_loose():
+    curve = [{"t": 0.0, "fpr": 0.048, "predicted": 86}, {"t": 0.8, "fpr": 0.048, "predicted": 86},
+             {"t": 0.85, "fpr": 0.048, "predicted": 59}, {"t": 0.9, "fpr": 0.0, "predicted": 23}]
+    ch = cal.choose_thresholds(curve)
+    assert (ch["broad"]["t"], ch["balanced"]["t"], ch["strict"]["t"]) == (0.0, 0.85, 0.9)
+    assert ch["strict"]["target_met"] and ch["balanced"]["target_met"]
+
+
+def test_choose_thresholds_binding_targets_and_unmet():
+    curve = [{"t": 0.0, "fpr": 0.40, "predicted": 100}, {"t": 0.6, "fpr": 0.12, "predicted": 70},
+             {"t": 0.8, "fpr": 0.07, "predicted": 40}, {"t": 0.9, "fpr": 0.06, "predicted": 10}]
+    ch = cal.choose_thresholds(curve)
+    assert ch["balanced"] == {"t": 0.6, "target": 0.15, "target_met": True}
+    assert ch["strict"] == {"t": 0.9, "target": 0.05, "target_met": False}  # honest: target not reachable
+
+
+def test_filter_emulates_gate():
+    preds = {"x": [{"source": "llm", "confidence": 0.85}, {"source": "llm", "confidence": 0.9},
+                   {"source": "heuristic", "confidence": 0.3}]}
+    assert [s["confidence"] for s in cal.filt(preds, 0.9, "strict")["x"]] == [0.9]          # rules dropped at strict
+    assert [s["confidence"] for s in cal.filt(preds, 0.85, "balanced")["x"]] == [0.85, 0.9, 0.3]
+
+
+def test_regate_resets_old_values_and_writes_thresholds(tmp_path):
+    path = tmp_path / "t.yaml"
+    path.write_text("version: 1\ntechniques:\n"
+                    "  - label: loaded_language\n    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}\n"
+                    "    dev_precision: 0.9\n    experimental: false\n"
+                    "  - label: fear_appeal\n    min_confidence: {strict: 0.8, balanced: 0.6, broad: 0.4}\n"
+                    "    dev_precision: 0.8\n    experimental: false\n", encoding="utf-8")
+    cal.write_thresholds({"strict": {"t": 0.9}, "balanced": {"t": 0.85}, "broad": {"t": 0.0}}, path)
+    updates = cal.regate({"loaded_language": {"predicted": 6, "precision": 0.75}}, path)
+    text = path.read_text(encoding="utf-8")
+    assert updates == {"loaded_language": 0.75}
+    assert text.count("min_confidence: {strict: 0.9, balanced: 0.85, broad: 0.0}") == 2
+    # fear_appeal had an old (other model) value: reset to unmeasured + experimental
+    assert "dev_precision: 0.75\n    experimental: false" in text
+    assert "dev_precision: null\n    experimental: true" in text
+    cal.r.taxonomy.load.cache_clear()
+
+
+def test_self_flip_compares_flagged_label_sets():
+    s = lambda label, color="red", rs=False: {"label": label, "color": color, "reported_speech": rs}
+    first = {"a": [s("loaded_language")], "b": [s("fear_appeal")], "c": [s("doubt_casting", rs=True)]}
+    second = {"a": [s("loaded_language")], "b": [s("bandwagon")], "c": []}
+    out = scons.self_flip(first, second)
+    assert (out["texts"], out["flipped"], out["self_flip_rate"]) == (3, 1, 0.333)
+
+
+def test_self_consistency_plan_makes_no_calls(monkeypatch, tmp_path, capsys):
+    sym = tmp_path / "sym.jsonl"
+    sym.write_text(json.dumps({"pair_id": "sym-01", "lang": "en", "a": {"text": "Calm text."}, "b": {"text": "Calm."}}) + "\n",
+                   encoding="utf-8")
+    monkeypatch.setattr(re_, "SYM", sym)
+    monkeypatch.setattr(re_, "DEV", tmp_path / "none.jsonl")
+    monkeypatch.setattr(scons, "SELF_DB", tmp_path / "self.db")
+    assert scons.main([]) == 0
+    assert "1 uncached LLM calls" in capsys.readouterr().out

@@ -46,10 +46,9 @@
         <div class="controls">
           <label class="inline">Sensitivity
             <select id="sensitivity">
-              <option value="" selected>Automatic</option>
-              <option value="strict">Strict (fewest labels)</option>
+              <option value="strict" selected>Strict (default)</option>
               <option value="balanced">Balanced</option>
-              <option value="broad">Broad (more labels)</option>
+              <option value="broad">Broad (all AI labels)</option>
             </select>
           </label>
           <label class="inline check">
@@ -58,6 +57,7 @@
           </label>
           <button type="submit" id="go">Analyze</button>
         </div>
+        <p id="sens-note" class="muted small" aria-live="polite"></p>
       </form>
       <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>

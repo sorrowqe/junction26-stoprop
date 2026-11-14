@@ -19,7 +19,11 @@
       <h2 id="h-disc">Read this first</h2>
       <ul>
         <li><strong>English only.</strong> Stoprop accepts any language, but accuracy has only been measured for English.
-          Estonian, Russian and other languages are not measured and use strict sensitivity by default.</li>
+          Estonian, Russian and other languages are not measured.</li>
+        <li><strong>Model overlap:</strong> the analyzer now runs on gemini-3.5-flash-lite, and a Gemini model
+          (gemini-3.5-flash) was one of the two reviewers that validated the synthetic test items. A model family can
+          favour its own style, so the synthetic scores may be flattered. The SemEval scores are not affected: those
+          labels come from human annotators.</li>
         <li><strong>Synthetic test items</strong> were written by a model (gpt-5.5) from fixed specifications and
           validated by two independent model families (Gemini and Mistral), consensus only, not human-verified.
           Items the two reviewers disagreed on are excluded.</li>
@@ -30,6 +34,12 @@
           containing no technique, and separately on synthetic hard negatives (emotional but factual reports, quoted
           politicians, fair opinion pieces).</li>
         <li>Synthetic data measures the mechanics, not how often manipulation occurs in the real world.</li>
+        <li><strong>SemEval is a hard benchmark.</strong> In the SemEval-2020 Task 11 competition the best system for
+          finding propaganda spans (ignoring which technique) reached F1 51.7%, and the best system for naming the
+          technique of spans it was given reached micro-F1 63.7% (corrected results, Da San Martino et al., 2020,
+          <a href="https://arxiv.org/abs/2009.02696">arXiv:2009.02696</a>). Stoprop must find the span and name the
+          technique at once, on a sample mapped to our labels and scored with a different overlap rule, so the
+          numbers are context, not a like-for-like comparison.</li>
       </ul>
     </section>
 
@@ -51,9 +61,15 @@
         <div class="table-wrap"><table id="overall"><thead><tr><th>Source</th><th>Mode</th><th>Precision</th><th>Recall</th><th>F1</th><th>Predicted</th><th>Gold</th></tr></thead><tbody></tbody></table></div>
       </section>
 
+      <section class="card" id="calib-card" aria-labelledby="h-calib" hidden>
+        <h2 id="h-calib">Sensitivity levels (measured trade-off)</h2>
+        <p id="calib-info" class="muted small"></p>
+        <div class="table-wrap"><table id="calib"><thead><tr><th>Level</th><th>Min. confidence</th><th>Precision (95% CI)</th><th>Recall (95% CI)</th><th>F1</th><th>False positives: SemEval clean, techniques (95% CI)</th><th>False positives: synthetic hard negatives, any flag</th><th>Symmetry flips</th><th>Self-flips (same text twice)</th></tr></thead><tbody></tbody></table></div>
+      </section>
+
       <section class="card" aria-labelledby="h-labels">
         <h2 id="h-labels">Per technique (strict, all sources)</h2>
-        <p class="muted small">A technique is shown by default only when its measured precision is at least 70%.</p>
+        <p class="muted small">A technique is shown by default only when its measured precision is at least 70% (measured with no confidence filter, on at least 5 predictions). The rows below are the model with no confidence filter (“broad”); see the sensitivity table above for the other levels.</p>
         <div class="table-wrap"><table id="per-label"><thead><tr><th>Label</th><th>Precision</th><th>Recall</th><th>F1</th><th>Predicted</th><th>Gold</th></tr></thead><tbody></tbody></table></div>
         <h3>What we don't detect well</h3>
         <ul id="weak"></ul>

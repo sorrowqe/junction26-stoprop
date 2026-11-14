@@ -27,7 +27,11 @@
       <li><strong>Privacy by default.</strong> No accounts; swarm uploads are processed in memory.</li>
     </ol>
     <p><strong>Language coverage:</strong> any language is accepted, but accuracy has only been measured for English.
-      Other languages use strict sensitivity by default and are marked as not measured (see <a href="/metrics">Metrics</a>).</p>
+      Other languages are marked as not measured (see <a href="/metrics">Metrics</a>).</p>
+    <p><strong>Sensitivity levels</strong> are calibrated on the English development set: <em>strict</em> (the default)
+      targets at most 5% of clean news paragraphs flagged with a technique, <em>balanced</em> at most 15%, and
+      <em>broad</em> shows every label the AI proposes. The measured trade-off for each level, with confidence
+      intervals, is on the <a href="/metrics">Metrics</a> page.</p>
     <p class="muted">No AI-generated-text detection: such detectors are unreliable and known to be biased against non-native writers.</p>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>

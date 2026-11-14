@@ -29,7 +29,7 @@ def router_api_key() -> str:
 
 
 def model_tagger() -> str:
-    return env("MODEL_TAGGER", "claude-haiku-4.5-eu")
+    return env("MODEL_TAGGER", "gemini-3.5-flash-lite-eu")
 
 
 def llm_configured() -> bool:

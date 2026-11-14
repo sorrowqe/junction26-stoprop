@@ -23,7 +23,9 @@ def name(lang: str) -> str:
 
 
 def default_sensitivity(lang: str) -> str:
-    return "balanced" if is_evaluated(lang) else "strict"
+    """Site default = strict for every language (2026-11-14): calibrated to <= 5 % technique false positives
+    on clean English news paragraphs (dev split, eval/calibrate.py)."""
+    return "strict"
 
 
 def note(lang: str) -> str | None:
@@ -31,7 +33,7 @@ def note(lang: str) -> str | None:
         return None
     what = "this language" if lang == "other" else name(lang)
     return (f"Accuracy has only been measured for English; results for {what} are not measured, "
-            "so strict sensitivity is used by default.")
+            "so treat them with extra caution.")
 
 
 def coverage() -> list[dict]:

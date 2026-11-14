@@ -31,11 +31,32 @@
 
   const labelName = (l) => (labels[l] && labels[l].name) || l.replace(/_/g, " ");
 
+  // ---------------------------------------------- measured trade-off per sensitivity level
+  let calibration = null;
+  async function loadTradeoff() {
+    try {
+      const r = await fetch("/api/metrics");
+      calibration = (await r.json()).calibration;
+    } catch (e) { calibration = null; }
+    showTradeoff();
+  }
+  function showTradeoff() {
+    const el = $("sens-note");
+    const lvl = calibration && calibration.levels && calibration.levels[$("sensitivity").value];
+    if (!lvl) { el.textContent = ""; return; }
+    const pc = (x) => (x === null || x === undefined ? "–" : `${Math.round(x * 100)}%`);
+    const a = lvl.scores.all, f = lvl.fpr_semeval_none;
+    el.textContent = `Measured on our English development set: ${pc(a.precision)} of its labels match the reference labels, ` +
+      `it finds ${pc(a.recall)} of the labelled techniques, and it flagged ${f.flagged} of ${f.paragraphs} ` +
+      `clean news paragraphs. Small samples; details on the Metrics page.`;
+  }
+
   // ------------------------------------------------------------- bootstrap
   async function init() {
     $("show-exp").checked = store.get("stoprop.showExp") === "1";
     const sens = store.get("stoprop.sensitivity");
-    if (sens) $("sensitivity").value = sens;
+    if (["strict", "balanced", "broad"].includes(sens)) $("sensitivity").value = sens;
+    loadTradeoff();
     renderLegend();
 
     try {
@@ -64,6 +85,7 @@
     });
     $("sensitivity").addEventListener("change", () => {
       store.set("stoprop.sensitivity", $("sensitivity").value);
+      showTradeoff();
       if (current && $("text").value === current.text) analyze();
     });
     $("refresh-receipts").addEventListener("click", refreshReceipts);

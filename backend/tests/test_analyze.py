@@ -34,7 +34,7 @@ def test_response_schema():
 
 
 def test_heuristic_spans_are_amber_experimental_low_confidence():
-    spans = analyze(SAMPLES["manipulative"])["spans"]
+    spans = analyze(SAMPLES["manipulative"], sensitivity="balanced")["spans"]
     assert len(spans) >= 3
     for s in spans:
         assert s["color"] == "amber" and s["experimental"] is True and s["confidence"] < 0.5
@@ -60,7 +60,7 @@ def test_strict_drops_heuristic_spans():
 
 def test_reported_speech_flag_end_to_end():
     text = 'Officials were calm. "Everyone knows this plan failed," the opposition leader said.'
-    spans = analyze(text)["spans"]
+    spans = analyze(text, sensitivity="balanced")["spans"]
     assert spans and all(s["reported_speech"] for s in spans)
 
 
@@ -71,7 +71,7 @@ def test_ru_and_et_do_not_crash_and_detect_language():
 
 def test_emoji_offsets_are_code_points():
     text = "🎉🎉 Everyone knows this is true."
-    s = analyze(text)["spans"][0]
+    s = analyze(text, sensitivity="balanced")["spans"][0]
     assert text[s["start"]:s["end"]] == "Everyone knows"
 
 
@@ -118,10 +118,11 @@ def test_techniques_endpoint():
 def test_gate_llm_spans_by_confidence_and_colour():
     base = {"start": 0, "end": 4, "quote": "abcd", "label": "fear_appeal", "source": "llm", "reported_speech": False}
     spans = [dict(base, confidence=0.9), dict(base, confidence=0.5), dict(base, confidence=0.3), dict(base, label="nope", confidence=0.9)]
+    assert [s["confidence"] for s in taxonomy.gate(spans, "strict")] == [0.9]
     balanced = taxonomy.gate(spans, "balanced")
     assert [s["confidence"] for s in balanced] == [0.9]
-    broad = taxonomy.gate(spans, "broad")
-    assert [s["confidence"] for s in broad] == [0.9, 0.5]
+    broad = taxonomy.gate(spans, "broad")  # broad = no confidence filter (calibration 2026-11-14)
+    assert [s["confidence"] for s in broad] == [0.9, 0.5, 0.3]
     # every technique is experimental until M4 measures it -> amber, never red yet
     assert all(s["color"] == "amber" and s["experimental"] for s in broad)
 
@@ -159,7 +160,7 @@ def test_v2_response_fields():
 def test_language_coverage_english_evaluated():
     body = analyze("Everyone knows the plan failed and the council is to blame for it.")
     assert body["lang"] == "en" and body["language_evaluated"] is True
-    assert body["sensitivity"] == "balanced" and body["language_note"] is None
+    assert body["sensitivity"] == "strict" and body["language_note"] is None  # site default
 
 
 def test_unevaluated_language_defaults_to_strict_with_note():

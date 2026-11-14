@@ -40,7 +40,7 @@ class AnalyzeRequest(BaseModel):
     text: str | None = None
     url: str | None = None
     lang: str = "auto"
-    # None = automatic: balanced for evaluated languages (English), strict for languages we have not measured
+    # None = site default (strict for every language; calibrated in eval/calibrate.py)
     sensitivity: Literal["strict", "balanced", "broad"] | None = None
     private: bool = False  # analyze, but do not write to the shared cache
 
@@ -79,6 +79,7 @@ def _read_result(name: str):
 def metrics() -> dict:
     """Latest evaluation results (eval/results/*.json, committed) + language coverage."""
     return {"latest": _read_result("latest.json"), "bakeoff": _read_result("bakeoff.json"),
+            "calibration": _read_result("calibration.json"), "self_consistency": _read_result("self_consistency.json"),
             "ai_review": _read_result("ai_review.json"),
             "gold_report": _read_result("gold_report.json"), "languages": languages.coverage()}
 

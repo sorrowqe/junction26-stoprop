@@ -196,3 +196,6 @@ tbody th { font-weight: 600; }
 .disclosure { border-left: 4px solid var(--amber); }
 .disclosure ul { padding-left: 1.1rem; margin: 0; }
 .disclosure li { margin-bottom: .4rem; }
+
+/* sensitivity select never wider than its container (phones) */
+.controls select { max-width: 100%; }

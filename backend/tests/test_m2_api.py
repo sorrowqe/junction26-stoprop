@@ -71,8 +71,10 @@ def test_second_request_is_cached(monkeypatch):
 def test_sensitivity_gating_on_llm_spans(monkeypatch):
     install(monkeypatch, FakeLLM(manip_responder))
     labels = lambda b: sorted(s["confidence"] for s in b["spans"])
-    assert labels(post(SAMPLES["manipulative"], sensitivity="strict")) == [0.8, 0.9]
+    assert labels(post(SAMPLES["manipulative"], sensitivity="strict")) == [0.9]          # calibrated: strict >= 0.9
+    assert labels(post(SAMPLES["manipulative"], sensitivity="balanced")) == [0.9]        # balanced >= 0.85
     assert labels(post(SAMPLES["manipulative"], sensitivity="broad")) == [0.8, 0.9]
+    assert labels(post(SAMPLES["manipulative"])) == [0.9]                                # site default = strict
     # a low-confidence span only survives "broad"
     install(monkeypatch, FakeLLM(lambda u, s: json.dumps([{"sentence_id": "p1s1", "quote": "are a disaster",
                                                           "label": "loaded_language", "confidence": 0.45}])))
@@ -92,7 +94,7 @@ def test_private_request_not_cached_and_not_counted(monkeypatch, _isolated):
 
 def test_llm_failure_falls_back_to_heuristics(monkeypatch):
     install(monkeypatch, FakeLLM(fail=True))
-    body = post(SAMPLES["manipulative"])
+    body = post(SAMPLES["manipulative"], sensitivity="balanced")  # strict (default) drops rule-based hints
     assert body["mode"] == "heuristics_only" and body["mode_reason"] == "llm_error"
     assert body["spans"] and all(s["source"] == "heuristic" for s in body["spans"])
     assert any("temporarily unavailable" in n for n in body["notes"])
