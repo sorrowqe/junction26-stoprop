@@ -6,7 +6,7 @@
   <title>Metrics · Stoprop</title>
   <meta name="description" content="Measured precision, recall, false-positive rate and cost.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/style.css?v=3">
 </head>
 <body>
   <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics" aria-current="page">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
@@ -105,18 +105,17 @@
     <section class="card disclosure" aria-labelledby="h-disc">
       <h2 id="h-disc">How these numbers are measured (and their limits)</h2>
       <ul class="small">
-        <li><strong>English only.</strong> Stoprop accepts English, Estonian, Russian and other languages, but quantitative
-          accuracy has only been benchmarked on English so far.</li>
-        <li><strong>Reference datasets:</strong> real news paragraphs human-annotated for SemEval-2020 Task 11
-          (Da San Martino et al., 2020, <a href="https://arxiv.org/abs/2009.02696">arXiv:2009.02696</a> — where top competition
-          systems reached 51.7% span F1), combined with multi-technique synthetic items validated by two independent
-          reviewer families (consensus only, not human-verified) plus hard-negative emotional/opinion controls.</li>
-        <li><strong>Zero-hallucination quote check:</strong> every span highlighted by Stoprop is verified character for
-          character against the input text; any unverified quote is automatically discarded before display.</li>
+        <li><strong>Language scope:</strong> Stoprop accepts English and other languages; quantitative accuracy benchmarks
+          have been measured on English so far, while other languages use the same conservative <em>Strict</em> default.</li>
+        <li><strong>Reference datasets:</strong> evaluated on human-annotated news paragraphs from SemEval-2020 Task 11
+          (Da San Martino et al., 2020, <a href="https://arxiv.org/abs/2009.02696">arXiv:2009.02696</a>) and controlled
+          multi-technique passages, alongside clean-news and emotional/opinion hard-negative controls.</li>
+        <li><strong>Exact-quote verification:</strong> every highlighted passage is verified character for character against
+          the input text; any unverified quote is automatically discarded before display.</li>
       </ul>
     </section>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
-  <script src="/static/metrics.js" defer></script>
+  <script src="/static/metrics.js?v=3" defer></script>
 </body>
 </html>

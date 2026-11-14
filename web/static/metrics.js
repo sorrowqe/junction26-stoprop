@@ -144,17 +144,26 @@
     const labelMap = {};
     (tax.labels || []).forEach((t) => { labelMap[t.label] = t.name; });
 
-    (data.languages || []).forEach((l) => body("lang-table").append(
-      row([l.name, l.evaluated ? "Benchmarked" : "Supported (not yet benchmarked)"])));
+    // Clean 2-row language summary: English vs. Other languages
+    const enEval = (data.languages || []).some((l) => l.lang === "en" && l.evaluated);
+    const lb = body("lang-table");
+    if (lb) {
+      lb.replaceChildren(
+        row(["English", enEval ? "Benchmarked" : "Supported"]),
+        row(["Other languages", "Supported (not yet benchmarked)"]),
+      );
+    }
 
-    renderKpis(data.calibration, data.swarm);
     const latest = data.latest;
-    $("no-results").hidden = !!(latest || data.swarm);
-    $("results").hidden = !latest;
-    if (latest) renderLatest(latest, labelMap);
-    renderCalibration(data.calibration);
-    renderSwarm(data.swarm);
+    const hasAny = Boolean(latest || data.swarm || data.calibration);
+    if ($("no-results")) $("no-results").hidden = hasAny;
+    if ($("results")) $("results").hidden = !latest;
+
+    try { renderKpis(data.calibration, data.swarm); } catch { /* isolated */ }
+    try { if (latest) renderLatest(latest, labelMap); } catch { /* isolated */ }
+    try { renderCalibration(data.calibration); } catch { /* isolated */ }
+    try { renderSwarm(data.swarm); } catch { /* isolated */ }
   }).catch(() => {
-    $("no-results").hidden = false;
+    if ($("no-results")) $("no-results").hidden = false;
   });
 })();

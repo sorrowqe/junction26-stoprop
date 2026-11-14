@@ -415,8 +415,18 @@ async def trace_post(req: TraceRequest, request: Request):
     return await _respond(run, error, req.stream)
 
 
+@app.middleware("http")
+async def _no_stale_static(request: Request, call_next):
+    resp = await call_next(request)
+    if request.url.path == "/" or request.url.path.startswith("/static/") or request.url.path in {
+        "/source", "/swarm", "/metrics", "/methodology", "/api",
+    }:
+        resp.headers.setdefault("Cache-Control", "no-cache")
+    return resp
+
+
 def _page(name: str) -> FileResponse:
-    return FileResponse(config.WEB_DIR / f"{name}.html", media_type="text/html")
+    return FileResponse(config.WEB_DIR / f"{name}.html", media_type="text/html", headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/", include_in_schema=False)

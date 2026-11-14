@@ -31,8 +31,7 @@ def default_sensitivity(lang: str) -> str:
 def note(lang: str) -> str | None:
     if is_evaluated(lang):
         return None
-    what = "this language" if lang == "other" else name(lang)
-    return (f"Accuracy has only been measured for English; results for {what} are not measured, "
+    return ("Accuracy has only been measured for English; results for other languages are not yet benchmarked, "
             "so treat them with extra caution.")
 
 

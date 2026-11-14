@@ -6,7 +6,7 @@
   <title>Methodology · Stoprop</title>
   <meta name="description" content="How Stoprop detects techniques and coordination, and its limits.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/style.css?v=3">
 </head>
 <body>
   <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology" aria-current="page">Methodology</a><a href="/api">API</a></div></nav>
@@ -26,8 +26,8 @@
       <li><strong>Innocent explanations</strong> are listed next to every flag.</li>
       <li><strong>Privacy by default.</strong> No accounts; swarm uploads are processed in memory.</li>
     </ol>
-    <p><strong>Language coverage:</strong> any language is accepted, but accuracy has only been measured for English.
-      Other languages are marked as not measured (see <a href="/metrics">Metrics</a>).</p>
+    <p><strong>Language coverage:</strong> English and other languages are accepted; quantitative accuracy benchmarks
+      are currently measured on English, while other languages use the same conservative defaults (see <a href="/metrics">Metrics</a>).</p>
     <p><strong>Sensitivity levels</strong> are calibrated on the English development set: <em>strict</em> (the default)
       targets at most 5% of clean news paragraphs flagged with a technique, <em>balanced</em> at most 15%, and
       <em>broad</em> shows every label the AI proposes. The measured trade-off for each level, with confidence

@@ -108,7 +108,7 @@ def build_profile(seg: Segmented, spans: list[dict], hints: list[dict], names: d
 
 def summary(lang, genre, words, flagged, n_experimental, n_reported, share, density, names) -> str:
     """One or two neutral sentences. Describes the text, never the author."""
-    lang_name = LANG_NAMES.get(lang, "a language without word lists yet")
+    lang_name = "English" if lang == "en" else "other language"
     parts = [f"{GENRE_PHRASES[genre]} ({lang_name}, {words:,} words)."]
     techniques = [s for s in flagged if s.get("color") == "red"]
     claims = [s for s in flagged if s.get("color") == "amber"]

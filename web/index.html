@@ -6,7 +6,7 @@
   <title>Stoprop</title>
   <meta name="description" content="Stoprop highlights manipulation techniques in text and explains them in plain language. We flag the tactics, not the opinions.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/style.css?v=3">
 </head>
 <body>
   <a class="skip" href="#text">Skip to the analyzer</a>
@@ -35,7 +35,7 @@
         <label for="text" class="field-label">Text</label>
         <textarea id="text" rows="9" placeholder="Paste a news article, social media post or comment…" spellcheck="false"></textarea>
         <label class="inline check private"><input type="checkbox" id="private" aria-describedby="private-note"> Don't store this text</label>
-        <p id="private-note" class="muted small">AI results are cached per paragraph, so the same text is instant and free next time.
+        <p id="private-note" class="muted small">Results are cached briefly for speed.
           Tick this to analyze without saving anything to that shared cache.</p>
 
         <label for="url" class="field-label">Or a link</label>
@@ -48,7 +48,7 @@
             <select id="sensitivity">
               <option value="strict" selected>Strict (default)</option>
               <option value="balanced">Balanced</option>
-              <option value="broad">Broad (all AI labels)</option>
+              <option value="broad">Broad (all detections)</option>
             </select>
           </label>
           <button type="submit" id="go">Analyze</button>
@@ -115,7 +115,7 @@
     Stoprop labels techniques and behaviours, never people, outlets or viewpoints. No accounts, no reading history.
     <a href="/methodology">Methodology</a> · <a href="/api">API</a>
   </footer>
-  <script src="/static/receipts.js" defer></script>
-  <script src="/static/app.js" defer></script>
+  <script src="/static/receipts.js?v=3" defer></script>
+  <script src="/static/app.js?v=3" defer></script>
 </body>
 </html>

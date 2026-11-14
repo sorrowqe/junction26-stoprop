@@ -18,7 +18,7 @@
   };
   const PRIORITY = { red: 0, amber: 1, green: 2, blue: 3 };
   const GENRES = { news: "News report", opinion: "Opinion", social: "Social media post", unknown: "Unclear" };
-  const LANGS = { en: "English", et: "Estonian", ru: "Russian", other: "Other" };
+  const LANGS = { en: "English", et: "Other language", ru: "Other language", other: "Other language" };
 
   const store = {
     get(k) { try { return localStorage.getItem(k); } catch { return null; } },

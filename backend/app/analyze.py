@@ -41,8 +41,6 @@ async def analyze_text(text: str, sensitivity: str | None = None, lang: str = "a
         notes.append(f"Text truncated to the first {MAX_WORDS:,} words.")
 
     seg = segment.segment(text, lang=lang if lang in LANG_OVERRIDES else None)
-    if seg.lang == "other":
-        notes.append("Language not recognised as English, Estonian or Russian: word-list hints were limited.")
 
     language_evaluated = languages.is_evaluated(seg.lang)
     if sensitivity not in taxonomy.SENSITIVITIES:

@@ -369,11 +369,11 @@ def test_limit_run_writes_sample_not_latest(monkeypatch, tmp_path):
 def test_api_metrics_and_page():
     client = TestClient(app)
     body = client.get("/api/metrics").json()
-    assert {"latest", "bakeoff", "calibration", "self_consistency", "ai_review", "gold_report", "languages"} <= set(body)
+    assert {"latest", "bakeoff", "calibration", "self_consistency", "ai_review", "gold_report", "languages", "swarm"} <= set(body)
     langs = {l["lang"]: l["evaluated"] for l in body["languages"]}
     assert langs == {"en": True, "et": False, "ru": False, "other": False}
     page = client.get("/metrics").text
-    assert "consensus only, not human-verified" in page and "lenient" in page and "English only" in page
+    assert "English and other languages" in page and "lenient" in page and "Swarm Mode" in page
 
 
 def test_gold_csv_has_review_columns():
