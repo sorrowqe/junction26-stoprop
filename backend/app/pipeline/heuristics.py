@@ -22,6 +22,8 @@ _LEXICON_HINTS = {
     "vague_authority": "vague_authority",
     "whataboutism": "whataboutism_phrase",
     "false_dilemma": "false_dilemma_phrase",
+    "causal_oversimplification": "causal_oversimplification_phrase",
+    "exaggeration": "exaggeration_phrase",
     "balance": "balance_marker",
     "opinion": "opinion_marker",
 }

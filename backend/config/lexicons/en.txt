@@ -162,17 +162,42 @@ people are saying
 
 [whataboutism]
 what about when
+what about the
+what about their
+what about his
+what about her
 why complain about
 where was the outrage
-what about their
+before they lecture
 hypocritical coming from
 
 [false_dilemma]
 either we
 the only choice is
 the only option is
+only two choices
+only two options
 no other choice
+no middle ground
 with us or against us
+
+[causal_oversimplification]
+for one reason
+only one reason
+the real reason
+has one cause
+boils down to one
+solely because
+entirely the fault of
+nothing more than
+
+[exaggeration]
+nothing but
+biggest * in history
+worst * in history
+total collapse
+complete disaster
+a mountain of
 
 [balance]
 however

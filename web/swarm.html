@@ -6,7 +6,7 @@
   <title>Swarm mode · Stoprop</title>
   <meta name="description" content="Detect coordinated behaviour in a batch of posts.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css?v=3">
+  <link rel="stylesheet" href="/static/style.css?v=4">
 </head>
 <body>
   <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm" aria-current="page">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
@@ -48,19 +48,19 @@
         </div>
 
         <div class="controls">
+          <label class="inline check"><input type="checkbox" id="tag" checked> Tag manipulation techniques in flagged groups
+            <span class="muted small">(AI, 0 cost when organic)</span></label>
           <button type="submit" id="go">Investigate</button>
         </div>
         <p id="status" class="status" role="status" aria-live="polite"></p>
 
         <details class="advanced-box" id="adv-box">
-          <summary class="small">Advanced: AI options &amp; research dataset import (CSV / JSON)</summary>
+          <summary class="small">Advanced: AI paraphrase embeddings &amp; research dataset import (CSV / JSON)</summary>
           <div class="advanced-body">
             <fieldset class="options">
               <legend class="sr-only">AI options for thread/batch checks</legend>
-              <label class="inline check"><input type="checkbox" id="deep"> Deep mode: also find paraphrases
-                <span class="muted small">(AI embeddings, costs credits, weaker evidence)</span></label>
-              <label class="inline check"><input type="checkbox" id="tag"> Tag manipulation techniques in flagged groups
-                <span class="muted small">(AI, up to 10 calls)</span></label>
+              <label class="inline check"><input type="checkbox" id="deep"> Deep mode: also find heavily paraphrased copies
+                <span class="muted small">(AI embeddings, weaker evidence)</span></label>
             </fieldset>
             <div class="row-actions" style="margin-top:.6rem">
               <label class="file-pick">Choose a CSV or JSON file<input type="file" id="file" accept=".csv,.json,.txt,text/csv,application/json"></label>
@@ -114,6 +114,6 @@
     </section>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
-  <script src="/static/swarm.js?v=3"></script>
+  <script src="/static/swarm.js?v=4"></script>
 </body>
 </html>

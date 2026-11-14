@@ -9,6 +9,7 @@ from __future__ import annotations
 import asyncio
 import html as html_mod
 import re
+from collections import Counter
 from urllib.parse import urlsplit
 
 from app.pipeline import extract
@@ -17,6 +18,11 @@ from app.receipts import lookalike
 from app.trace import fingerprint
 
 PAGE_TIMEOUT_S = 4.0
+_SOCIAL_SHARE_DOMAINS = {
+    "facebook.com", "fb.com", "twitter.com", "x.com", "t.co", "linkedin.com", "instagram.com",
+    "youtube.com", "youtu.be", "t.me", "telegram.me", "reddit.com", "whatsapp.com", "pinterest.com",
+    "tiktok.com", "bsky.app", "threads.net", "google.com", "apple.com", "play.google.com",
+}
 
 _TITLE_RE = re.compile(r"<title[^>]*>([\s\S]{1,400}?)</title>", re.I)
 _META_RE = re.compile(r"<meta\s+([^>]{1,500})>", re.I)
@@ -86,6 +92,8 @@ def analyze_html(raw_html: str, requested_url: str, final_url: str, redirects: l
     site_name = metas.get("og:site_name") or metas.get("application-name")
 
     has_about = has_contact = has_policy = False
+    ext_counts: Counter[str] = Counter()
+    ext_hosts: dict[str, str] = {}
     scan_html = raw_html if len(raw_html) <= 300_000 else (raw_html[:150_000] + "\n" + raw_html[-150_000:])
     for m in _ANCHOR_RE.finditer(scan_html):
         href = (m.group(1) or m.group(2) or "").strip()
@@ -96,8 +104,32 @@ def analyze_html(raw_html: str, requested_url: str, final_url: str, redirects: l
             has_contact = True
         if not has_policy and (_POLICY_HREF.search(href) or _POLICY_TEXT.search(txt)):
             has_policy = True
-        if has_about and has_contact and has_policy:
-            break
+        if href.lower().startswith(("http://", "https://")):
+            try:
+                ehost = dom.normalize_host(href)
+                ereg = dom.registrable(ehost)
+            except dom.DomainError:
+                ereg = ""
+            if ereg and ereg != reg and ereg not in _SOCIAL_SHARE_DOMAINS:
+                ext_counts[ereg] += 1
+                ext_hosts.setdefault(ereg, ehost)
+
+    official = lookalike.official_domains()
+    ctx = lookalike.context_domains()
+    verified_outlets = sorted(d for d in ext_counts if d in official)
+    state_media = sorted(d for d in ext_counts if "state" in (ctx.get(d, {}).get("kind") or "").lower())
+    lookalike_links = sorted(
+        d for d in list(ext_counts)[:40]
+        if d not in official and d not in ctx and lookalike.check(ext_hosts[d]).get("flag") == "warning"
+    )
+    outbound_links = {
+        "external_links": int(sum(ext_counts.values())),
+        "distinct_domains": len(ext_counts),
+        "verified_outlets": verified_outlets[:8],
+        "state_media_domains": state_media[:8],
+        "lookalike_domains": lookalike_links[:5],
+        "top_domains": [{"domain": d, "links": n} for d, n in ext_counts.most_common(5)],
+    }
 
     author = metas.get("author") or metas.get("article:author") or metas.get("parsely-author")
     if not author:
@@ -147,6 +179,7 @@ def analyze_html(raw_html: str, requested_url: str, final_url: str, redirects: l
             "contact_link": has_contact,
             "policy_link": has_policy,
         },
+        "outbound_links": outbound_links,
         "brand_warning": brand_warning,
     }
 

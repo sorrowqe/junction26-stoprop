@@ -30,6 +30,7 @@
     });
     if (page && page.brand_warning) warn += 1;
     if (page && page.cross_domain_redirect) warn += 1;
+    if (page && page.outbound_links && (page.outbound_links.lookalike_domains || []).length) warn += 1;
     if (ok) box.append(el("span", "pill ok", `✓ ${ok} reassuring`));
     if (warn) box.append(el("span", "pill warn", `! ${warn} worth a closer look`));
     if (info) box.append(el("span", "pill", `i ${info} neutral records`));
@@ -127,6 +128,22 @@
     });
     if (page.is_article) {
       badges.append(el("span", `pill ${page.author ? "ok" : "warn"}`, page.author ? "✓ Named author" : "! No author byline detected"));
+    }
+
+    const netEl = $("link-net");
+    if (netEl) {
+      const ob = page.outbound_links;
+      if (ob && ob.distinct_domains > 0) {
+        netEl.hidden = false;
+        const top = (ob.top_domains || []).map((d) => `${d.domain} (${d.links})`).join(", ");
+        const notes = [`Outbound link network: ${ob.external_links} external link${ob.external_links === 1 ? "" : "s"} across ${ob.distinct_domains} domain${ob.distinct_domains === 1 ? "" : "s"} (${top}).`];
+        if ((ob.verified_outlets || []).length) notes.push(`Cites known public/wire outlets: ${ob.verified_outlets.join(", ")}.`);
+        if ((ob.state_media_domains || []).length) notes.push(`Links to state-funded outlets: ${ob.state_media_domains.join(", ")}.`);
+        if ((ob.lookalike_domains || []).length) notes.push(`Warning — links to look-alike domain(s): ${ob.lookalike_domains.join(", ")}.`);
+        netEl.textContent = notes.join(" ");
+      } else {
+        netEl.hidden = true;
+      }
     }
   }
 

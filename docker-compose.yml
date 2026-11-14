@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     env_file: .env
     volumes:
-      - ./data:/app/data
+      - stoprop_data:/app/data
     expose:
       - "8000"
     labels:
@@ -21,3 +21,6 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+
+volumes:
+  stoprop_data:

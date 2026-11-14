@@ -30,26 +30,31 @@
     <p>Stoprop fetches public web pages only (private, local and cloud-metadata addresses are refused, every redirect is
       re-checked, 8 s / 2 MB limits), extracts the main text, and returns it as <code>text</code> together with
       <code>source</code> (title, final URL, date) and <code>receipts</code> for the domain.</p>
-    <h2>Check a source (receipts only, no AI)</h2>
-    <pre><code>curl -s https://stoprop.tech/api/receipts   -H 'Content-Type: application/json'   -d '{"domain": "err-news.ee"}'</code></pre>
-    <p>Each receipt: <code>type</code>, <code>status</code> (<code>found</code> | <code>not_found</code> |
-      <code>not_checked</code> | <code>error</code>), <code>flag</code> (<code>ok</code> | <code>warning</code> |
-      <code>neutral</code>), plain-English <code>text</code>, <code>evidence_url</code>, <code>checked_at</code>.
-      Add <code>"refresh": true</code> to re-check items older than 15 minutes.</p>
-    <h2>Swarm mode (coordinated behaviour)</h2>
+    <h2>Verify claims in a text</h2>
+    <pre><code>curl -s -X POST https://stoprop.tech/api/verify \
+  -H 'Content-Type: application/json' \
+  -d '{"text": "According to Delfi, emergency grid rationing starts Monday."}'</code></pre>
+    <p>Extracts up to 3 check-worthy factual claims (+ cited source), searches cited domains and independent news/web
+      indexes (Brave Search + Oxylabs failover), reads candidate articles SSRF-safely, and returns verbatim-verified
+      <code>evidence</code> quotes with stance (<code>corroborated</code> | <code>contradicted</code> |
+      <code>cited_source_not_found</code> | <code>no_reports_found</code> | <code>not_checked</code>).</p>
+    <h2>Check a source (provenance receipts &amp; live page audit, 0 AI calls)</h2>
+    <pre><code>curl -s https://stoprop.tech/api/receipts   -H 'Content-Type: application/json'   -d '{"url": "https://news.err.ee/"}'</code></pre>
+    <p>Returns domain <code>milestones</code> (RDAP / ccTLD port-43 WHOIS registration, Wayback first capture,
+      Certificate Transparency via crt.sh + CertSpotter), live HTML <code>page</code> audit (HTTPS, About/Contact/Policy
+      transparency links, author byline, brand-impersonation check, and <code>outbound_links</code> domain network),
+      8-watchdog fact-check search, and open-web verbatim copy detection.</p>
+    <h2>Swarm mode (coordinated behaviour across threads &amp; channels)</h2>
     <pre><code>curl -s -X POST https://stoprop.tech/api/swarm \
   -H 'Content-Type: text/csv' --data-binary @posts.csv
 
+# public thread or channel link (Reddit, Telegram t.me, Bluesky, Mastodon, Hacker News, YouTube)
 curl -s -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/json' \
-  -d '{"data": "id,author,timestamp,text\n1,alice,2026-11-14T10:00:00Z,Hello", "deep": false}'
+  -d '{"url": "https://www.reddit.com/r/europe", "tag_clusters": true}'
 
-# a public post link: the post and its replies (Bluesky, Mastodon, YouTube)
-curl -s -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/json' \
-  -d '{"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22"}'
-
-# up to 50 links, one post each; "stream": true sends NDJSON progress lines, then {"result": ...}
+# cross-channel check: up to 50 public links (e.g. multiple Telegram channels); "stream": true sends NDJSON progress
 curl -s -N -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/json' \
-  -d '{"urls": ["https://bsky.app/profile/…/post/…", "https://mastodon.social/@…/…"], "stream": true}'</code></pre>
+  -d '{"urls": ["https://t.me/euronews_en", "https://t.me/dwnews"], "stream": true}'</code></pre>
     <p>Columns <code>id, author, timestamp, text</code> (optional <code>url, author_created_at, platform</code>), CSV or
       JSON, max 2000 posts / 2 MB, processed in memory and never stored. Returns <code>clusters</code> (groups of
       accounts posting the same or near-identical text), each with a <code>verdict</code>

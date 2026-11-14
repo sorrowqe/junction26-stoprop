@@ -267,7 +267,7 @@ async def verify(text: str, progress=None) -> dict:
         notes.append(f"{discarded} AI judgement{'s were' if discarded != 1 else ' was'} discarded because the quoted "
                      "evidence was not found word for word in the article.")
     if not factcheck.configured():
-        notes.append("Existing fact-checks (Google Fact Check Tools) were not searched: not configured on this server.")
+        notes.append("Independent Fact Check search was not run: search provider not configured on this server.")
     cost["credits"] = round(cost["credits"], 4)
     result = {"id": "v_" + uuid.uuid4().hex[:10], "claims": results, "spans": spans, "notes": notes, "cost": cost,
               "elapsed_ms": round((time.monotonic() - t0) * 1000), "cached": False}

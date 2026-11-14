@@ -319,9 +319,14 @@
       art.append(box);
     }
     if (c.techniques) {
-      art.append(el("p", { class: "small" }, c.techniques.length
-        ? `Techniques in the shared text: ${c.techniques.map((t) => t.replace(/_/g, " ")).join(", ")}.`
-        : "No manipulation technique found in the shared text."));
+      const tbox = el("div", { class: "platform-badges", style: "margin:.55rem 0" });
+      if (c.techniques.length) {
+        tbox.append(el("span", { class: "small muted" }, "AI-detected manipulation tactics in shared text:"));
+        c.techniques.forEach((t) => tbox.append(el("span", { class: "pill warn" }, t.replace(/_/g, " "))));
+      } else {
+        tbox.append(el("span", { class: "pill ok" }, "✓ No manipulation tactics flagged in shared text"));
+      }
+      art.append(tbox);
     }
     const det = el("details");
     det.append(el("summary", {}, `Accounts (${c.authors.length})`));

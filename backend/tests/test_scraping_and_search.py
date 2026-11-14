@@ -514,3 +514,65 @@ def test_clean_analyzer_ui_and_user_focused_metrics_with_swarm():
     ])
     assert rej == 0 and len(spans) == 1
     assert spans[0]["label"] == "name_calling" and spans[0]["sentence_id"] == "p1s2"
+
+
+def test_outbound_link_network_verify_fallback_and_structural_hints(monkeypatch):
+    # 1. Outbound link network classifies verified outlets, state media, and lookalikes (ignoring social share buttons)
+    from app.receipts import pagecheck
+    html = """<html><head><title>Port report</title></head><body>
+      <a href="https://twitter.com/share">Share</a>
+      <a href="https://www.reuters.com/world/europe/story">Reuters</a>
+      <a href="https://www.rt.com/news/123">RT</a>
+      <a href="https://err-news.ee/fake-story">Lookalike</a>
+      <p>Port authorities published the full winter ferry schedule on Tuesday afternoon for commuters.</p>
+    </body></html>"""
+    info = pagecheck.analyze_html(html, "https://harbour-blog.example/post/1", "https://harbour-blog.example/post/1", [])
+    ob = info["outbound_links"]
+    assert ob["external_links"] == 3 and ob["distinct_domains"] == 3
+    assert "reuters.com" in ob["verified_outlets"]
+    assert "rt.com" in ob["state_media_domains"]
+    assert "err-news.ee" in ob["lookalike_domains"]
+
+    # 2. Verify news search falls back to undated web search when recent window returns 0 hits
+    from app.swarm.collectors import http as chttp
+    from app.swarm.collectors.http import Session
+    from app.verify import news
+    news.reset()
+    monkeypatch.setattr(chttp, "client_factory", lambda: httpx2.AsyncClient(transport=httpx2.MockTransport(lambda _r: httpx2.Response(200))))
+    monkeypatch.setenv("SEARCH_PROVIDER", "brave")
+    monkeypatch.setenv("BRAVE_API_KEY", "test-brave")
+    calls = []
+
+    async def fake_search_web(_s, q, *, kind="web", days=None, limit=20):
+        calls.append((kind, days))
+        if days is not None:
+            return []
+        return [{"url": "https://www.bbc.com/news/old-hoax", "title": "Old hoax debunked", "domain": "bbc.com",
+                 "ts": 1700000000.0, "language": "en", "snippets": ["Debunked months ago."]}]
+
+    monkeypatch.setattr(news.websearch, "search_web", fake_search_web)
+
+    async def _run():
+        async with Session(max_requests=4, deadline_s=15.0) as s:
+            return await news.search(s, "harbour hoax claim", days=14, limit=10)
+
+    got = asyncio.run(_run())
+    assert calls == [("news", 14), ("web", None)]
+    assert len(got) == 1 and got[0]["domain"] == "bbc.com"
+
+    # 3. Structural pre-anchors for causal_oversimplification, exaggeration, and false_dilemma
+    from app.pipeline import heuristics, segment
+    seg = segment.segment(
+        "The budget gap exists for one reason: welfare grew too fast. "
+        "Their plan turned into the biggest mess in history. "
+        "There are only two choices left for voters."
+    )
+    htypes = {h["type"] for h in heuristics.extract_hints(seg)}
+    assert {"causal_oversimplification_phrase", "exaggeration_phrase", "false_dilemma_phrase"} <= htypes
+    assert heuristics.spans_from_hints([h for h in heuristics.extract_hints(seg) if h["type"] in ("causal_oversimplification_phrase", "exaggeration_phrase")]) == []
+
+    # 4. Landing page cross-tool handoff links & visible Swarm AI tag toggle
+    idx_html = client.get("/").text
+    assert 'id="to-swarm"' in idx_html and 'id="to-source"' in idx_html
+    sw_html = client.get("/swarm").text
+    assert 'id="tag" checked' in sw_html

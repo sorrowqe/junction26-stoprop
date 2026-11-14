@@ -134,6 +134,10 @@ async def _search_api(s: Session, keywords: str, domains: list[str], days: int, 
     kind = "web" if domains else "news"
     try:
         hits = await websearch.search_web(s, q.strip(), kind=kind, days=days, limit=limit)
+        # Historical fallback: if recent window (14d/30d) returned 0 articles, retry once without date filter
+        # on general web index so older claims, archival reports, and previously debunked hoaxes are still found.
+        if not hits and days and s.remaining() > 4.0:
+            hits = await websearch.search_web(s, q.strip(), kind="web", days=None, limit=limit)
     except websearch.SearchProviderError as exc:
         raise SearchUnavailable(str(exc)) from None
     if domains:

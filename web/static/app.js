@@ -157,6 +157,18 @@
     renderInnocent(spans, res);
     $("verify-card").hidden = false;
     renderSource(res);
+
+    const effUrl = (res.source && res.source.final_url) || current.url || "";
+    const toSwarm = $("to-swarm");
+    if (toSwarm) {
+      const seed = effUrl || (current.text || "").trim().split(/\n+/)[0].slice(0, 320);
+      toSwarm.href = seed ? `/swarm?q=${encodeURIComponent(seed)}` : "/swarm";
+    }
+    const toSource = $("to-source");
+    if (toSource) {
+      toSource.hidden = !effUrl;
+      if (effUrl) toSource.href = `/source?q=${encodeURIComponent(effUrl)}`;
+    }
   }
 
   function renderSource(res) {
