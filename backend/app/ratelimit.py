@@ -14,8 +14,8 @@ from collections import defaultdict, deque
 from fastapi import HTTPException, Request
 
 WINDOW_S = 3600
-LIMITS = {"analyze": 30, "swarm": 10, "receipts": 60, "feedback": 30}
-NOUNS = {"analyze": "analyses", "swarm": "swarm runs", "receipts": "source checks", "feedback": "reports"}
+LIMITS = {"analyze": 30, "swarm": 10, "trace": 5, "receipts": 60, "feedback": 30}
+NOUNS = {"analyze": "analyses", "swarm": "swarm runs", "trace": "traces", "receipts": "source checks", "feedback": "reports"}
 
 
 def client_ip(request: Request) -> str:

@@ -32,6 +32,18 @@ def model_tagger() -> str:
     return env("MODEL_TAGGER", "gemini-3.5-flash-lite-eu")
 
 
+def model_summary() -> str:
+    return env("MODEL_SUMMARY", "gemini-3.5-flash-lite-eu")
+
+
+def search_provider() -> str:
+    return env("SEARCH_PROVIDER", "none").lower()
+
+
+def search_api_key() -> str:
+    return env("SEARCH_API_KEY")
+
+
 def model_embed() -> str:
     return env("MODEL_EMBED", "text-embedding-3-small-eu")
 

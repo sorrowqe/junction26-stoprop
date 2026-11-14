@@ -19,6 +19,7 @@ import uuid
 from collections import Counter, defaultdict
 
 from app.pipeline import lexicons
+from app.receipts import domain as dom
 from app.swarm import accounts, amplification as amp, explain, textreuse, timing
 from app.swarm.ingest import Batch
 
@@ -115,6 +116,35 @@ def quoted_statement(posts: list) -> str | None:
     quoted = sum(bool(_QUOTES.search(p.text)) and bool(lexicons.find("*", "speech", p.text)) for p in posts)
     if quoted >= QUOTE_SHARE * len(posts):
         return f"{quoted} of {len(posts)} posts"
+    return None
+
+
+WIRE_DOMAINS = {"reuters.com", "apnews.com", "ap.org", "afp.com", "bns.ee", "bns.lt", "bns.lv", "dpa.com", "ansa.it",
+                "efe.com", "pap.pl", "ntb.no", "tt.se", "stt.fi", "ritzau.dk", "lusa.pt", "agi.it", "upi.com"}
+PRESS_RELEASE_DOMAINS = {"prnewswire.com", "businesswire.com", "globenewswire.com", "einpresswire.com", "newswire.com",
+                         "accesswire.com", "prweb.com", "presseportal.de", "mynewsdesk.com", "openpr.com", "prlog.org",
+                         "newsfile.ca", "cision.com"}
+
+
+def _domains(post) -> set[str]:
+    out = set()
+    for u in amp.items(post)["url"]:
+        try:
+            out.add(dom.registrable(u.split("/", 1)[0]))
+        except ValueError:
+            continue
+    return out
+
+
+def syndication(posts: list) -> str | None:
+    """The earliest post in the group is on (or links to) a news agency or press-release service: other sites
+    republishing that copy is normal syndication."""
+    first = min(posts, key=lambda p: p.ts)
+    hit = _domains(first) & (WIRE_DOMAINS | PRESS_RELEASE_DOMAINS)
+    if hit:
+        d = sorted(hit)[0]
+        kind = "a news agency" if d in WIRE_DOMAINS else "a press-release service"
+        return f"{d}, {kind}"
     return None
 
 
@@ -226,14 +256,22 @@ def merge_campaigns(items: list[dict]) -> list[dict]:
 # ------------------------------------------------------------------ main
 
 async def analyze_batch(batch: Batch, *, deep: bool = False, tag_clusters: bool = False,
-                        embed=None, tagger=None) -> dict:
-    """embed(texts) -> (vectors, meta) and tagger(text) -> (labels, meta) are injected (LLM calls)."""
+                        embed=None, tagger=None, groups: list[list[int]] | None = None) -> dict:
+    """embed(texts) -> (vectors, meta) and tagger(text) -> (labels, meta) are injected (LLM calls).
+    groups: text-reuse groups established elsewhere (trace mode: copies confirmed by exact-phrase search);
+    when given, T comes from them instead of MinHash, and every other signal and rule runs unchanged."""
     t0 = time.monotonic()
     posts = batch.posts
     notes = ["Processed in memory; nothing from this upload was stored."]
     cost = {"embeddings": 0, "llm_calls": 0, "input_tokens": 0, "output_tokens": 0, "credits": 0.0}
 
-    pairs, norm = await asyncio.to_thread(textreuse.find_pairs, posts)  # CPU-bound: keep the event loop free
+    if groups is not None:
+        from app.swarm.textreuse import Pair
+        norm = [textreuse.compare_text(p.text) for p in posts]
+        pairs = [Pair(g[0], i, "trace", 1.0) for g in groups for i in g[1:]]
+        deep = False
+    else:
+        pairs, norm = await asyncio.to_thread(textreuse.find_pairs, posts)  # CPU-bound: keep the event loop free
     word_counts = [textreuse.word_count(t) for t in norm]
     eligible = sum(w >= textreuse.MIN_WORDS for w in word_counts)
     deep_info = None
@@ -299,7 +337,8 @@ async def analyze_batch(batch: Batch, *, deep: bool = False, tag_clusters: bool 
             "representative_text": posts[rep_i].text,
             "time_span": {"start": cp[0].ts, "end": cp[-1].ts, "seconds": round(cp[-1].ts - cp[0].ts, 1)},
             "signals": {"T": {"present": True, "pairs": dict(kinds),
-                              "paraphrase_only": not kinds.get("exact") and not kinds.get("near")},
+                              "paraphrase_only": bool(kinds.get("paraphrase")) and not (kinds.get("exact") or kinds.get("near")
+                                                                                 or kinds.get("trace"))},
                         "S": sync, "A": acc, "M": am},
             "authors": [{"author": next(p.author for p in cp if p.author.lower() == a),
                          "role": "first poster" if k == 0 else "amplifier",
@@ -324,6 +363,9 @@ async def analyze_batch(batch: Batch, *, deep: bool = False, tag_clusters: bool 
         detail = event_hashtag(c, tag_index, clusters)
         if detail:
             innocent["event_hashtag"] = detail
+        detail = syndication(c["_posts"])
+        if detail:
+            innocent["syndication"] = detail
         sig = c["signals"]
         c["verdict"], c["verdict_before_innocent_check"] = verdict(
             c["author_count"], sig["S"]["present"], sig["A"]["present"], sig["M"]["present"], bool(innocent))

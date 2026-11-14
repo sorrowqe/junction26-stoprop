@@ -42,6 +42,8 @@ def _isolated(monkeypatch):
     from app.swarm.collectors import http as collectors_http
     monkeypatch.setattr(collectors_http, "client_factory", _no_http)
     monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    monkeypatch.delenv("SEARCH_API_KEY", raising=False)
+    monkeypatch.setenv("SEARCH_PROVIDER", "none")
     collectors.reset_cache()
     monkeypatch.delenv("FACTCHECK_API_KEY", raising=False)
     receipts_service.reset()

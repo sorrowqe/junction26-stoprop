@@ -138,11 +138,12 @@ def validate_urls(urls: list[str]) -> tuple[dict[str, list[str]], list[dict]]:
     return groups, failed
 
 
-async def collect_urls(urls: list[str], progress=None) -> tuple[Collected, bool]:
-    """Single-post mode for several links (mixed platforms). Returns (collected, from_cache)."""
+async def collect_urls(urls: list[str], progress=None, *, cache: bool = True) -> tuple[Collected, bool]:
+    """Single-post mode for several links (mixed platforms). Returns (collected, from_cache).
+    cache=False (trace mode): neither read nor write the 10-minute cache."""
     groups, failed = validate_urls(urls)
     key = ("multi", tuple(sorted(u for us in groups.values() for u in us)))
-    hit = _cached(key)
+    hit = _cached(key) if cache else None
     if hit:
         return hit, True
     coll = Collected("mixed" if len(groups) > 1 else next(iter(groups)), f"{sum(map(len, groups.values()))} links")
@@ -166,5 +167,6 @@ async def collect_urls(urls: list[str], progress=None) -> tuple[Collected, bool]
     if not coll.posts:
         reason = coll.failed[0]["reason"] if coll.failed else "nothing found"
         raise CollectorError(f"No public posts could be collected from those links ({reason}).", 404, "empty_result")
-    _store(key, coll)
+    if cache:
+        _store(key, coll)
     return coll, False

@@ -24,6 +24,8 @@ def duration(seconds: float) -> str:
 
 
 def reuse_kind(kinds: dict[str, int]) -> str:
+    if kinds.get("trace"):
+        return "the traced"
     if kinds.get("near"):
         return "near-identical"
     if kinds.get("exact"):
@@ -53,7 +55,11 @@ def evidence(c: dict) -> tuple[list[str], list[str]]:
         bits.append(f"{kinds['near']} near-identical (≥ 60% shared character sequences)")
     if kinds.get("paraphrase"):
         bits.append(f"{kinds['paraphrase']} paraphrased (meaning-level match, weaker evidence)")
-    pro.append(f"Text reuse across different accounts: {', '.join(bits)} post links.")
+    if kinds.get("trace"):
+        pro.append(f"Text reuse: {c['post_count']} places carry the traced sentence word for word (found by exact-phrase "
+                   "search and checked in the text or the search snippet).")
+    else:
+        pro.append(f"Text reuse across different accounts: {', '.join(bits)} post links.")
 
     s = c["signals"]["S"]
     if s.get("present"):
@@ -104,6 +110,8 @@ INNOCENT_TEXT = {
     "short_generic": "Short or generic text ({detail}): such phrases are often written independently by many people.",
     "quoted_statement": "Quoted statement: most posts quote an attributed statement ({detail}); people often share "
                         "the same official quote.",
+    "syndication": "Syndication: the text first appeared on {detail}; other sites republishing agency or "
+                   "press-release copy is normal.",
     "event_hashtag": "Event hashtag burst: #{detail} was used by many unrelated accounts at the same time, as "
                      "during a live event.",
 }

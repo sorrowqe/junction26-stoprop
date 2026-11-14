@@ -75,6 +75,13 @@ class Session:
         return self.requests < self.max_requests and self.remaining() > 1.0
 
     async def get_json(self, url: str, params=None, headers: dict | None = None):
+        return await self.request_json("GET", url, params=params, headers=headers)
+
+    async def post_json(self, url: str, payload: dict, headers: dict | None = None, timeout_s: float | None = None):
+        return await self.request_json("POST", url, json_body=payload, headers=headers, timeout_s=timeout_s)
+
+    async def request_json(self, method: str, url: str, *, params=None, json_body=None, headers: dict | None = None,
+                           timeout_s: float | None = None):
         if self.requests >= self.max_requests:
             raise BudgetExhausted("request limit")
         if self.remaining() <= 1.0:
@@ -85,8 +92,8 @@ class Session:
             raise CollectorError(exc.message, 400, "blocked") from None
         self.requests += 1
         try:
-            async with asyncio.timeout(min(REQUEST_TIMEOUT_S, self.remaining())):
-                async with self._client.stream("GET", url, params=params,
+            async with asyncio.timeout(min(timeout_s or REQUEST_TIMEOUT_S, self.remaining())):
+                async with self._client.stream(method, url, params=params, json=json_body,
                                                headers={"Accept": "application/json", "User-Agent": extract.USER_AGENT,
                                                         **(headers or {})}) as resp:
                     if resp.status_code == 429:

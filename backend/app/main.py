@@ -268,7 +268,12 @@ async def _swarm_links(payload: dict, request: Request, deep: bool, tag_clusters
         logging.getLogger("stoprop.swarm").exception("link collection failed")
         return 500, "Something went wrong while collecting posts."
 
-    if not payload.get("stream"):
+    return await _respond(run, error, bool(payload.get("stream")))
+
+
+async def _respond(run, error, stream: bool):
+    """Plain JSON, or NDJSON: {"progress": ...} lines while working, then {"result": ...} or {"error": ...}."""
+    if not stream:
         try:
             return await run(None)
         except Exception as exc:  # noqa: BLE001 - mapped to a plain message
@@ -297,6 +302,50 @@ async def _swarm_links(payload: dict, request: Request, deep: bool, tag_clusters
     return StreamingResponse(lines(), media_type="application/x-ndjson")
 
 
+class TraceRequest(BaseModel):
+    text: str | None = None
+    url: str | None = None
+    stream: bool = False
+
+
+@app.post("/api/trace")
+async def trace_post(req: TraceRequest, request: Request):
+    """Trace a post: find where the same text spread (exact-phrase search on the open web and Bluesky), then run the
+    swarm detector on the copies. Public data only; no identity research; nothing stored. 5 traces/hour/IP.
+    Body {"text": ...} or {"url": "<public post link>"}; "stream": true for NDJSON progress lines."""
+    from app.swarm import collectors
+    from app.swarm.collectors.http import CollectorError
+    from app.trace import fingerprint
+    from app.trace.run import TraceError, trace
+    text, url = (req.text or "").strip(), (req.url or "").strip()
+    if not text and not url:
+        raise HTTPException(400, "Please paste a post's text or a link to a public post.")
+    if url:
+        try:
+            collectors.classify(url)
+        except CollectorError as exc:
+            raise HTTPException(exc.status, exc.message) from None
+    elif len(fingerprint.words(text)) < fingerprint.MIN_WORDS:
+        raise HTTPException(400, "Please paste a post of at least 8 words, or a link to a public post.")
+    elif len(text) > 20_000:
+        raise HTTPException(413, "That text is too long to trace (max 20,000 characters).")
+    ratelimit.enforce("trace", request)
+
+    async def run(progress):
+        async with asyncio.timeout(45):
+            return await trace(text=None if url else text, url=url or None, progress=progress)
+
+    def error(exc: Exception) -> tuple[int, str]:
+        if isinstance(exc, (TraceError, CollectorError)):
+            return exc.status, exc.message
+        if isinstance(exc, TimeoutError):
+            return 504, "Tracing took too long. Please try again."
+        logging.getLogger("stoprop.trace").exception("trace failed")
+        return 500, "Something went wrong while tracing."
+
+    return await _respond(run, error, req.stream)
+
+
 def _page(name: str) -> FileResponse:
     return FileResponse(config.WEB_DIR / f"{name}.html", media_type="text/html")
 
@@ -306,5 +355,5 @@ def index() -> FileResponse:
     return _page("index")
 
 
-for _name in ("source", "swarm", "metrics", "methodology", "api"):
+for _name in ("source", "swarm", "trace", "metrics", "methodology", "api"):
     app.add_api_route(f"/{_name}", (lambda n=_name: _page(n)), methods=["GET"], include_in_schema=False)

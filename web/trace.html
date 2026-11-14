@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trace a post · Stoprop</title>
+  <meta name="description" content="Find where the same text spread, then check the copies for coordinated behaviour.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/trace" aria-current="page">Trace a post</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
+  <main class="wrap page wide">
+    <h1>Trace a post</h1>
+    <p class="lede">Start from one post. Stoprop picks its most distinctive sentences, searches for exact copies on
+      the open web and on Bluesky, and then checks the copies for coordinated behaviour.</p>
+    <p class="banner principle"><strong>We trace where this text spread. We don't research who is behind any account.</strong>
+      Public search results only; no profile lookups, no linking of accounts across platforms, nothing stored.</p>
+
+    <section class="card" aria-labelledby="h-in">
+      <h2 id="h-in" class="sr-only">Post to trace</h2>
+      <form id="trace-form" novalidate>
+        <label for="input" class="field-label">A post's text, or a link to a public post</label>
+        <textarea id="input" rows="5" placeholder="Paste the text of a post, or a link like https://bsky.app/profile/…/post/…"></textarea>
+        <p class="muted small">Searched: the open web (search engine results) and Bluesky. Not searched: Mastodon
+          (its search needs a login), and X, Facebook, Instagram, TikTok, Reddit (closed to outside tools).
+          Each trace uses one small AI call to choose sentences and up to 6 searches; 5 traces per hour.</p>
+        <p class="examples small">Try: <button type="button" class="secondary" id="ex-text">an example text</button></p>
+        <button type="submit" id="go">Trace this post</button>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="result" hidden aria-labelledby="h-res">
+      <div class="card">
+        <h2 id="h-res">Where this text spread</h2>
+        <div id="verdict-line" class="cluster-head"></div>
+        <p id="summary"></p>
+        <p id="first-seen" class="small"></p>
+        <svg id="timeline" class="timeline" role="img" hidden></svg>
+        <ul id="notes" class="notes small"></ul>
+        <button type="button" id="download" class="secondary">Download JSON</button>
+      </div>
+      <div class="card" id="evidence-card" hidden>
+        <h3>What the copies show</h3>
+        <div class="evidence">
+          <div><h4>Evidence for coordination</h4><ul id="ev-for"></ul></div>
+          <div><h4>Evidence against</h4><ul id="ev-against"></ul></div>
+        </div>
+        <div class="innocent" id="innocent-wrap" hidden><h4>Possible innocent explanations</h4><ul id="innocent"></ul></div>
+      </div>
+      <div class="card">
+        <h3>Searched for</h3>
+        <ol id="fingerprints" class="small"></ol>
+        <p id="fp-method" class="muted small"></p>
+        <div class="table-wrap"><table id="coverage"><thead><tr><th>Where</th><th>Status</th><th>Searches</th><th>Results</th><th>Copies confirmed</th></tr></thead><tbody></tbody></table></div>
+        <ul id="coverage-notes" class="small muted"></ul>
+      </div>
+      <div class="card" id="domains-card" hidden>
+        <h3>Websites carrying the text</h3>
+        <div class="table-wrap"><table id="domains"><thead><tr><th>Website</th><th>Pages</th><th>First seen</th><th>Domain checks</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <div class="card" id="accounts-card" hidden>
+        <h3>Bluesky accounts that posted it</h3>
+        <p class="muted small">Only the names the search returned with each post. Stoprop does not look up who runs them.</p>
+        <div class="table-wrap"><table id="accounts"><thead><tr><th>Account</th><th>Copies</th><th>First copy</th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <details class="card" id="copies-wrap"><summary id="copies-sum">All copies</summary><ul id="copies" class="copies small"></ul></details>
+    </section>
+  </main>
+  <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
+  <script src="/static/trace.js"></script>
+</body>
+</html>

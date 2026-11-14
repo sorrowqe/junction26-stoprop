@@ -247,3 +247,6 @@ tbody th { font-weight: 600; }
 .timeline .dot.var-2 { fill: var(--blue); } .timeline .dot.var-3 { fill: var(--amber); } .timeline .dot.var-4 { fill: var(--green); }
 .options .inline.check { display: block; }
 .options .inline.check .muted { display: inline; }
+.principle { font-size: .95rem; }
+.copies li { margin-bottom: .5rem; overflow-wrap: anywhere; }
+.copies li.unconfirmed { opacity: .7; }

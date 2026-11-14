@@ -1,6 +1,6 @@
 # Progress
 
-_Last updated: 2026-11-14 (M5 Part A deployed; Part A2 (link collection) done, not yet deployed; Part B next)_
+_Last updated: 2026-11-14 (M5 Part A + A2 deployed; Part A3 (Trace a post) done, not yet deployed; Part B next)_
 
 Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
 
@@ -109,7 +109,7 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   (T+S, downgraded to worth watching), generic phrase (organic), event-hashtag cheers (organic). ~130 ms.
 - Tests: 496 passed (40 swarm tests incl. 2000 posts < 20 s, every signal + innocent pattern, API, rate limit).
 
-## M5 Part A2 DONE (link-based collection, not yet deployed)
+## M5 Part A2 DONE (link-based collection, deployed)
 - `backend/app/swarm/collectors/`: `http.py` (Session: 40 requests, 25 s deadline, SSRF-safe client, no redirects,
   StopropBot User-Agent, 429 -> stop), `bluesky.py` (public AppView: getPostThread depth 1000 + re-fetch of cut
   branches, getQuotes up to 300, getProfiles only for missing createdAt; single mode getProfiles + getPosts 25/call),
@@ -130,6 +130,24 @@ Spec: CLAUDE.md **v2** (web service only, no extension, swarm mode in M5).
   61 posts / 20 accounts / 2 requests, 60-reply cap note, 0 clusters; YouTube NOT run (no GOOGLE_API_KEY on the PC).
 - Tests: 546 passed (50 collector tests on anonymized recorded responses; YouTube from documented API shapes).
 - `scripts/swarm_live_check.py` (one live run, --record, --replay, --snapshot, --pseudonymize).
+
+## M5 Part A3 DONE (Trace a post, not yet deployed)
+- `backend/app/trace/`: `fingerprint.py` (one MODEL_SUMMARY call picks 2-3 sentences >= 8 words, verified verbatim;
+  word-rarity fallback; query = <= 24 words, no quote marks), `search.py` (Oxylabs Web API `/v1/search`, Bearer
+  SEARCH_API_KEY, quoted query, max 20 results, snippet dates; Bluesky `searchPosts` on api.bsky.app without login
+  (public.api.bsky.app answers 403); Mastodon not searched: status search needs login), `run.py` (max 6 searches,
+  30 s, every hit verified: Bluesky text contains the sentence or whole post copied, web snippet has >= 6 consecutive
+  words; quotes/mentions counted separately; confirmed dated copies -> swarm detector via `analyze_batch(groups=...)`;
+  receipts (lookalike + RDAP domain age) for <= 8 websites; spread view: first seen, timeline, websites, accounts).
+- New innocent pattern for all swarm runs: syndication (earliest copy on/links to a news agency or press-release site).
+- `POST /api/trace` (text|url, stream), 5 traces/hour/IP, nothing stored (collectors called with cache=False).
+- `/trace` page + nav link on every page; principle banner "We trace where this text spread. We don't research who is
+  behind any account."; docs/METHODOLOGY.md "Trace a post" (what it does / deliberately doesn't do).
+- Live check (2026-11-14, NO AI and NO Oxylabs: rarity rule + Bluesky search only): https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22
+  -> 2 searches, 8 results, 1 confirmed copy, 4 quote/mention hits excluded, verdict insufficient_data, 0 credits.
+- Tests: 561 passed (15 trace tests; Bluesky search fixtures from the anonymized recorded post shape, Oxylabs from its
+  documented response shape; LLM via FakeLLM).
+- NOT yet run: the AI fingerprint and Oxylabs web search live (no SEARCH_API_KEY on the PC; needs Aleksandr's OK).
 
 ## Next
 - M5 Part B: benchmark generator + run_swarm_eval.py + /metrics swarm section (announce calls/credits first).

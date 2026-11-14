@@ -163,6 +163,15 @@ async def get_receipts(target: str, *, title: str | None = None, refresh: bool =
     return {"domain": host, "registrable_domain": reg, "receipts": [results[t] for t in ORDER]}
 
 
+async def domain_receipts(target: str) -> dict:
+    """Light receipts for trace mode: lookalike (offline) + domain age (RDAP, cached like /source)."""
+    host = normalize_host(target)
+    reg = registrable(host)
+    age = await _cached("domain_age", reg, lambda: rdap.check(reg), False)
+    return {"domain": host, "registrable_domain": reg,
+            "receipts": [_shape("lookalike", lookalike.check(host), clock(), cached=False), age]}
+
+
 def reset() -> None:
     """For tests."""
     _inflight.clear()
