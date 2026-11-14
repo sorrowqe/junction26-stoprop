@@ -12,20 +12,35 @@
   <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology" aria-current="page">Methodology</a><a href="/api">API</a></div></nav>
   <main class="wrap page">
     <h1>Methodology</h1>
-    <p class="lede">The full write-up (pipeline, caching, privacy, evaluation protocol and known limitations) is
-      being written. These principles are fixed:</p>
+    <p class="lede">How Stoprop detects persuasion techniques, verifies factual claims, checks source provenance, and
+      measures coordinated campaigns — along with the strict guardrails and limitations built into every step.</p>
+
+    <h2>Core design principles</h2>
     <ol class="principles">
-      <li><strong>How, not what.</strong> We label techniques and behaviours, never people, outlets or viewpoints.</li>
-      <li><strong>The AI proposes, code verifies.</strong> Every highlighted passage must appear word for word in your text; positions are computed by our code.</li>
-      <li><strong>Reported speech is not the author's manipulation.</strong> Words attributed to someone else (direct quotes and attributed indirect speech such as “X said that…” or “according to X…”) are marked and not counted. Vague attributions like “experts say” do not count as reported speech.</li>
-      <li><strong>Abstain instead of guessing.</strong> “Nothing found”, “insufficient data” and “not checked” are valid answers.</li>
-      <li><strong>Two independent signals</strong> before calling anything “likely coordinated”.</li>
-      <li><strong>Publish what we have measured.</strong> Precision, recall and clean-text false-positive rates for each sensitivity level are measured and published openly on <a href="/metrics">Metrics</a>.</li>
-      <li><strong>No single “propaganda score”.</strong> Profiles and evidence instead.</li>
-      <li><strong>Colours describe, they don't judge.</strong> Amber means “no source given”, not “false”; green means “source given”, not “true”.</li>
-      <li><strong>Innocent explanations</strong> are listed next to every flag.</li>
-      <li><strong>Privacy by default.</strong> No accounts; swarm uploads are processed in memory.</li>
+      <li><strong>How, not what.</strong> We label rhetorical techniques and posting behaviours, never people, outlets or political viewpoints.</li>
+      <li><strong>Deterministic verification.</strong> Every highlighted quote must appear character for character in your input text; character offsets are computed by deterministic code, never trusted from a model, and unverified quotes are discarded.</li>
+      <li><strong>Reported speech is not the author's manipulation.</strong> Words attributed to a specific named person, role or organisation (direct quotes and attributed indirect speech such as “X said that…” or “according to X…”) are marked as reported speech and excluded from author flags. Vague attributions like “experts say” do not count as reported speech.</li>
+      <li><strong>Abstain instead of guessing.</strong> “Nothing found”, “insufficient data” and “not checked” are valid, expected outcomes on clean text.</li>
+      <li><strong>Two independent signal families</strong> must agree before calling any group of posts “likely coordinated”.</li>
+      <li><strong>Publish what we have measured.</strong> Precision, recall, false-positive rates on clean controls, and sample-size confidence intervals are published openly on <a href="/metrics">Metrics</a>.</li>
+      <li><strong>No single “propaganda score”.</strong> Readers get highlighted passages, plain-English explanations and verifiable receipts, never a black-box rating.</li>
+      <li><strong>Colours describe structure, not truth.</strong> Amber means “no source given in the text”, not “false”; green means “cites a source”, not “true”.</li>
+      <li><strong>Innocent explanations</strong> are always shown alongside flagged techniques and swarm clusters.</li>
+      <li><strong>Privacy by default.</strong> No user accounts or reading history; “Don't store this text” skips caching completely, and Swarm batches stay in memory only briefly.</li>
     </ol>
+
+    <h2>1. Text analysis &amp; manipulation technique detection</h2>
+    <p>When you paste an article or link on <a href="/">Analyze</a>, Stoprop runs a 6-step pipeline:</p>
+    <ul>
+      <li><strong>Segmentation &amp; hints:</strong> text is split into paragraphs and numbered sentences while preserving exact Unicode offsets. Rule-based lexicons flag candidate cues (bandwagon openings, vague authorities, whataboutism, false dilemmas, unattributed statistics, attributions and balance markers) as non-binding pointers.</li>
+      <li><strong>14 persuasion techniques + claim &amp; balance markers:</strong> each sentence is checked for specific rhetorical patterns — <em>Loaded language, Name-calling / labelling, Appeal to fear, Exaggeration or minimisation, Doubt casting / undermining, Causal oversimplification, Scapegoating, False dilemma, Whataboutism / deflection, Bandwagon, Questionable / fabricated authority, Emotional appeal, Thought-terminating cliché</em> and <em>Slogan</em> — plus <em>Unsupported claims</em> (amber), <em>Cited claims</em> (green) and <em>Balance markers</em> (blue).</li>
+      <li><strong>Exact-text verification &amp; overlap deduplication:</strong> deterministic code normalizes smart quotes, dashes and zero-width characters, verifies every proposed quote verbatim against its paragraph, strips duplicate overlapping generic labels when a more specific technique already covers the same phrase, and detects reported speech.</li>
+      <li><strong>Sensitivity gating:</strong> <em>Strict</em> (default, calibrated to keep clean-news false positives ≤ 5%) retains high-confidence detections; <em>Balanced</em> surfaces probable persuasive framing; <em>Broad</em> shows all verified detections including subtle rhetoric.</li>
+    </ul>
+
+    <h2>2. Claim verification &amp; Check a Source</h2>
+    <p><strong>Verify claims</strong> extracts up to 3 check-worthy factual assertions (prioritising attributed claims and statistics), searches live news and open-web indexes, reads independent reporting, verifies verbatim evidence quotes, and reports one of five transparent statuses: <em>corroborated</em>, <em>contradicted</em>, <em>cited source not found</em>, <em>no independent reports found</em>, or <em>could not check</em> — never “true” or “false”.</p>
+    <p><strong><a href="/source">Check a source</a></strong> inspects domain registration age (RDAP + port-43 WHOIS fallback), earliest Wayback Machine archive, Certificate Transparency logs (crt.sh + CertSpotter), brand/homoglyph/TLD-swap impersonation against known outlets, declared satire and state-media context, live newsroom transparency links (About, Contact, Editorial policy, author bylines), independent fact-checker/watchdog mentions, and verbatim syndication across other websites.</p>
     <p><strong>Language coverage:</strong> English and other languages are accepted; quantitative accuracy benchmarks
       are currently measured on English, while other languages use the same conservative defaults (see <a href="/metrics">Metrics</a>).</p>
     <p><strong>Sensitivity levels</strong> are calibrated on the English development set: <em>strict</em> (the default)
@@ -57,6 +72,14 @@
       swarm detector on dated copies. It does no identity research, never looks up profiles, never links accounts
       across platforms, and stores nothing.</p>
     <p class="muted">No AI-generated-text detection: such detectors are unreliable and known to be biased against non-native writers.</p>
+
+    <h2>Known limitations &amp; boundaries</h2>
+    <ul>
+      <li><strong>Finite benchmark sample sizes:</strong> a 0% false-positive count on 21–25 paragraphs or 20 Swarm batches means zero false alarms occurred in our benchmark, not that false alarms are impossible in the wild — 95% confidence intervals are shown on <a href="/metrics">Metrics</a> to make that statistical uncertainty explicit.</li>
+      <li><strong>Subtle irony, dog-whistles &amp; missing context:</strong> text analysis inspects rhetorical form inside the passage you provide; coded insider references, sarcasm, or selective omission of facts outside the article cannot be caught from wording alone.</li>
+      <li><strong>Heavy paraphrasing without burst/account cues:</strong> in Swarm mode, default detection uses character 5-gram MinHash (≥ 60% overlap) and requires a second independent signal before calling a wave “likely coordinated”. Heavily rewritten talking points posted hours apart by established accounts are intentionally downgraded to “worth watching” or missed rather than risking false accusations.</li>
+      <li><strong>Closed platforms &amp; hard paywalls:</strong> login-walled platforms (X/Twitter, Facebook, Instagram, TikTok) are not scraped directly; use Swarm spread search on post text or dataset upload instead.</li>
+    </ul>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
 </body>

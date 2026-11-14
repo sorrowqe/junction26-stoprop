@@ -311,6 +311,69 @@ def is_reported_speech(seg: Segmented, start: int, end: int) -> bool:
 
 # ------------------------------------------------------------------ candidates
 
+_SPECIFIC_RED = {
+    "name_calling", "fear_appeal", "false_dilemma", "scapegoating", "whataboutism",
+    "bandwagon", "questionable_authority", "exaggeration_minimisation", "doubt_casting",
+    "causal_oversimplification", "emotional_appeal", "slogan", "thought_terminating_cliche",
+}
+
+
+def _overlap_ratio(a: dict, b: dict) -> float:
+    ov = max(0, min(a["end"], b["end"]) - max(a["start"], b["start"]))
+    if ov == 0:
+        return 0.0
+    shorter = min(a["end"] - a["start"], b["end"] - b["start"])
+    return ov / shorter if shorter > 0 else 0.0
+
+
+def _locate_same_paragraph_unique(seg: Segmented, sentence_id: str, quote: str) -> tuple[tuple[int, int], str] | None:
+    """Rescue an off-by-one sentence_id from the LLM when a >=4-word quote appears uniquely in the same paragraph."""
+    if len(quote.split()) < 4:
+        return None
+    m = re.match(r"^(p\d+)s\d+$", sentence_id)
+    if not m:
+        return None
+    pid = m.group(1)
+    para = next((p for p in seg.paragraphs if p.id == pid), None)
+    if para is None:
+        return None
+    first = locate_in(seg.text, para.start, para.end, quote, occurrence=1)
+    if first is None or locate_in(seg.text, para.start, para.end, quote, occurrence=2) is not None:
+        return None
+    s_start, s_end = first
+    owner = next((s.id for s in para.sentences if s.start <= s_start and s_end <= s.end), sentence_id)
+    return (s_start, s_end), owner
+
+
+def _deduplicate_overlaps(spans: list[dict]) -> list[dict]:
+    """Drop duplicate overlapping spans of the same label, and generic loaded_language duplicating a specific label."""
+    ordered = sorted(spans, key=lambda s: (-s["confidence"], (s["end"] - s["start"])))
+    kept: list[dict] = []
+    for cand in ordered:
+        lbl = cand.get("label")
+        drop = False
+        for prev in kept:
+            ov = _overlap_ratio(cand, prev)
+            if ov >= 0.5 and prev.get("label") == lbl:
+                drop = True
+                break
+            if ov >= 0.8 and lbl == "loaded_language" and prev.get("label") in _SPECIFIC_RED:
+                drop = True
+                break
+        if not drop:
+            kept.append(cand)
+    # Also handle the reverse order when loaded_language had slightly higher confidence than a specific technique
+    final: list[dict] = []
+    for s in kept:
+        if s.get("label") == "loaded_language" and any(
+            o.get("label") in _SPECIFIC_RED and _overlap_ratio(s, o) >= 0.8 for o in kept if o is not s
+        ):
+            continue
+        final.append(s)
+    final.sort(key=lambda s: (s["start"], -s["end"]))
+    return final
+
+
 def validate_candidates(seg: Segmented, candidates: list[dict]) -> tuple[list[dict], int]:
     """Turn proposed spans into validated spans; return (spans, validator_rejections).
 
@@ -320,7 +383,13 @@ def validate_candidates(seg: Segmented, candidates: list[dict]) -> tuple[list[di
     rejections = 0
     seen: set[tuple[int, int, str]] = set()
     for c in candidates:
-        loc = locate(seg, str(c.get("sentence_id", "")), str(c.get("quote", "")))
+        sid = str(c.get("sentence_id", ""))
+        raw_quote = str(c.get("quote", ""))
+        loc = locate(seg, sid, raw_quote)
+        if loc is None and c.get("source", "llm") == "llm":
+            rescued = _locate_same_paragraph_unique(seg, sid, raw_quote)
+            if rescued is not None:
+                loc, sid = rescued
         if loc is None:
             rejections += 1
             continue
@@ -338,8 +407,8 @@ def validate_candidates(seg: Segmented, candidates: list[dict]) -> tuple[list[di
                 "confidence": round(float(c.get("confidence", 0.0)), 2),
                 "explanation": c.get("explanation", ""),
                 "reported_speech": is_reported_speech(seg, start, end),
-                "sentence_id": c.get("sentence_id"),
+                "sentence_id": sid,
                 "source": c.get("source", "llm"),
             }
         )
-    return spans, rejections
+    return _deduplicate_overlaps(spans), rejections

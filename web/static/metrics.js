@@ -36,6 +36,15 @@
     none: "Clean (no repeated groups)",
   };
 
+  function wilsonUpper(k, n) {
+    if (!n) return null;
+    const z = 1.96, p = k / n, z2 = z * z;
+    const denom = 1 + z2 / n;
+    const center = p + z2 / (2 * n);
+    const half = z * Math.sqrt((p * (1 - p) + z2 / (4 * n)) / n);
+    return Math.min(1, (center + half) / denom);
+  }
+
   function renderKpis(calib, swarm) {
     const grid = $("kpi-grid");
     grid.replaceChildren();
@@ -43,15 +52,34 @@
     const strict = calib && calib.levels && calib.levels.strict;
     if (strict && strict.fpr_semeval_none) {
       const f = strict.fpr_semeval_none;
-      tiles.push(["Clean-news false positives", `${f.flagged} / ${f.paragraphs} (${pct(f.rate)})`, "At default Strict sensitivity"]);
-    }
-    if (strict && strict.fpr_synthetic_hard_negative) {
-      const h = strict.fpr_synthetic_hard_negative;
-      tiles.push(["Hard-negative false alarms", `${h.flagged} / ${h.paragraphs} (${pct(h.rate)})`, "Emotional news & fair opinions"]);
+      const hi = f.ci ? pct(f.ci[1]) : pct(wilsonUpper(f.flagged, f.paragraphs));
+      tiles.push([
+        "Clean-news false alarms",
+        `${f.flagged} / ${f.paragraphs} (${pct(f.rate)})`,
+        `Human-labelled clean news · 95% CI 0–${hi}`,
+      ]);
+      const h = strict.fpr_synthetic_hard_negative || { flagged: 0, paragraphs: 0 };
+      const totFlag = f.flagged + h.flagged;
+      const totN = f.paragraphs + h.paragraphs;
+      const totHi = pct(wilsonUpper(totFlag, totN));
+      tiles.push([
+        "All clean + opinion controls",
+        `${totFlag} / ${totN} (${pct(totN ? totFlag / totN : 0)})`,
+        `21 clean news + ${h.paragraphs} emotional/opinion · 95% CI 0–${totHi}`,
+      ]);
     }
     if (swarm) {
-      tiles.push(["Swarm campaign F1", pct(swarm.f1), `${swarm.tp}/${swarm.coordinated_scenarios} coordinated waves caught`]);
-      tiles.push(["Swarm innocent false alarms", `${swarm.fp} / ${swarm.innocent_scenarios} (${pct(swarm.innocent_fpr)})`, "Headlines, quotes & event hashtags"]);
+      tiles.push([
+        "Swarm campaign F1",
+        pct(swarm.f1),
+        `${swarm.tp} / ${swarm.coordinated_scenarios} coordinated waves caught (P ${pct(swarm.precision)}, R ${pct(swarm.recall)})`,
+      ]);
+      const swHi = pct(wilsonUpper(swarm.fp, swarm.innocent_scenarios));
+      tiles.push([
+        "Swarm innocent false alarms",
+        `${swarm.fp} / ${swarm.innocent_scenarios} (${pct(swarm.innocent_fpr)})`,
+        `Headlines, quotes, syndication & events · 95% CI 0–${swHi}`,
+      ]);
     }
     if (!tiles.length) return;
     grid.hidden = false;
@@ -60,6 +88,13 @@
       card.append(el("div", "kpi-title muted small", title), el("div", "kpi-val", value), el("div", "muted small", sub));
       grid.append(card);
     });
+    const note = $("kpi-note");
+    if (note) {
+      note.hidden = false;
+      note.textContent = "How to read X / N: N is the number of benchmark passages or multi-post batches tested. " +
+        "Because N is finite (21–25 text controls, 40 Swarm batches), we also show the 95% Wilson confidence upper bound — " +
+        "0 false alarms in a sample means a low error rate, never a mathematical guarantee of 0% on every future article.";
+    }
   }
 
   function renderCalibration(c) {

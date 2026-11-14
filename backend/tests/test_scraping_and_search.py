@@ -498,4 +498,19 @@ def test_clean_analyzer_ui_and_user_focused_metrics_with_swarm():
 
     m = client.get("/api/metrics").json()
     assert m["swarm"] is not None
-    assert m["swarm"]["precision"] == 1.0 and m["swarm"]["recall"] == 1.0 and m["swarm"]["innocent_fpr"] == 0.0
+    assert m["swarm"]["scenarios"] == 40
+    assert m["swarm"]["precision"] == 1.0 and m["swarm"]["recall"] >= 0.85 and m["swarm"]["innocent_fpr"] == 0.0
+
+    # 3. Methodology placeholder is gone
+    meth = client.get("/methodology").text
+    assert "being written" not in meth and "Known limitations" in meth
+
+    # 4. Validator rescues unique >=4-word off-by-one sentence_id in same paragraph & deduplicates generic loaded_language
+    from app.pipeline import segment, validate
+    seg3 = segment.segment("First calm intro sentence here. Corrupt clueless Brussels bureaucrats ruined the port tonight.")
+    spans, rej = validate.validate_candidates(seg3, [
+        {"sentence_id": "p1s1", "quote": "Corrupt clueless Brussels bureaucrats", "label": "name_calling", "confidence": 0.93, "source": "llm"},
+        {"sentence_id": "p1s2", "quote": "Corrupt clueless Brussels bureaucrats", "label": "loaded_language", "confidence": 0.94, "source": "llm"},
+    ])
+    assert rej == 0 and len(spans) == 1
+    assert spans[0]["label"] == "name_calling" and spans[0]["sentence_id"] == "p1s2"

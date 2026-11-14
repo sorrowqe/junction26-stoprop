@@ -6,16 +6,18 @@
   <title>Metrics · Stoprop</title>
   <meta name="description" content="Measured precision, recall, false-positive rate and cost.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css?v=3">
+  <link rel="stylesheet" href="/static/style.css?v=4">
 </head>
 <body>
   <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics" aria-current="page">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
   <main class="wrap page wide">
     <h1>Accuracy &amp; False-Positive Metrics</h1>
     <p class="lede">How accurately Stoprop spots manipulation techniques and coordinated campaigns — and how rarely it
-      false-flags clean news, fair opinions, or normal viral sharing. We publish our weak spots openly alongside what works.</p>
+      false-flags clean news, fair opinions, or normal viral sharing. Every fraction below shows <strong>flagged / tested</strong>
+      alongside its statistical margin.</p>
 
     <div id="kpi-grid" class="kpi-grid" hidden></div>
+    <p id="kpi-note" class="muted small" style="margin:-.3rem 0 1rem" hidden></p>
 
     <div id="no-results" class="card" hidden>
       <h2>No benchmark results published yet</h2>
@@ -116,6 +118,6 @@
     </section>
   </main>
   <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
-  <script src="/static/metrics.js?v=3" defer></script>
+  <script src="/static/metrics.js?v=4" defer></script>
 </body>
 </html>

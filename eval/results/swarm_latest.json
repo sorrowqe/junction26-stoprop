@@ -1,121 +1,373 @@
 {
-  "scenarios": 12,
-  "coordinated_scenarios": 6,
-  "innocent_scenarios": 6,
-  "tp": 6,
+  "scenarios": 40,
+  "coordinated_scenarios": 20,
+  "innocent_scenarios": 20,
+  "tp": 17,
   "fp": 0,
-  "fn": 0,
-  "tn": 6,
+  "fn": 3,
+  "tn": 20,
   "precision": 1.0,
-  "recall": 1.0,
-  "f1": 1.0,
+  "recall": 0.85,
+  "f1": 0.919,
   "innocent_fpr": 0.0,
   "details": [
     {
-      "id": "coord_timing_burst",
+      "id": "coord_01_fast_burst",
       "kind": "coordinated",
-      "label": "Synchronized 2-minute copy burst",
-      "posts": 83,
+      "label": "8-account 2-minute copy burst",
+      "posts": 88,
       "top_verdict": "likely_coordinated",
       "likely_coordinated_clusters": 1,
       "passed": true
     },
     {
-      "id": "coord_account_pattern",
+      "id": "coord_02_small_burst_4",
       "kind": "coordinated",
-      "label": "Look-alike + newly created accounts",
-      "posts": 76,
+      "label": "4-account 90-second synchronized burst",
+      "posts": 94,
       "top_verdict": "likely_coordinated",
       "likely_coordinated_clusters": 1,
       "passed": true
     },
     {
-      "id": "coord_link_push",
+      "id": "coord_03_lookalike_handles",
       "kind": "coordinated",
-      "label": "Coordinated non-mainstream link push",
-      "posts": 76,
+      "label": "6 look-alike newly registered accounts",
+      "posts": 81,
       "top_verdict": "likely_coordinated",
       "likely_coordinated_clusters": 1,
       "passed": true
     },
     {
-      "id": "coord_template_near",
+      "id": "coord_04_link_push_domain",
       "kind": "coordinated",
-      "label": "Near-duplicate template burst",
+      "label": "6 accounts pushing same non-mainstream leak link",
+      "posts": 81,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_05_template_slots",
+      "kind": "coordinated",
+      "label": "7-account near-duplicate slot template burst",
+      "posts": 87,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_06_telegram_mirror",
+      "kind": "coordinated",
+      "label": "6 Telegram mirror channels forwarding campaign link",
+      "posts": 71,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_07_two_narratives",
+      "kind": "coordinated",
+      "label": "Same 6 accounts running two synchronized talking points",
+      "posts": 97,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_08_hashtag_campaign",
+      "kind": "coordinated",
+      "label": "6 accounts pushing non-event campaign hashtag",
+      "posts": 81,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_09_mention_brigade",
+      "kind": "coordinated",
+      "label": "5 accounts copy-pasting pressure message at same target",
+      "posts": 80,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_10_noisy_180_feed",
+      "kind": "coordinated",
+      "label": "5-account 60-second burst buried in 180 organic posts",
+      "posts": 185,
+      "top_verdict": "worth_watching",
+      "likely_coordinated_clusters": 0,
+      "passed": false
+    },
+    {
+      "id": "coord_11_single_purpose",
+      "kind": "coordinated",
+      "label": "6 single-purpose accounts repeating talking point",
       "posts": 82,
       "top_verdict": "likely_coordinated",
       "likely_coordinated_clusters": 1,
       "passed": true
     },
     {
-      "id": "coord_cross_channel",
+      "id": "coord_12_new_cohort_week",
       "kind": "coordinated",
-      "label": "Cross-channel mirror wave",
-      "posts": 66,
+      "label": "5 unrelated handles registered in same 48h window",
+      "posts": 80,
       "top_verdict": "likely_coordinated",
       "likely_coordinated_clusters": 1,
       "passed": true
     },
     {
-      "id": "coord_multi_message",
+      "id": "coord_13_cross_platform",
       "kind": "coordinated",
-      "label": "Two-message campaign by same accounts",
-      "posts": 92,
+      "label": "Cross-platform Reddit + Bluesky + Telegram copy burst",
+      "posts": 76,
       "top_verdict": "likely_coordinated",
       "likely_coordinated_clusters": 1,
       "passed": true
     },
     {
-      "id": "clean_organic_thread",
+      "id": "coord_14_url_utm_variants",
+      "kind": "coordinated",
+      "label": "6 accounts sharing campaign URL with tracking params",
+      "posts": 76,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_15_two_waves",
+      "kind": "coordinated",
+      "label": "Two tight bursts 3 hours apart from 6 accounts",
+      "posts": 91,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_16_prefix_edit",
+      "kind": "coordinated",
+      "label": "Near-duplicate core claim with varied intros in 90s burst",
+      "posts": 85,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_17_borderline_3acct",
+      "kind": "coordinated",
+      "label": "Borderline 3-account 30-second burst in 100-post thread",
+      "posts": 103,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "coord_18_heavy_paraphrase",
+      "kind": "coordinated",
+      "label": "Hard limit: heavily rewritten talking point (no shared 5-grams)",
+      "posts": 79,
+      "top_verdict": "none",
+      "likely_coordinated_clusters": 0,
+      "passed": false
+    },
+    {
+      "id": "coord_19_slow_drip_no_aux",
+      "kind": "coordinated",
+      "label": "Hard limit: 3 veteran accounts, hours apart, no 2nd signal",
+      "posts": 78,
+      "top_verdict": "worth_watching",
+      "likely_coordinated_clusters": 0,
+      "passed": false
+    },
+    {
+      "id": "coord_20_punct_padded_burst",
+      "kind": "coordinated",
+      "label": "6 accounts padding copied text with punctuation in 2-min burst",
+      "posts": 81,
+      "top_verdict": "likely_coordinated",
+      "likely_coordinated_clusters": 1,
+      "passed": true
+    },
+    {
+      "id": "clean_01_organic_90",
       "kind": "innocent",
-      "label": "Organic neighbourhood discussion",
+      "label": "Pure organic local forum thread (90 posts)",
       "posts": 90,
       "top_verdict": "none",
       "likely_coordinated_clusters": 0,
       "passed": true
     },
     {
-      "id": "clean_headline_sharing",
+      "id": "clean_02_organic_160",
       "kind": "innocent",
-      "label": "Mainstream news headline sharing",
+      "label": "Busy organic AMA thread (160 posts)",
+      "posts": 160,
+      "top_verdict": "none",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_03_err_headline",
+      "kind": "innocent",
+      "label": "Readers sharing ERR public-broadcaster headline",
       "posts": 76,
       "top_verdict": "organic_looking",
       "likely_coordinated_clusters": 0,
       "passed": true
     },
     {
-      "id": "clean_quoted_statement",
+      "id": "clean_04_bbc_breaking",
       "kind": "innocent",
-      "label": "Shared official quoted statement",
+      "label": "Breaking BBC headline shared during fast news hour",
+      "posts": 85,
+      "top_verdict": "worth_watching",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_05_reuters_link",
+      "kind": "innocent",
+      "label": "Reuters market headline shared by 6 finance readers",
+      "posts": 81,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_06_official_quote",
+      "kind": "innocent",
+      "label": "Attributed prime-minister press quote shared verbatim",
       "posts": 75,
       "top_verdict": "organic_looking",
       "likely_coordinated_clusters": 0,
       "passed": true
     },
     {
-      "id": "clean_event_hashtag",
+      "id": "clean_07_bank_quote",
       "kind": "innocent",
-      "label": "Live-event hashtag crowd",
-      "posts": 63,
+      "label": "Attributed central-bank governor quote",
+      "posts": 75,
       "top_verdict": "organic_looking",
       "likely_coordinated_clusters": 0,
       "passed": true
     },
     {
-      "id": "clean_wire_syndication",
+      "id": "clean_08_song_festival",
       "kind": "innocent",
-      "label": "News-agency wire syndication",
-      "posts": 65,
+      "label": "Live-event concert crowd (#SongFestival2026)",
+      "posts": 70,
       "top_verdict": "organic_looking",
       "likely_coordinated_clusters": 0,
       "passed": true
     },
     {
-      "id": "clean_short_generic",
+      "id": "clean_09_football_goal",
       "kind": "innocent",
-      "label": "Short generic courtesy replies",
-      "posts": 68,
+      "label": "Live football match #UCLFinal crowd reactions",
+      "posts": 66,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_10_wire_syndication",
+      "kind": "innocent",
+      "label": "Reuters wire lead syndicated by 4 regional papers",
+      "posts": 70,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_11_ap_syndication",
+      "kind": "innocent",
+      "label": "Associated Press weather report syndicated",
+      "posts": 69,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_12_short_thanks",
+      "kind": "innocent",
+      "label": "Short courtesy replies (<8 words)",
+      "posts": 75,
+      "top_verdict": "none",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_13_short_congrats",
+      "kind": "innocent",
+      "label": "Short congratulatory thread replies (<8 words)",
+      "posts": 74,
+      "top_verdict": "none",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_14_same_author_thread",
+      "kind": "innocent",
+      "label": "Single author posting a 10-part thread rapid-fire",
+      "posts": 80,
+      "top_verdict": "none",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_15_two_users_quoting",
+      "kind": "innocent",
+      "label": "Only 2 users quoting same sentence (<3 accounts)",
+      "posts": 72,
+      "top_verdict": "insufficient_data",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_16_same_topic_unique",
+      "kind": "innocent",
+      "label": "10 citizens debating same topic in their own words",
+      "posts": 70,
+      "top_verdict": "none",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_17_guardian_column",
+      "kind": "innocent",
+      "label": "Guardian column link shared with headline",
+      "posts": 75,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_18_book_quote",
+      "kind": "innocent",
+      "label": "Book-club readers sharing an attributed literary quote",
+      "posts": 74,
+      "top_verdict": "organic_looking",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_19_slow_proverb_3",
+      "kind": "innocent",
+      "label": "3 unrelated veteran users sharing proverb over 2 days",
+      "posts": 78,
       "top_verdict": "worth_watching",
+      "likely_coordinated_clusters": 0,
+      "passed": true
+    },
+    {
+      "id": "clean_20_varied_link_reviews",
+      "kind": "innocent",
+      "label": "6 developers sharing release URL with distinct reviews",
+      "posts": 71,
+      "top_verdict": "none",
       "likely_coordinated_clusters": 0,
       "passed": true
     }

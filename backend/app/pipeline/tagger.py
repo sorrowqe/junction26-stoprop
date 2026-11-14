@@ -28,7 +28,7 @@ from app.store import get_store
 CHUNK_WORDS = 1200
 MAX_CONCURRENT_CALLS = 3
 WAIT_TIMEOUT_S = 120
-MAX_OUTPUT_TOKENS = 2000
+MAX_OUTPUT_TOKENS = 4000
 HINT_TYPES = (
     "bandwagon_phrase", "vague_authority", "whataboutism_phrase", "false_dilemma_phrase",
     "emotive", "intensifier", "absolutist", "us_them", "all_caps",
