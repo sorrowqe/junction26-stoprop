@@ -8,3 +8,5 @@ __pycache__
 **/__pycache__
 *.pyc
 .pytest_cache
+CLAUDE.md
+KICKOFF.md

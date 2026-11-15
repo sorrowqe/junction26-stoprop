@@ -15,3 +15,6 @@ eval/data/cache/
 # LibreOffice / office lock files
 .~lock.*#
 ~$*
+# local build/agent guides (kept locally, not in repo)
+/CLAUDE.md
+/KICKOFF.md
