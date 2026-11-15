@@ -6,19 +6,40 @@
   <title>Check a source · Stoprop</title>
   <meta name="description" content="Plain-English provenance receipts for a URL or domain.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css?v=6">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=10">
+  <script src="/static/ui.js?v=10"></script>
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source" aria-current="page">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
-  <main class="wrap page wide">
-    <h1>Check a source</h1>
-    <p class="lede">Inspect a website or an article link with plain-English provenance “receipts”: domain registration
-      age, earliest archive &amp; TLS history, clone/impersonation checks, newsroom transparency markers (About,
-      Contact, Editorial policy, byline), watchdog &amp; fact-check records, and verbatim copies on other sites.</p>
+  <a class="skip" href="#target">Skip to the source check</a>
+  <header class="nav">
+    <nav class="nav-inner" aria-label="Main">
+      <a class="brand" href="/" aria-label="Stoprop home"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="mk-dim" x="3" y="4.6" width="18" height="3.4" rx="1.7"/><rect class="mk-hot" x="3" y="10.3" width="12" height="3.4" rx="1.7"/><rect class="mk-dim" x="3" y="16" width="15" height="3.4" rx="1.7"/></svg>Stop<span>rop</span></a>
+      <div class="links" id="nav-links"><a href="/">Analyze</a><a href="/source" aria-current="page">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch between light and dark theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2Z"/></svg></button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
+    </nav>
+  </header>
 
-    <section class="card" aria-labelledby="h-check">
+  <main class="wrap page wide">
+    <header class="page-hero">
+      <p class="eyebrow">Trust the source</p>
+      <h1>Check a source</h1>
+      <p class="lede">Inspect a website or an article link with plain-English provenance “receipts”: domain registration
+        age, earliest archive &amp; TLS history, clone/impersonation checks, newsroom transparency markers (About,
+        Contact, Editorial policy, byline), watchdog &amp; fact-check records, and verbatim copies on other sites.</p>
+    </header>
+
+    <section class="card input glow" aria-labelledby="h-check">
       <h2 id="h-check" class="sr-only">Check a link or domain</h2>
-      <div class="samples" role="group" aria-label="Example domains">
+      <form id="source-form" class="source-form" novalidate>
+        <label for="target" class="sr-only">Link or domain</label>
+        <input id="target" type="text" inputmode="url" autocomplete="off" spellcheck="false"
+               placeholder="Enter a domain (bbc.com, nytimes.com) or a full article link (https://…)" required>
+        <button type="submit" id="check">Check source</button>
+      </form>
+      <p class="muted small note">Tip: paste a full article link to also check its author/date metadata and search for verbatim copies on other sites.</p>
+      <div class="samples mt-1 mb-0" role="group" aria-label="Example domains">
         <span class="muted small">Try:</span>
         <button type="button" data-try="bbc.com">bbc.com (official broadcaster)</button>
         <button type="button" data-try="nytimes.com">nytimes.com (major daily)</button>
@@ -27,49 +48,51 @@
         <button type="button" data-try="theonion.com">theonion.com (satire)</button>
         <button type="button" data-try="rt.com">rt.com (state media &amp; watchdogs)</button>
       </div>
-      <form id="source-form" class="source-form" novalidate>
-        <label for="target" class="sr-only">Link or domain</label>
-        <input id="target" type="text" inputmode="url" autocomplete="off" spellcheck="false"
-               placeholder="Enter a domain (bbc.com, nytimes.com) or a full article link (https://…)" required>
-        <button type="submit" id="check">Check source</button>
-      </form>
-      <p class="muted small" style="margin:.45rem 0 0">Tip: paste a full article link to also check its author/date metadata and search for verbatim copies on other sites.</p>
       <p id="status" class="status" role="status" aria-live="polite"></p>
     </section>
 
     <section id="result" hidden aria-labelledby="h-result">
       <div class="card">
         <div class="source-summary-head">
-          <h2 id="h-result" style="margin:0">Provenance report for <span id="domain"></span></h2>
+          <h2 id="h-result">Provenance report for <span id="domain"></span></h2>
           <div id="score-pills" class="platform-badges"></div>
         </div>
-        <p id="reg-note" class="muted small" style="margin:.25rem 0 .5rem" hidden></p>
+        <p id="reg-note" class="muted small" hidden></p>
         <div id="history-chart" class="chart-box" hidden></div>
 
         <div id="page-card" class="page-inspect" hidden>
           <h3>Live page &amp; transparency signals</h3>
           <div id="brand-alert" class="banner" hidden></div>
-          <p id="page-meta" class="small" style="margin:.3rem 0 .45rem"></p>
+          <p id="page-meta" class="small"></p>
           <div id="transp-badges" class="platform-badges"></div>
-          <p id="link-net" class="small muted" style="margin:.55rem 0 0" hidden></p>
+          <p id="link-net" class="small muted" hidden></p>
         </div>
 
-        <h3 style="margin-top:1rem">Provenance receipts</h3>
+        <h3>Provenance receipts</h3>
         <ul id="receipts" class="receipts"></ul>
 
-        <div class="row-actions" style="margin-top:.85rem">
+        <div class="row-actions">
           <button type="button" id="copy-source-brief" class="secondary">Copy brief</button>
           <button type="button" id="refresh" class="secondary">Refresh checks</button>
           <a id="analyze-link" class="btn-link secondary" href="/" hidden>Analyze this page's text →</a>
           <a id="swarm-link" class="btn-link secondary" href="/swarm">Check spread in Swarm mode →</a>
         </div>
         <p id="refresh-status" class="small muted" role="status" aria-live="polite"></p>
-        <p class="muted small" style="margin-bottom:0">Receipts describe where a site comes from — they are not a truth verdict on a single story:
+        <p class="muted small">Receipts describe where a site comes from — they are not a truth verdict on a single story:
           genuine new projects also use new domains, and established outlets can still quote misleading claims.</p>
       </div>
     </section>
   </main>
-  <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
+
+  <footer class="site-footer">
+    <div class="wrap foot-grid">
+      <div>
+        <a class="brand" href="/">Stop<span>rop</span></a>
+        <p>Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer"><a href="/">Analyze</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></nav>
+    </div>
+  </footer>
   <script src="/static/receipts.js?v=5" defer></script>
   <script src="/static/source.js?v=5" defer></script>
 </body>

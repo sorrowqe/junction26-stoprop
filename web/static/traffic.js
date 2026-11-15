@@ -172,8 +172,9 @@
     if (!last) return;
     $("mitig-code").textContent = (last.mitigations && last.mitigations[activeFmt]) || "";
     document.querySelectorAll(".fmt-btn").forEach((b) => {
-      b.style.borderColor = b.dataset.fmt === activeFmt ? "var(--fg)" : "";
-      b.style.fontWeight = b.dataset.fmt === activeFmt ? "700" : "";
+      const on = b.dataset.fmt === activeFmt;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", String(on));
     });
   }
   function renderResult(r) {

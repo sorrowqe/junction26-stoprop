@@ -3,136 +3,303 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Stoprop</title>
+  <title>Stoprop · See the spin before it sees you</title>
   <meta name="description" content="Stoprop highlights manipulation techniques in text and explains them in plain language. We flag the tactics, not the opinions.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css?v=6">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=10">
+  <script src="/static/ui.js?v=10"></script>
 </head>
-<body>
+<body class="home">
   <a class="skip" href="#text">Skip to the analyzer</a>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/" aria-current="page">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
+  <header class="nav">
+    <nav class="nav-inner" aria-label="Main">
+      <a class="brand" href="/" aria-label="Stoprop home"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="mk-dim" x="3" y="4.6" width="18" height="3.4" rx="1.7"/><rect class="mk-hot" x="3" y="10.3" width="12" height="3.4" rx="1.7"/><rect class="mk-dim" x="3" y="16" width="15" height="3.4" rx="1.7"/></svg>Stop<span>rop</span></a>
+      <div class="links" id="nav-links"><a href="/" aria-current="page">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch between light and dark theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2Z"/></svg></button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
+    </nav>
+  </header>
+
   <header class="hero">
+    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="wrap">
-      <h1>Stop<span>rop</span></h1>
-      <p class="tagline">Stoprop: see the spin before it sees you. We flag the tactics, not the opinions.</p>
-      <p class="lede">Paste a news article, post, link or server log. Stoprop highlights <em>how</em> text tries to
-        persuade you, verifies source provenance, spots coordinated swarms, and separates malicious bots from real visitors.</p>
-      <ul class="tools" aria-label="Four tools">
-        <li><a href="#h-analyze"><strong>Analyze</strong><span>Name the technique, span by span</span></a></li>
-        <li><a href="/source"><strong>Check a source</strong><span>Provenance &amp; link-network receipts</span></a></li>
-        <li><a href="/swarm"><strong>Swarm mode</strong><span>Spot coordinated waves &amp; trace spread</span></a></li>
-        <li><a href="/traffic"><strong>Clean traffic</strong><span>Server-log bots, Shodan &amp; .htaccess rules</span></a></li>
-      </ul>
+      <div class="hero-copy">
+        <p class="eyebrow chip" data-reveal><span class="pulse" aria-hidden="true"></span>Propaganda &amp; manipulation detector</p>
+        <h1 class="hero-title" data-split>See the <em class="spin">spin</em> before it sees you.</h1>
+        <p class="tagline" data-reveal="blur" style="--d:5">We flag the tactics, not the opinions.</p>
+        <p class="lede" data-reveal style="--d:6">Paste a news article, post, link or server log. Stoprop highlights <em>how</em> text tries to
+          persuade you, verifies source provenance, spots coordinated swarms, and separates malicious bots from real visitors.</p>
+        <div class="cta-row" data-reveal style="--d:7">
+          <a class="btn" href="#analyze">Analyze a text <span class="arr" aria-hidden="true">↓</span></a>
+          <a class="btn ghost" href="/methodology">How it works <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+      </div>
+
+      <figure class="specimen" data-reveal="scale" style="--d:8">
+        <div class="specimen-bar" aria-hidden="true"><i></i><i></i><i></i><span>Illustration</span></div>
+        <div class="beam" aria-hidden="true"></div>
+        <p class="specimen-text"><mark class="hl c-red" style="--i:0">Everyone knows</mark><span class="ico c-red" style="--i:0" aria-hidden="true">!</span> the new smart meters are a disaster. <mark class="hl c-red" style="--i:1">Experts say</mark><span class="ico c-red" style="--i:1" aria-hidden="true">!</span> they can be switched off at any moment, <mark class="hl c-red" style="--i:2">leaving families freezing in the dark</mark><span class="ico c-red" style="--i:2" aria-hidden="true">!</span>. Since the rollout began, <mark class="hl c-amber" style="--i:3">bills have jumped 300%</mark><span class="ico c-amber" style="--i:3" aria-hidden="true">?</span>.</p>
+        <ul class="specimen-tags" aria-label="What the four highlights mean">
+          <li style="--i:0"><span class="ico c-red" aria-hidden="true">!</span>Bandwagon</li>
+          <li style="--i:1"><span class="ico c-red" aria-hidden="true">!</span>Questionable authority</li>
+          <li style="--i:2"><span class="ico c-red" aria-hidden="true">!</span>Fear appeal</li>
+          <li style="--i:3"><span class="ico c-amber" aria-hidden="true">?</span>Unsupported claim</li>
+        </ul>
+        <figcaption>An illustration of the output. The real analyzer is right below: paste your own text or try a sample.</figcaption>
+      </figure>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="input card" aria-labelledby="h-analyze">
-      <h2 id="h-analyze">Analyze a text</h2>
-      <div class="samples" id="samples" role="group" aria-label="Sample texts">
-        <span class="muted">Try a sample:</span>
-      </div>
-      <form id="form" novalidate>
-        <label for="text" class="field-label">Text</label>
-        <textarea id="text" rows="9" placeholder="Paste a news article, social media post or comment…" spellcheck="false"></textarea>
-        <label class="inline check private"><input type="checkbox" id="private" aria-describedby="private-note"> Don't store this text</label>
-        <p id="private-note" class="muted small">Results are cached briefly for speed.
-          Tick this to analyze without saving anything to that shared cache.</p>
-
-        <label for="url" class="field-label">Or a link</label>
-        <input id="url" type="url" inputmode="url" placeholder="https://…" aria-describedby="url-note" autocomplete="off">
-        <p id="url-note" class="muted small">Stoprop fetches public web pages only and adds source receipts.
-          If you give both text and a link, the text is analyzed and the link is used for the receipts.</p>
-
-        <div class="controls">
-          <label class="inline">Sensitivity
-            <select id="sensitivity">
-              <option value="strict" selected>Strict (default)</option>
-              <option value="balanced">Balanced</option>
-              <option value="broad">Broad (all detections)</option>
-            </select>
-          </label>
-          <button type="submit" id="go">Analyze</button>
+  <main>
+    <div class="wrap">
+      <section class="card input glow" id="analyze" aria-labelledby="h-analyze" data-reveal="scale">
+        <div class="card-head">
+          <h2 id="h-analyze">Analyze a text</h2>
+          <span class="kbd"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> to run</span>
         </div>
-        <p id="sens-note" class="muted small" aria-live="polite"></p>
-      </form>
-      <p id="status" class="status" role="status" aria-live="polite"></p>
-    </section>
+        <div class="samples" id="samples" role="group" aria-label="Sample texts">
+          <span class="muted">Try a sample:</span>
+        </div>
+        <form id="form" novalidate>
+          <label for="text" class="sr-only">Text</label>
+          <textarea id="text" rows="9" placeholder="Paste a news article, social media post or comment…" spellcheck="false"></textarea>
 
-    <section id="result" hidden aria-labelledby="h-result">
-      <h2 id="h-result" class="sr-only">Result</h2>
-      <div id="banner" class="banner" hidden></div>
-      <p id="lang-note" class="lang-note" hidden></p>
-      <div class="grid">
-        <article class="card">
-          <h3>Highlighted text</h3>
-          <div id="doc" class="doc-text"></div>
-          <h3>Findings</h3>
-          <div id="empty" class="empty" hidden></div>
-          <ol id="findings" class="findings"></ol>
-        </article>
-        <aside>
-          <section class="card" aria-labelledby="h-profile">
-            <h3 id="h-profile">Profile</h3>
-            <p id="summary" class="summary"></p>
-            <dl id="profile" class="profile"></dl>
-            <ul id="notes" class="notes"></ul>
-            <div class="row-actions" id="handoff-actions" style="margin-top:.75rem">
-              <button type="button" id="copy-brief" class="secondary small">Copy brief</button>
-              <a id="to-swarm" class="btn-link secondary small" href="/swarm">Trace spread in Swarm mode →</a>
-              <a id="to-source" class="btn-link secondary small" href="/source" hidden>Full source provenance →</a>
+          <label for="url" class="field-label">Or a link</label>
+          <input id="url" type="url" inputmode="url" placeholder="https://…" aria-describedby="url-note" autocomplete="off">
+          <p id="url-note" class="muted small note">Stoprop fetches public web pages only and adds source receipts.
+            If you give both text and a link, the text is analyzed and the link is used for the receipts.</p>
+
+          <div class="controls">
+            <div class="inline">
+              <label for="sensitivity" class="seg-label">Sensitivity</label>
+              <select id="sensitivity" data-segmented="Sensitivity">
+                <option value="strict" data-short="Strict" selected>Strict (default)</option>
+                <option value="balanced" data-short="Balanced">Balanced</option>
+                <option value="broad" data-short="Broad">Broad (all detections)</option>
+              </select>
             </div>
-          </section>
-          <section class="card" id="source-card" hidden aria-labelledby="h-source">
-            <h3 id="h-source">Source</h3>
-            <p id="source-info" class="small"></p>
-            <ul id="receipts" class="receipts"></ul>
-            <button type="button" id="refresh-receipts" class="secondary">Refresh checks</button>
-            <p id="receipts-status" class="small muted" role="status" aria-live="polite"></p>
-          </section>
-          <section class="card" id="innocent-card" hidden aria-labelledby="h-innocent">
-            <h3 id="h-innocent">Other possible explanations</h3>
-            <p class="muted small">Before drawing conclusions, consider:</p>
-            <ul id="innocent" class="innocent"></ul>
-          </section>
-          <section class="card" id="verify-card" hidden aria-labelledby="h-verify">
-            <h3 id="h-verify">Check the claims</h3>
-            <p class="muted small">Looks up to 3 factual claims in recent news: did the cited source really report it,
-              do independent outlets report it, does anything contradict it? Takes up to 30 seconds; 10 checks per hour.
-              Results say what was found, never “true” or “false”.</p>
-            <button type="button" id="verify-btn">Verify claims</button>
-            <p id="verify-status" class="status" role="status" aria-live="polite"></p>
-            <div id="verify-out"></div>
-          </section>
-          <section class="card" aria-labelledby="h-legend">
-            <h3 id="h-legend">Legend</h3>
-            <ul id="legend" class="legend"></ul>
-            <p class="muted small">Colours describe <em>how</em> a passage is written, never whether it is true.
-              Most text stays uncoloured. There is no single “propaganda score”.</p>
-          </section>
-        </aside>
+            <label class="check private"><input type="checkbox" id="private" aria-describedby="private-note"><span>Don't store this text</span></label>
+            <button type="submit" id="go">Analyze <span class="arr" aria-hidden="true">→</span></button>
+          </div>
+          <p id="sens-note" class="muted small note" aria-live="polite"></p>
+          <p id="private-note" class="muted small note">Results are cached briefly for speed.
+            Switch on “Don't store this text” to analyze without saving anything to that shared cache.</p>
+        </form>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="result" hidden aria-labelledby="h-result">
+        <h2 id="h-result" class="sr-only">Result</h2>
+        <div id="banner" class="banner" hidden></div>
+        <p id="lang-note" class="lang-note" hidden></p>
+        <div class="grid">
+          <article class="card">
+            <h3 class="label-s">Highlighted text</h3>
+            <div id="doc" class="doc-text"></div>
+            <h3 class="label-s">Findings</h3>
+            <div id="empty" class="empty" hidden></div>
+            <ol id="findings" class="findings"></ol>
+          </article>
+          <aside>
+            <section class="card" aria-labelledby="h-profile">
+              <h3 id="h-profile">Profile</h3>
+              <p id="summary" class="summary"></p>
+              <dl id="profile" class="profile"></dl>
+              <ul id="notes" class="notes"></ul>
+              <div class="row-actions" id="handoff-actions">
+                <button type="button" id="copy-brief" class="secondary small">Copy brief</button>
+                <a id="to-swarm" class="btn-link secondary small" href="/swarm">Trace spread in Swarm mode →</a>
+                <a id="to-source" class="btn-link secondary small" href="/source" hidden>Full source provenance →</a>
+              </div>
+            </section>
+            <section class="card" id="source-card" hidden aria-labelledby="h-source">
+              <h3 id="h-source">Source</h3>
+              <p id="source-info" class="small"></p>
+              <ul id="receipts" class="receipts"></ul>
+              <div class="row-actions"><button type="button" id="refresh-receipts" class="secondary small">Refresh checks</button></div>
+              <p id="receipts-status" class="small muted" role="status" aria-live="polite"></p>
+            </section>
+            <section class="card" id="innocent-card" hidden aria-labelledby="h-innocent">
+              <h3 id="h-innocent">Other possible explanations</h3>
+              <p class="muted small">Before drawing conclusions, consider:</p>
+              <ul id="innocent" class="innocent"></ul>
+            </section>
+            <section class="card" id="verify-card" hidden aria-labelledby="h-verify">
+              <h3 id="h-verify">Check the claims</h3>
+              <p class="muted small">Looks up to 3 factual claims in recent news: did the cited source really report it,
+                do independent outlets report it, does anything contradict it? Takes up to 30 seconds; 10 checks per hour.
+                Results say what was found, never “true” or “false”.</p>
+              <button type="button" id="verify-btn">Verify claims</button>
+              <p id="verify-status" class="status" role="status" aria-live="polite"></p>
+              <div id="verify-out"></div>
+            </section>
+            <section class="card" aria-labelledby="h-legend">
+              <h3 id="h-legend">Legend</h3>
+              <ul id="legend" class="legend"></ul>
+              <p class="muted small">Colours describe <em>how</em> a passage is written, never whether it is true.
+                Most text stays uncoloured. There is no single “propaganda score”.</p>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </div>
+
+    <section class="band" aria-labelledby="h-tools">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Four tools</p>
+          <h2 id="h-tools">One question each. Evidence every time.</h2>
+          <p>Each tool answers a different question about what you are reading, and shows the evidence it used.</p>
+        </div>
+        <ul class="tools" aria-label="Four tools">
+          <li data-reveal="scale">
+            <a class="tile t-analyze" href="#analyze">
+              <div class="tile-art" aria-hidden="true">
+                <svg class="art" viewBox="0 0 320 150">
+                  <rect class="ln" x="10" y="12" width="300" height="12" rx="6"/>
+                  <rect class="ln" x="10" y="42" width="92" height="12" rx="6"/>
+                  <rect class="soft sweep" x="110" y="35" width="128" height="26" rx="7"/>
+                  <rect class="ln" x="118" y="42" width="112" height="12" rx="6"/>
+                  <rect class="hot sweep" x="110" y="60" width="128" height="3.5" rx="1.75"/>
+                  <rect class="ln" x="246" y="42" width="64" height="12" rx="6"/>
+                  <rect class="ln" x="10" y="72" width="300" height="12" rx="6"/>
+                  <rect class="ln" x="10" y="102" width="46" height="12" rx="6"/>
+                  <rect class="soft sweep" x="64" y="95" width="92" height="26" rx="7"/>
+                  <rect class="ln" x="72" y="102" width="76" height="12" rx="6"/>
+                  <rect class="hot sweep" x="64" y="120" width="92" height="3.5" rx="1.75"/>
+                  <rect class="ln" x="164" y="102" width="118" height="12" rx="6"/>
+                  <rect class="ln" x="10" y="132" width="200" height="12" rx="6"/>
+                </svg>
+              </div>
+              <span class="tile-kicker">Name the technique</span>
+              <strong>Analyze</strong>
+              <span class="tile-desc">Highlights manipulation techniques span by span and explains each one in plain language.</span>
+              <span class="tile-go">Try the analyzer <i aria-hidden="true">→</i></span>
+            </a>
+          </li>
+          <li data-reveal="scale" style="--d:1">
+            <a class="tile t-source" href="/source">
+              <div class="tile-art" aria-hidden="true">
+                <svg class="art" viewBox="0 0 320 150">
+                  <g class="blip" style="--k:0"><circle class="soft" cx="26" cy="27" r="15"/><path class="tick" d="M19 27.5l5 5 9-10"/></g>
+                  <rect class="ln" x="56" y="15" width="150" height="10" rx="5"/><rect class="ln" x="56" y="32" width="238" height="8" rx="4"/>
+                  <g class="blip" style="--k:2"><circle class="soft" cx="26" cy="75" r="15"/><path class="tick" d="M19 75.5l5 5 9-10"/></g>
+                  <rect class="ln" x="56" y="63" width="118" height="10" rx="5"/><rect class="ln" x="56" y="80" width="204" height="8" rx="4"/>
+                  <g class="blip" style="--k:4"><circle class="ring" cx="26" cy="123" r="14"/><path class="tick" d="M20 123h12"/></g>
+                  <rect class="ln" x="56" y="111" width="168" height="10" rx="5"/><rect class="ln" x="56" y="128" width="182" height="8" rx="4"/>
+                </svg>
+              </div>
+              <span class="tile-kicker">Trust the source</span>
+              <strong>Check a source</strong>
+              <span class="tile-desc">Provenance &amp; link-network receipts: domain age, look-alike names, archive history.</span>
+              <span class="tile-go">Check a domain <i aria-hidden="true">→</i></span>
+            </a>
+          </li>
+          <li data-reveal="scale">
+            <a class="tile t-swarm" href="/swarm">
+              <div class="tile-art" aria-hidden="true">
+                <svg class="art" viewBox="0 0 320 150">
+                  <line class="line" x1="10" y1="136" x2="310" y2="136"/>
+                  <rect class="dash" x="146" y="10" width="70" height="118" rx="12"/>
+                  <circle class="dot blip" style="--k:0" cx="28" cy="96" r="5"/><circle class="dot blip" style="--k:1" cx="54" cy="46" r="5"/>
+                  <circle class="dot blip" style="--k:2" cx="84" cy="110" r="5"/><circle class="dot blip" style="--k:3" cx="112" cy="68" r="5"/>
+                  <circle class="dot blip" style="--k:4" cx="130" cy="28" r="5"/><circle class="dot blip" style="--k:9" cx="238" cy="88" r="5"/>
+                  <circle class="dot blip" style="--k:10" cx="262" cy="42" r="5"/><circle class="dot blip" style="--k:11" cx="286" cy="106" r="5"/>
+                  <circle class="dot blip" style="--k:12" cx="302" cy="64" r="5"/>
+                  <circle class="hot blip" style="--k:5" cx="160" cy="32" r="5.5"/><circle class="hot blip" style="--k:5" cx="172" cy="58" r="5.5"/>
+                  <circle class="hot blip" style="--k:6" cx="180" cy="84" r="5.5"/><circle class="hot blip" style="--k:6" cx="188" cy="44" r="5.5"/>
+                  <circle class="hot blip" style="--k:7" cx="196" cy="102" r="5.5"/><circle class="hot blip" style="--k:7" cx="202" cy="70" r="5.5"/>
+                  <circle class="hot blip" style="--k:8" cx="166" cy="110" r="5.5"/>
+                </svg>
+              </div>
+              <span class="tile-kicker">Spot the swarm</span>
+              <strong>Swarm mode</strong>
+              <span class="tile-desc">Spot coordinated waves &amp; trace spread, from a batch of posts and never from a single one.</span>
+              <span class="tile-go">Investigate a thread <i aria-hidden="true">→</i></span>
+            </a>
+          </li>
+          <li data-reveal="scale" style="--d:1">
+            <a class="tile t-traffic" href="/traffic">
+              <div class="tile-art" aria-hidden="true">
+                <svg class="art" viewBox="0 0 320 150">
+                  <line class="line" x1="4" y1="137" x2="316" y2="137"/>
+                  <rect class="okbar grow" style="--k:0" x="8" y="105" width="14" height="30" rx="3"/><rect class="okbar grow" style="--k:1" x="30" y="93" width="14" height="42" rx="3"/>
+                  <rect class="okbar grow" style="--k:2" x="52" y="99" width="14" height="36" rx="3"/><rect class="okbar grow" style="--k:3" x="74" y="85" width="14" height="50" rx="3"/>
+                  <rect class="okbar grow" style="--k:4" x="96" y="91" width="14" height="44" rx="3"/>
+                  <rect class="okbar grow" style="--k:5" x="118" y="95" width="14" height="40" rx="3"/><rect class="badbar grow" style="--k:7" x="118" y="41" width="14" height="52" rx="3"/>
+                  <rect class="okbar grow" style="--k:6" x="140" y="91" width="14" height="44" rx="3"/><rect class="badbar grow" style="--k:8" x="140" y="19" width="14" height="70" rx="3"/>
+                  <rect class="okbar grow" style="--k:7" x="162" y="89" width="14" height="46" rx="3"/><rect class="badbar grow" style="--k:9" x="162" y="67" width="14" height="20" rx="3"/>
+                  <rect class="okbar grow" style="--k:8" x="184" y="95" width="14" height="40" rx="3"/><rect class="okbar grow" style="--k:9" x="206" y="89" width="14" height="46" rx="3"/>
+                  <rect class="okbar grow" style="--k:10" x="228" y="97" width="14" height="38" rx="3"/><rect class="okbar grow" style="--k:11" x="250" y="83" width="14" height="52" rx="3"/>
+                  <rect class="okbar grow" style="--k:12" x="272" y="101" width="14" height="34" rx="3"/><rect class="okbar grow" style="--k:13" x="294" y="91" width="14" height="44" rx="3"/>
+                </svg>
+              </div>
+              <span class="tile-kicker">Clean the traffic</span>
+              <strong>Clean traffic</strong>
+              <span class="tile-desc">Server-log bots, Shodan &amp; .htaccess rules, with real visitors and verified crawlers protected.</span>
+              <span class="tile-go">Inspect a log <i aria-hidden="true">→</i></span>
+            </a>
+          </li>
+        </ul>
       </div>
     </section>
 
-    <section class="card" aria-labelledby="h-bm" style="padding:.9rem 1.25rem">
-      <div class="source-summary-head">
-        <div>
-          <h2 id="h-bm" style="margin:0;font-size:.98rem">1-Click Browser Bookmarklet</h2>
-          <p class="muted small" style="margin:.15rem 0 0">Drag this button to your browser's bookmarks bar — click it while reading any news article or blog post to inspect it instantly in Stoprop.</p>
+    <section class="band alt" aria-labelledby="h-how">
+      <div class="wrap">
+        <div class="manifesto">
+          <p class="eyebrow" id="h-how">How we keep it honest</p>
+          <p class="ml" data-reveal="line">We label <em>how</em> something is said. Never who said it, and never which side they are on.</p>
+          <p class="ml" data-reveal="line">The AI proposes. <em>Plain code verifies</em> every quote against your text, character for character.</p>
+          <p class="ml" data-reveal="line">Words quoted from a named source are <em>not held against the author</em>.</p>
+          <p class="ml" data-reveal="line">A crowd is called coordinated only when <em>two independent signals</em> agree.</p>
+          <p class="ml" data-reveal="line">And when there is nothing to find, <em>we say nothing</em>.</p>
+          <a class="btn ghost" href="/methodology" data-reveal>Read the methodology <span class="arr" aria-hidden="true">→</span></a>
         </div>
-        <a class="btn-link" id="bookmarklet"
-           href="javascript:void(location.hostname==='stoprop.tech'?(document.getElementById('url')&&document.getElementById('url').focus()):(location.href='https://stoprop.tech/?url='+encodeURIComponent(location.href)))">⚡ Check with Stoprop</a>
+      </div>
+    </section>
+
+    <section class="band" id="numbers" aria-labelledby="h-numbers" hidden>
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Measured, not claimed</p>
+          <h2 id="h-numbers">The numbers, false alarms included.</h2>
+          <p>Read live from our published benchmark results, not typed into this page.</p>
+        </div>
+        <div class="stats" id="stats"></div>
+        <p class="stats-foot" data-reveal>These are small benchmarks, so treat every figure as an estimate. The swarm and traffic
+          sets are synthetic: they measure the mechanics, not real-world prevalence. Confidence intervals and
+          per-technique results are on <a href="/metrics">Metrics</a>.</p>
+      </div>
+    </section>
+
+    <section class="band tight" aria-labelledby="h-bm">
+      <div class="wrap">
+        <div class="card bookmark" data-reveal>
+          <div>
+            <h2 id="h-bm">One-click bookmarklet</h2>
+            <p class="muted small">Drag this button to your browser's bookmarks bar, then click it while reading any news article or blog post to inspect it instantly in Stoprop.</p>
+          </div>
+          <a class="btn-link" id="bookmarklet"
+             href="javascript:void(location.hostname==='stoprop.tech'?(document.getElementById('url')&&document.getElementById('url').focus()):(location.href='https://stoprop.tech/?url='+encodeURIComponent(location.href)))">⚡ Check with Stoprop</a>
+        </div>
       </div>
     </section>
   </main>
 
   <div id="tip" class="tip" role="tooltip" hidden></div>
 
-  <footer class="wrap muted small">
-    Stoprop labels techniques and behaviours, never people, outlets or viewpoints. No accounts, no reading history.
-    <a href="/methodology">Methodology</a> · <a href="/api">API</a>
+  <footer class="site-footer">
+    <div class="wrap foot-grid">
+      <div>
+        <a class="brand" href="/">Stop<span>rop</span></a>
+        <p>Stoprop labels techniques and behaviours, never people, outlets or viewpoints. No accounts, no reading history.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer"><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></nav>
+    </div>
   </footer>
   <script src="/static/receipts.js?v=5" defer></script>
-  <script src="/static/app.js?v=5" defer></script>
+  <script src="/static/app.js?v=6" defer></script>
+  <script src="/static/home.js?v=1" defer></script>
 </body>
 </html>

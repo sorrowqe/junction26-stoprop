@@ -6,14 +6,28 @@
   <title>Methodology · Stoprop</title>
   <meta name="description" content="How Stoprop detects techniques and coordination, and its limits.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css?v=6">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=10">
+  <script src="/static/ui.js?v=10"></script>
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology" aria-current="page">Methodology</a><a href="/api">API</a></div></nav>
-  <main class="wrap page">
-    <h1>Methodology</h1>
-    <p class="lede">How Stoprop detects persuasion techniques, verifies factual claims, checks source provenance, and
-      measures coordinated campaigns — along with the strict guardrails and limitations built into every step.</p>
+  <a class="skip" href="#main">Skip to the content</a>
+  <header class="nav">
+    <nav class="nav-inner" aria-label="Main">
+      <a class="brand" href="/" aria-label="Stoprop home"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="mk-dim" x="3" y="4.6" width="18" height="3.4" rx="1.7"/><rect class="mk-hot" x="3" y="10.3" width="12" height="3.4" rx="1.7"/><rect class="mk-dim" x="3" y="16" width="15" height="3.4" rx="1.7"/></svg>Stop<span>rop</span></a>
+      <div class="links" id="nav-links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology" aria-current="page">Methodology</a><a href="/api">API</a></div>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch between light and dark theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2Z"/></svg></button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <main class="wrap page wide prose" id="main">
+    <header class="page-hero">
+      <p class="eyebrow">How it works</p>
+      <h1>Methodology</h1>
+      <p class="lede">How Stoprop detects persuasion techniques, verifies factual claims, checks source provenance, and
+        measures coordinated campaigns — along with the strict guardrails and limitations built into every step.</p>
+    </header>
 
     <h2>Core design principles</h2>
     <ol class="principles">
@@ -72,7 +86,7 @@
       <strong>Hacker News</strong>, verifies matches, checks hosting domain ages and look-alike names, and runs the
       swarm detector on dated copies. It does no identity research, never looks up profiles, never links accounts
       across platforms, and stores nothing.</p>
-    <p class="muted">No AI-generated-text detection: such detectors are unreliable and known to be biased against non-native writers.</p>
+    <p class="banner principle"><strong>No AI-generated-text detection.</strong> Such detectors are unreliable and known to be biased against non-native writers.</p>
 
     <h2>4. Clean the traffic (server-log bot &amp; scraper inspector)</h2>
     <p><strong><a href="/traffic">Clean traffic</a></strong> parses Nginx/Apache Combined &amp; Common logs, Caddy/Traefik structured JSON logs, or CSV exports in memory (never written to disk). Candidate public IPs are enriched live against <strong>Shodan InternetDB</strong> (open ports, threat tags such as <code>tor</code> / <code>scanner</code> / <code>vpn</code>, rDNS hostnames, and CVE vulnerabilities), <strong>RIPE NCC RIPEstat</strong> (Autonomous System Number and network holder), and optional <strong>VirusTotal v3</strong> reputation.</p>
@@ -86,6 +100,15 @@
       <li><strong>Closed platforms &amp; hard paywalls:</strong> login-walled platforms (X/Twitter, Facebook, Instagram, TikTok) are not scraped directly; use Swarm spread search on post text or dataset upload instead.</li>
     </ul>
   </main>
-  <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
+
+  <footer class="site-footer">
+    <div class="wrap foot-grid">
+      <div>
+        <a class="brand" href="/">Stop<span>rop</span></a>
+        <p>Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/api">API</a></nav>
+    </div>
+  </footer>
 </body>
 </html>

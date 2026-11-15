@@ -6,19 +6,34 @@
   <title>Clean traffic · Stoprop</title>
   <meta name="description" content="Separate malicious bots, credential stuffers, spoofed crawlers and scrapers from real visitors in web-server logs.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css?v=7">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=10">
+  <script src="/static/ui.js?v=10"></script>
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic" aria-current="page">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
+  <a class="skip" href="#log-input">Skip to the log input</a>
+  <header class="nav">
+    <nav class="nav-inner" aria-label="Main">
+      <a class="brand" href="/" aria-label="Stoprop home"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="mk-dim" x="3" y="4.6" width="18" height="3.4" rx="1.7"/><rect class="mk-hot" x="3" y="10.3" width="12" height="3.4" rx="1.7"/><rect class="mk-dim" x="3" y="16" width="15" height="3.4" rx="1.7"/></svg>Stop<span>rop</span></a>
+      <div class="links" id="nav-links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic" aria-current="page">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch between light and dark theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2Z"/></svg></button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
+    </nav>
+  </header>
+
   <main class="wrap page wide">
-    <h1>Clean the traffic</h1>
-    <p class="lede">Inspect Nginx, Apache, Caddy, or Traefik web-server logs to separate credential-stuffing attacks,
-      vulnerability scanners, spoofed search bots, and bulk AI scrapers from verified crawlers and real visitors —
-      enriched live with <strong>Shodan InternetDB</strong>, <strong>RIPE NCC ASN</strong>, and <strong>VirusTotal</strong>.</p>
+    <header class="page-hero">
+      <p class="eyebrow">Clean the traffic</p>
+      <h1>Clean the traffic</h1>
+      <p class="lede">Inspect Nginx, Apache, Caddy, or Traefik web-server logs to separate credential-stuffing attacks,
+        vulnerability scanners, spoofed search bots, and bulk AI scrapers from verified crawlers and real visitors —
+        enriched live with <strong>Shodan InternetDB</strong>, <strong>RIPE NCC ASN</strong>, and <strong>VirusTotal</strong>.</p>
+    </header>
+
     <p class="banner principle"><strong>Innocent-visitor protection built in.</strong> Shared office/campus NAT IPs,
       real browsers loading CSS/JS/images, minor 404s, and ASN-verified Googlebot/Bingbot crawlers are protected from false blocks.</p>
 
-    <section class="card" aria-labelledby="h-log">
+    <section class="card input glow" aria-labelledby="h-log">
       <h2 id="h-log">Inspect server access logs</h2>
       <div class="samples" role="group" aria-label="One-click log demos">
         <span class="muted small">Try an example:</span>
@@ -29,14 +44,14 @@
 
       <form id="traffic-form" novalidate>
         <label for="log-input" class="field-label">Paste access.log lines (Nginx / Apache Combined, Caddy JSON, or CSV)</label>
-        <textarea id="log-input" rows="7" spellcheck="false" style="font-family:ui-monospace,Consolas,monospace;font-size:.84rem"
+        <textarea id="log-input" class="mono" rows="7" spellcheck="false"
           placeholder='185.220.101.1 - - [14/Nov/2026:18:22:01 +0000] "POST /wp-login.php HTTP/1.1" 401 512 "-" "Mozilla/5.0"&#10;66.249.66.1 - - [14/Nov/2026:18:22:05 +0000] "GET /robots.txt HTTP/1.1" 200 124 "-" "Mozilla/5.0 (compatible; Googlebot/2.1)"'></textarea>
 
         <div class="controls">
           <label class="file-pick small">Upload .log / .json / .csv<input type="file" id="log-file" accept=".log,.txt,.json,.csv,text/plain"></label>
           <span id="file-info" class="muted small" aria-live="polite"></span>
-          <label class="inline check"><input type="checkbox" id="enrich" checked> Enrich public IPs via Shodan &amp; RIPE ASN</label>
-          <button type="submit" id="go">Analyze logs</button>
+          <label class="check"><input type="checkbox" id="enrich" checked><span>Enrich public IPs via Shodan &amp; RIPE ASN</span></label>
+          <button type="submit" id="go">Analyze logs <span class="arr" aria-hidden="true">→</span></button>
         </div>
         <p id="status" class="status" role="status" aria-live="polite"></p>
       </form>
@@ -47,26 +62,24 @@
 
       <div class="card">
         <div class="source-summary-head">
-          <h2 id="h-res" style="margin:0">Traffic overview</h2>
-          <div class="row-actions" style="margin:0">
-            <button type="button" id="copy-traffic-brief" class="secondary small">Copy brief</button>
-          </div>
+          <h2 id="h-res">Traffic overview</h2>
+          <button type="button" id="copy-traffic-brief" class="secondary small">Copy brief</button>
         </div>
-        <p id="summary" style="margin:.45rem 0 .6rem"></p>
+        <p id="summary" class="summary mt-1"></p>
         <div id="traffic-chart" class="chart-box" hidden></div>
         <ul id="notes" class="notes small"></ul>
       </div>
 
       <section class="card" id="mitig-card" aria-labelledby="h-mit">
-        <h2 id="h-mit">Actionable server mitigations (Hostinger `.htaccess`, Nginx &amp; Firewall)</h2>
-        <p class="muted small">Ready-to-paste rules targeting only confirmed malicious actors (`block`), leaving real visitors and verified crawlers untouched.</p>
-        <div class="samples" role="tablist" aria-label="Server config format" style="margin-bottom:.5rem">
+        <h2 id="h-mit">Actionable server mitigations (Hostinger <code>.htaccess</code>, Nginx &amp; Firewall)</h2>
+        <p class="muted small">Ready-to-paste rules targeting only confirmed malicious actors (<code>block</code>), leaving real visitors and verified crawlers untouched.</p>
+        <div class="samples mb-0" role="group" aria-label="Server config format">
           <button type="button" data-fmt="htaccess" class="fmt-btn">Apache / Hostinger .htaccess</button>
           <button type="button" data-fmt="nginx" class="fmt-btn">Nginx</button>
           <button type="button" data-fmt="ufw" class="fmt-btn">Linux UFW Firewall</button>
-          <button type="button" id="copy-rules" class="secondary small" style="margin-left:auto">Copy rules</button>
+          <button type="button" id="copy-rules" class="secondary small push">Copy rules</button>
         </div>
-        <pre><code id="mitig-code"></code></pre>
+        <pre data-no-copy><code id="mitig-code"></code></pre>
       </section>
 
       <section class="card" aria-labelledby="h-actors">
@@ -75,7 +88,16 @@
       </section>
     </section>
   </main>
-  <footer class="wrap muted small">Stoprop separates malicious automation from real visitors using multi-signal behaviour + public IP registries. Logs are processed in memory and never stored.</footer>
-  <script src="/static/traffic.js?v=1" defer></script>
+
+  <footer class="site-footer">
+    <div class="wrap foot-grid">
+      <div>
+        <a class="brand" href="/">Stop<span>rop</span></a>
+        <p>Stoprop separates malicious automation from real visitors using multi-signal behaviour + public IP registries. Logs are processed in memory and never stored.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></nav>
+    </div>
+  </footer>
+  <script src="/static/traffic.js?v=2" defer></script>
 </body>
 </html>

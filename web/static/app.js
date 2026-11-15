@@ -381,6 +381,7 @@
       if (!cover.length) { doc.append(chunk); continue; }
       const m = el("mark", `hl c-${cover[0].color}${cover[0].source === "heuristic" ? " exp" : ""}`, chunk);
       m.dataset.spans = cover.map((s) => s.idx).join(",");
+      m.style.setProperty("--i", k);   // stagger for the highlight entrance (style.css)
       m.tabIndex = 0;
       m.setAttribute("role", "button");
       m.setAttribute("aria-label", `${chunk}: ${cover.map((s) => labelName(s.label)).join(", ")}. Press Enter for details.`);
@@ -388,6 +389,7 @@
       cover.filter((s) => s.b === b).forEach((s) => {
         const ic = el("span", `ico c-${s.color}`, COLORS[s.color].icon);
         ic.setAttribute("aria-hidden", "true");
+        ic.style.setProperty("--i", k);
         doc.append(ic);
       });
     }

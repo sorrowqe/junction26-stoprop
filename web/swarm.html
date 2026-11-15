@@ -6,20 +6,35 @@
   <title>Swarm mode · Stoprop</title>
   <meta name="description" content="Detect coordinated behaviour in a batch of posts.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css?v=6">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=10">
+  <script src="/static/ui.js?v=10"></script>
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm" aria-current="page">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
+  <a class="skip" href="#swarm-input">Skip to the input</a>
+  <header class="nav">
+    <nav class="nav-inner" aria-label="Main">
+      <a class="brand" href="/" aria-label="Stoprop home"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="mk-dim" x="3" y="4.6" width="18" height="3.4" rx="1.7"/><rect class="mk-hot" x="3" y="10.3" width="12" height="3.4" rx="1.7"/><rect class="mk-dim" x="3" y="16" width="15" height="3.4" rx="1.7"/></svg>Stop<span>rop</span></a>
+      <div class="links" id="nav-links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm" aria-current="page">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch between light and dark theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2Z"/></svg></button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
+    </nav>
+  </header>
+
   <main class="wrap page wide">
-    <h1>Swarm mode</h1>
-    <p class="lede">Spot coordinated amplification and copy-paste campaigns. Paste a social thread or channel link to
-      check its posts and comments — or paste any article link, claim, or viral post text to trace where the same
-      wording spread across the web and public platforms.</p>
+    <header class="page-hero">
+      <p class="eyebrow">Spot the swarm</p>
+      <h1>Swarm mode</h1>
+      <p class="lede">Spot coordinated amplification and copy-paste campaigns. Paste a social thread or channel link to
+        check its posts and comments — or paste any article link, claim, or viral post text to trace where the same
+        wording spread across the web and public platforms.</p>
+    </header>
+
     <p class="banner principle"><strong>We trace where this text spread. We don't research who is behind any account.</strong>
       A group is called “likely coordinated” only when copied text <em>and</em> at least one independent signal (timing
       burst, account pattern, or shared link push) agree.</p>
 
-    <section class="card" aria-labelledby="h-in">
+    <section class="card input glow" aria-labelledby="h-in">
       <h2 id="h-in">Investigate a thread, channel, or narrative</h2>
       <div class="samples" role="group" aria-label="One-click examples">
         <span class="muted small">Try an example:</span>
@@ -47,9 +62,9 @@
         </div>
 
         <div class="controls">
-          <label class="inline check"><input type="checkbox" id="tag" checked> Tag manipulation techniques in flagged groups
-            <span class="muted small">(AI, 0 cost when organic)</span></label>
-          <button type="submit" id="go">Investigate</button>
+          <label class="check"><input type="checkbox" id="tag" checked><span>Tag manipulation techniques in flagged groups
+            <span class="muted small">(AI, 0 cost when organic)</span></span></label>
+          <button type="submit" id="go">Investigate <span class="arr" aria-hidden="true">→</span></button>
         </div>
         <p id="status" class="status" role="status" aria-live="polite"></p>
 
@@ -58,15 +73,15 @@
           <div class="advanced-body">
             <fieldset class="options">
               <legend class="sr-only">AI options for thread/batch checks</legend>
-              <label class="inline check"><input type="checkbox" id="deep"> Deep mode: also find heavily paraphrased copies
-                <span class="muted small">(AI embeddings, weaker evidence)</span></label>
+              <label class="check"><input type="checkbox" id="deep"><span>Deep mode: also find heavily paraphrased copies
+                <span class="muted small">(AI embeddings, weaker evidence)</span></span></label>
             </fieldset>
-            <div class="row-actions" style="margin-top:.6rem">
+            <div class="row-actions">
               <label class="file-pick">Choose a CSV or JSON file<input type="file" id="file" accept=".csv,.json,.txt,text/csv,application/json"></label>
               <span id="file-info" class="muted small" aria-live="polite"></span>
               <button type="button" class="secondary small" id="clear-file" hidden>Clear dataset</button>
             </div>
-            <p class="muted small">For closed platforms (X/Twitter, Facebook, Instagram, TikTok), paste a post's text in the main box above to search where it spread, or upload a research export (`id, author, timestamp, text`) here.</p>
+            <p class="muted small">For closed platforms (X/Twitter, Facebook, Instagram, TikTok), paste a post's text in the main box above to search where it spread, or upload a research export (<code>id, author, timestamp, text</code>) here.</p>
           </div>
         </details>
       </form>
@@ -77,13 +92,13 @@
         <h2 id="h-res">Result</h2>
         <div id="source" hidden></div>
         <div id="verdict-line" class="cluster-head" hidden></div>
-        <p id="summary"></p>
+        <p id="summary" class="summary"></p>
         <p id="first-seen" class="small" hidden></p>
         <div id="overview-chart" class="chart-box" hidden></div>
         <ul id="notes" class="notes small"></ul>
-        <details id="failed-wrap" hidden><summary id="failed-sum"></summary><ul id="failed" class="small"></ul></details>
-        <details id="rejected-wrap" hidden><summary id="rejected-sum"></summary><ul id="rejected" class="small"></ul></details>
-        <div class="row-actions" style="margin-top:.5rem">
+        <details id="failed-wrap" class="mt-1" hidden><summary id="failed-sum"></summary><ul id="failed" class="small"></ul></details>
+        <details id="rejected-wrap" class="mt-1" hidden><summary id="rejected-sum"></summary><ul id="rejected" class="small"></ul></details>
+        <div class="row-actions">
           <button type="button" id="copy-swarm-brief" class="secondary">Copy brief</button>
           <button type="button" id="trace-root-btn" class="secondary" hidden>Trace where this post spread across the web →</button>
           <button type="button" id="download" class="secondary">Download JSON</button>
@@ -113,7 +128,16 @@
       </div>
     </section>
   </main>
-  <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
-  <script src="/static/swarm.js?v=6"></script>
+
+  <footer class="site-footer">
+    <div class="wrap foot-grid">
+      <div>
+        <a class="brand" href="/">Stop<span>rop</span></a>
+        <p>Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></nav>
+    </div>
+  </footer>
+  <script src="/static/swarm.js?v=7"></script>
 </body>
 </html>

@@ -141,6 +141,15 @@ def test_static_files_served():
     assert client.get("/static/style.css").status_code == 200
 
 
+def test_shared_ui_layer_served_and_linked():
+    for asset in ("/static/ui.js", "/static/home.js", "/static/favicon.svg"):
+        assert client.get(asset).status_code == 200, asset
+    for path in ("/", "/source", "/swarm", "/traffic", "/metrics", "/methodology", "/api"):
+        page = client.get(path).text
+        assert "/static/ui.js" in page and "/static/style.css" in page, path
+        assert 'class="skip"' in page and "theme-toggle" in page, path
+
+
 def test_pages_served_with_nav():
     for path in ("/", "/source", "/swarm", "/metrics", "/methodology", "/api"):
         r = client.get(path)

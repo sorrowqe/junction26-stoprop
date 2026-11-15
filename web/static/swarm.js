@@ -21,14 +21,14 @@
     web: "Open Web", source: "Source post", mixed: "several platforms", demo: "Demo dataset",
   };
   const PLAT_COLOR = {
-    web: "#1a5fb4",
-    reddit: "#d9480f",
-    telegram: "#0b7285",
-    bluesky: "#3b5bdb",
-    hackernews: "#d97706",
-    mastodon: "#5f3dc4",
-    youtube: "#c92a2a",
-    source: "#1e6b34",
+    web: "var(--p-web)",
+    reddit: "var(--p-reddit)",
+    telegram: "var(--p-telegram)",
+    bluesky: "var(--p-bluesky)",
+    hackernews: "var(--p-hackernews)",
+    mastodon: "var(--p-mastodon)",
+    youtube: "var(--p-youtube)",
+    source: "var(--green)",
   };
   const VARIANT_COLORS = ["var(--red)", "var(--blue)", "var(--amber)", "var(--green)"];
   let last = null;
@@ -183,7 +183,7 @@
       item.append(el("span", { class: square ? "leg-swatch" : "leg-dot", style: `background:${color}` }), document.createTextNode(label));
       leg.append(item);
     };
-    addLeg("#1e6b34", "★ First poster", false);
+    addLeg("var(--green)", "★ First poster", false);
     addLeg("var(--fg)", "Amplifier post", false);
     if ((c.burst_windows || []).length) addLeg("var(--red)", "⚡ Burst window", true);
     head.append(leg);
@@ -262,7 +262,7 @@
       const laneIdx = overflow && aIdx >= MAX_LANES - 1 ? MAX_LANES - 1 : Math.max(0, aIdx);
       const cx = xOf(p.t), cy = padTop + laneIdx * rowH + rowH / 2;
       const isFirst = aIdx === 0 && idx === 0;
-      const fill = isFirst ? "#1e6b34"
+      const fill = isFirst ? "var(--green)"
         : p.variant ? VARIANT_COLORS[(p.variant - 1) % VARIANT_COLORS.length]
         : (p.in_burst ? "var(--red)" : "var(--fg)");
       const dot = svgEl("circle", { cx, cy, r: isFirst ? 6 : 4.6, fill, class: "pt-dot", tabindex: "0" });

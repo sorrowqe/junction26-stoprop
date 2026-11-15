@@ -208,6 +208,21 @@ Spec: CLAUDE.md **v2** + full 4-track Hostinger suite (`/`, `/source`, `/swarm`,
   - 24-scenario Clean-Traffic Benchmark (`traffic_latest.json`): `100%` precision, `100%` recall (`12/12`), `100%` F1, `12/12 (100%)` innocent visitor controls protected.
 - **Persistent SQLite Volume & UI Redesign:** switched `docker-compose.yml` to named volume `stoprop_data:/app/data` (`storage: "sqlite"` verified live), redesigned `style.css` across all pages, added `Copy brief` export across all tools, 1-click cross-tool handoffs, and draggable browser bookmarklet.
 
+## UI redesign v3 (2026-11-16, committed locally on `main`, NOT pushed / NOT deployed)
+- New design system in `web/static/style.css` (design tokens, light + dark theme, frosted sticky nav, pill buttons,
+  switches, glass tooltip, serif reading text for analysed documents) and a shared `web/static/ui.js` loaded in the
+  `<head>` of every page: theme toggle, mobile menu, scroll-reveal fade-ins, word-by-word hero headline, segmented
+  Sensitivity control (drives the existing `<select id="sensitivity">`), animated border while a request runs,
+  copy buttons on code blocks, cross-page fade (CSS view transitions where the browser supports them).
+- Home page: animated hero with an illustration of the highlighter, analyzer card, four tool tiles, principles
+  section that lights up on scroll, live numbers band (`web/static/home.js`, data from `/api/metrics`), bookmarklet.
+- All 7 pages rebuilt on the new layout; every element id is unchanged. Page-script edits are cosmetic only:
+  `app.js` (stagger index on highlights), `swarm.js` (chart colours use theme variables), `traffic.js` (active
+  format button uses a class instead of inline styles). No backend change.
+- Checked locally in headless Chrome at 1440 px and 390 px, light and dark, plus reduced motion: 0 console errors,
+  no horizontal scroll on mobile, every block visible after scrolling. Tests: 607 passed.
+- To deploy: `bash deploy.sh` (Aleksandr pushes himself).
+
 ## Known boundaries (documented on `/methodology`)
 - Quantitative text accuracy benchmarks are measured on English (`dev` 89 + `test` 49 passages); other languages use the same conservative `Strict` default.
 - Rate limits are per-IP in-memory sliding windows (set `RATE_LIMIT_MULTIPLIER=3` in server `.env` on shared venue Wi-Fi).
@@ -215,6 +230,6 @@ Spec: CLAUDE.md **v2** + full 4-track Hostinger suite (`/`, `/source`, `/swarm`,
 
 ## How to verify
 ```bash
-.venv/Scripts/python -m pytest -q                                     # 606 passed
+.venv/Scripts/python -m pytest -q                                     # 607 passed
 curl -s https://stoprop.tech/api/health                               # version 1.0.0, storage: sqlite
 ```

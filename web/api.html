@@ -6,13 +6,28 @@
   <title>API · Stoprop</title>
   <meta name="description" content="Stoprop public API with curl examples.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css?v=6">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=10">
+  <script src="/static/ui.js?v=10"></script>
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api" aria-current="page">API</a></div></nav>
-  <main class="wrap page">
-    <h1>API</h1>
-    <p class="lede">Everything the web app does is available as a JSON API. Interactive reference: <a href="/docs">/docs</a>.</p>
+  <a class="skip" href="#main">Skip to the content</a>
+  <header class="nav">
+    <nav class="nav-inner" aria-label="Main">
+      <a class="brand" href="/" aria-label="Stoprop home"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="mk-dim" x="3" y="4.6" width="18" height="3.4" rx="1.7"/><rect class="mk-hot" x="3" y="10.3" width="12" height="3.4" rx="1.7"/><rect class="mk-dim" x="3" y="16" width="15" height="3.4" rx="1.7"/></svg>Stop<span>rop</span></a>
+      <div class="links" id="nav-links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a><a href="/api" aria-current="page">API</a></div>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch between light and dark theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2Z"/></svg></button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <main class="wrap page prose" id="main">
+    <header class="page-hero">
+      <p class="eyebrow">For developers</p>
+      <h1>API</h1>
+      <p class="lede">Everything the web app does is available as a JSON API. Interactive reference: <a href="/docs">/docs</a>.</p>
+    </header>
+
     <h2>Analyze a text</h2>
     <pre><code>curl -s https://stoprop.tech/api/analyze \
   -H 'Content-Type: application/json' \
@@ -25,11 +40,15 @@
       <code>private: true</code> means the text is not written to the shared cache.</p>
     <p class="muted small">Offsets are Unicode code points (Python string indices). In JavaScript, convert them before slicing
       strings that contain emoji or other characters outside the Basic Multilingual Plane.</p>
+
     <h2>Analyze a link</h2>
-    <pre><code>curl -s https://stoprop.tech/api/analyze   -H 'Content-Type: application/json'   -d '{"url": "https://www.bbc.com/news/..."}'</code></pre>
+    <pre><code>curl -s https://stoprop.tech/api/analyze \
+  -H 'Content-Type: application/json' \
+  -d '{"url": "https://www.bbc.com/news/..."}'</code></pre>
     <p>Stoprop fetches public web pages only (private, local and cloud-metadata addresses are refused, every redirect is
       re-checked, 8 s / 2 MB limits), extracts the main text, and returns it as <code>text</code> together with
       <code>source</code> (title, final URL, date) and <code>receipts</code> for the domain.</p>
+
     <h2>Verify claims in a text</h2>
     <pre><code>curl -s -X POST https://stoprop.tech/api/verify \
   -H 'Content-Type: application/json' \
@@ -38,12 +57,16 @@
       indexes (Brave Search + Oxylabs failover), reads candidate articles SSRF-safely, and returns verbatim-verified
       <code>evidence</code> quotes with stance (<code>corroborated</code> | <code>contradicted</code> |
       <code>cited_source_not_found</code> | <code>no_reports_found</code> | <code>not_checked</code>).</p>
+
     <h2>Check a source (provenance receipts &amp; live page audit, 0 AI calls)</h2>
-    <pre><code>curl -s https://stoprop.tech/api/receipts   -H 'Content-Type: application/json'   -d '{"url": "https://www.nytimes.com/"}'</code></pre>
+    <pre><code>curl -s https://stoprop.tech/api/receipts \
+  -H 'Content-Type: application/json' \
+  -d '{"url": "https://www.nytimes.com/"}'</code></pre>
     <p>Returns domain <code>milestones</code> (RDAP / ccTLD port-43 WHOIS registration, Wayback first capture,
       Certificate Transparency via crt.sh + CertSpotter), live HTML <code>page</code> audit (HTTPS, About/Contact/Policy
       transparency links, author byline, brand-impersonation check, and <code>outbound_links</code> domain network),
       8-watchdog fact-check search, and open-web verbatim copy detection.</p>
+
     <h2>Swarm mode (coordinated behaviour across threads &amp; channels)</h2>
     <pre><code>curl -s -X POST https://stoprop.tech/api/swarm \
   -H 'Content-Type: text/csv' --data-binary @posts.csv
@@ -63,13 +86,17 @@ curl -s -N -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/
       <code>evidence_for</code>, <code>evidence_against</code>, <code>innocent_explanations</code>, <code>authors</code>
       and a <code>timeline</code>; plus skipped rows with reasons. <code>deep</code> (embeddings) and
       <code>tag_clusters</code> (max 10 AI calls) cost credits and are off by default.</p>
+
     <h2>Trace a post</h2>
-    <pre><code>curl -s -X POST https://stoprop.tech/api/trace -H 'Content-Type: application/json'   -d '{"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22"}'</code></pre>
+    <pre><code>curl -s -X POST https://stoprop.tech/api/trace \
+  -H 'Content-Type: application/json' \
+  -d '{"url": "https://bsky.app/profile/bsky.app/post/3mzhhvhjfwk22"}'</code></pre>
     <p>Body <code>{"text": ...}</code> or <code>{"url": ...}</code> (add <code>"stream": true</code> for progress lines).
       Returns the <code>fingerprints</code> searched, <code>coverage</code> (what was and was not searched),
       <code>spread</code> (first seen, timeline, websites with domain checks, accounts), the <code>verdict</code> and
       <code>cluster</code> evidence, and every kept result in <code>copies</code>. Public data only, nothing stored,
       5 traces per hour.</p>
+
     <h2>Clean the traffic (server-log bot &amp; scraper inspector)</h2>
     <pre><code>curl -s -X POST https://stoprop.tech/api/traffic \
   -H 'Content-Type: text/plain' --data-binary @/var/log/nginx/access.log</code></pre>
@@ -78,17 +105,29 @@ curl -s -N -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/
       <strong>VirusTotal</strong>, separates credential stuffers, vulnerability scanners, spoofed search crawlers and bulk
       AI scrapers from real visitors (including shared office NAT), and outputs ready-to-paste Hostinger
       <code>.htaccess</code>, Nginx, and <code>ufw</code> rules.</p>
+
     <h2>Taxonomy</h2>
     <pre><code>curl -s https://stoprop.tech/api/techniques</code></pre>
     <p>Returns all 14 taxonomy entries (<code>label</code>, human-readable <code>name</code>, <code>kind</code>,
       <code>color</code>, plain-English <code>definition</code>, <code>example</code>, and calibrated
       <code>thresholds</code> for <code>strict</code>, <code>balanced</code>, and <code>broad</code>).</p>
+
     <h2>Health and AI budget</h2>
     <pre><code>curl -s https://stoprop.tech/api/health</code></pre>
+
     <h2>Rate limits</h2>
     <p>Per client IP, per hour: analyze 30, receipts 60, verify 10, swarm 10, trace 5, traffic 30, feedback 30. Over the limit you get HTTP 429 with a plain message.</p>
     <p>Evaluation results: <code>GET /api/metrics</code>.</p>
   </main>
-  <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
+
+  <footer class="site-footer">
+    <div class="wrap foot-grid">
+      <div>
+        <a class="brand" href="/">Stop<span>rop</span></a>
+        <p>Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics">Metrics</a><a href="/methodology">Methodology</a></nav>
+    </div>
+  </footer>
 </body>
 </html>

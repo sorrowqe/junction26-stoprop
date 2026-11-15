@@ -6,17 +6,31 @@
   <title>Metrics · Stoprop</title>
   <meta name="description" content="Measured precision, recall, false-positive rate and cost.">
   <meta name="color-scheme" content="light dark">
-  <link rel="stylesheet" href="/static/style.css?v=6">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css?v=10">
+  <script src="/static/ui.js?v=10"></script>
 </head>
 <body>
-  <nav class="topnav wrap" aria-label="Main"><a class="brand" href="/">Stop<span>rop</span></a><div class="links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics" aria-current="page">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div></nav>
-  <main class="wrap page wide">
-    <h1>Accuracy &amp; False-Positive Metrics</h1>
-    <p class="lede">How accurately Stoprop spots manipulation techniques and coordinated campaigns — and how reliably it
-      passes clean news, fair opinions, and normal viral sharing without crying wolf.</p>
+  <a class="skip" href="#main">Skip to the results</a>
+  <header class="nav">
+    <nav class="nav-inner" aria-label="Main">
+      <a class="brand" href="/" aria-label="Stoprop home"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="mk-dim" x="3" y="4.6" width="18" height="3.4" rx="1.7"/><rect class="mk-hot" x="3" y="10.3" width="12" height="3.4" rx="1.7"/><rect class="mk-dim" x="3" y="16" width="15" height="3.4" rx="1.7"/></svg>Stop<span>rop</span></a>
+      <div class="links" id="nav-links"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/metrics" aria-current="page">Metrics</a><a href="/methodology">Methodology</a><a href="/api">API</a></div>
+      <button class="icon-btn theme-toggle" type="button" aria-label="Switch between light and dark theme"><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.5 1.5M17.2 17.2l1.5 1.5M5.3 18.7l1.5-1.5M17.2 6.8l1.5-1.5"/></svg><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4a8.2 8.2 0 1 0 10.2 10.2Z"/></svg></button>
+      <button class="icon-btn nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <main class="wrap page wide" id="main">
+    <header class="page-hero">
+      <p class="eyebrow">Measured, not claimed</p>
+      <h1>Accuracy &amp; False-Positive Metrics</h1>
+      <p class="lede">How accurately Stoprop spots manipulation techniques and coordinated campaigns — and how reliably it
+        passes clean news, fair opinions, and normal viral sharing without crying wolf.</p>
+    </header>
 
     <div id="kpi-grid" class="kpi-grid" hidden></div>
-    <p id="kpi-note" class="muted small" style="margin:-.3rem 0 1rem" hidden></p>
+    <p id="kpi-note" class="muted small" hidden></p>
 
     <div id="no-results" class="card" hidden>
       <h2>No benchmark results published yet</h2>
@@ -84,7 +98,7 @@
             <tbody></tbody>
           </table>
         </div>
-        <h3 style="margin-top:1rem">Clean-text false-positive check</h3>
+        <h3>Clean-text false-positive check</h3>
         <div class="table-wrap">
           <table id="fpr">
             <thead><tr><th>Clean benchmark set</th><th>Paragraphs</th><th>Flagged (techniques)</th><th>Flags per 1,000 words</th></tr></thead>
@@ -119,7 +133,7 @@
     <section class="card" aria-labelledby="h-sym">
       <h2 id="h-sym">Viewpoint Neutrality &amp; Language Coverage</h2>
       <p id="sym" class="small">Stoprop tests political and group symmetry on mirrored pairs where only the sides are swapped.</p>
-      <div class="table-wrap" style="margin-top:.6rem">
+      <div class="table-wrap">
         <table id="lang-table">
           <thead><tr><th>Language</th><th>Benchmark status</th></tr></thead>
           <tbody></tbody>
@@ -140,7 +154,16 @@
       </ul>
     </section>
   </main>
-  <footer class="wrap muted small">Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</footer>
+
+  <footer class="site-footer">
+    <div class="wrap foot-grid">
+      <div>
+        <a class="brand" href="/">Stop<span>rop</span></a>
+        <p>Stoprop labels techniques and behaviours, never people, outlets or viewpoints.</p>
+      </div>
+      <nav class="foot-links" aria-label="Footer"><a href="/">Analyze</a><a href="/source">Check a source</a><a href="/swarm">Swarm mode</a><a href="/traffic">Clean traffic</a><a href="/methodology">Methodology</a><a href="/api">API</a></nav>
+    </div>
+  </footer>
   <script src="/static/metrics.js?v=7" defer></script>
 </body>
 </html>
