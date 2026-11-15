@@ -86,7 +86,6 @@ def health() -> dict:
             "reddit": True,
             "telegram": True,
             "bluesky": True,
-            "mastodon": True,
             "hackernews": True,
             "youtube": bool(config.env("GOOGLE_API_KEY")),
         },

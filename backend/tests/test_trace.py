@@ -173,7 +173,6 @@ def test_trace_open_web_and_bluesky(monkeypatch):
     r = run(trace_run.trace(text=TEXT, progress=progress.append))
     cov = {c["source"].split(" ")[0]: c for c in r["coverage"]}
     assert cov["Open"]["status"] == "searched" and cov["Bluesky"]["status"] == "searched"
-    assert cov["Mastodon"]["status"] == "not_available"
     assert r["cost"]["searches"] <= trace_run.MAX_SEARCHES
     sp = r["spread"]
     # web: reuters + aggregator (dated) + undated copy confirmed; blog not confirmed; bluesky: 2 copies, 1 quote

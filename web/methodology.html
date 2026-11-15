@@ -61,8 +61,7 @@
       thread and channel links are read through public interfaces — <strong>Reddit</strong> threads and subreddits
       (public Atom feeds), <strong>Telegram</strong> public channel web previews (<code>t.me/s/…</code>, including
       multi-channel batches to catch cross-channel campaigns), <strong>Bluesky</strong>'s public AppView API,
-      <strong>Mastodon</strong> server public APIs, <strong>Hacker News</strong> (Algolia API), and
-      <strong>YouTube</strong> comments (Data API v3 when configured). Each run is limited to 2000 posts, 40 API
+      <strong>Hacker News</strong> (Algolia API), and <strong>YouTube</strong> comments (Data API v3 when configured). Each run is limited to 2000 posts, 40 API
       requests and 25 seconds; collected posts stay in memory for 10 minutes and are never written to disk. Closed
       platforms that require login or paid developer access (X/Twitter, Facebook, Instagram, Threads, TikTok) are
       not scraped directly — instead, paste a post's text into Swarm mode to search where it spread, or use the

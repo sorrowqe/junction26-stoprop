@@ -137,8 +137,6 @@ async def trace(text: str | None = None, url: str | None = None, progress=None, 
                                 "searches": 0, "results": 0, "confirmed": 0, "note": None}
         coverage["hackernews"] = {"source": "Hacker News (public search)", "status": "searched", "searches": 0,
                                   "results": 0, "confirmed": 0, "note": None}
-    coverage["mastodon"] = {"source": "Mastodon", "status": "not_available", "searches": 0, "results": 0,
-                            "confirmed": 0, "note": search.MASTODON_NOTE}
 
     if not web_on:
         coverage["web"]["note"] = "Open-web search is not configured on this server, so only public social search ran."
