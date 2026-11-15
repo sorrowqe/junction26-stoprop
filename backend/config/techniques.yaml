@@ -149,6 +149,7 @@ techniques:
     color: green
     definition: A factual claim that comes with a link, a named source or dated data in the text. This does not mean it is true.
     example: "Unemployment fell to 6.1% in October, Statistics Estonia said."
+    public_example: "Unemployment fell to 4.1% in October, Reuters reported."
     enabled: true
     min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
     dev_precision: null
@@ -173,7 +174,7 @@ techniques:
     color: red
     tagger: false
     definition: The text says a named outlet reported this, but we found no report from that outlet saying it.
-    example: "Russia is attacking Estonia with drones, according to Delfi news (when Delfi published no such report)."
+    example: "Emergency power rationing starts Monday, according to Reuters (when Reuters published no such report)."
     enabled: true
     min_confidence: {strict: 0.89, balanced: 0.86, broad: 0.0}
     dev_precision: null

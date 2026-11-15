@@ -78,10 +78,10 @@ CLOSERS = [
 GENERIC_SHORT = ["So true!", "Good morning everyone", "Happy Friday!", "Can't wait for the weekend",
                  "This is the way", "Thanks for sharing", "Agreed 100%", "Well said", "Love this", "lol same"]
 GENERIC_LONG = "Thank you so much for sharing this with all of us today"
-FIRST = ["maria", "jaan", "kevin", "liis", "olga", "tom", "anna", "peeter", "sofia", "mark", "kadri", "ivan", "laura",
-         "martin", "eva", "andres", "nina", "rasmus", "helen", "sergei", "kati", "mihkel", "julia", "toomas", "emma",
-         "priit", "irina", "karl", "elena", "marko", "triin", "pavel", "kristi", "jonas", "anu", "dmitri", "maarja"]
-LAST = ["k", "tamm", "saar", "mets", "lepp", "kask", "rebane", "ilves", "petrov", "smith", "berg", "vaher", "koppel"]
+FIRST = ["maria", "james", "kevin", "claire", "olga", "tom", "anna", "peter", "sofia", "mark", "chloe", "ivan", "laura",
+         "martin", "eva", "andrew", "nina", "lucas", "helen", "samir", "kate", "michael", "julia", "thomas", "emma",
+         "ryan", "irina", "karl", "elena", "marco", "tara", "paul", "kristin", "jonas", "amy", "david", "maya"]
+LAST = ["k", "miller", "chen", "patel", "garcia", "walker", "reed", "BROOKS".lower(), "petrov", "smith", "berg", "silva", "kim"]
 
 
 def iso(t: datetime) -> str:
@@ -138,9 +138,9 @@ def main() -> None:
         add(a, START + timedelta(days=k % DAYS, hours=9 + 3 * k, minutes=rng.randrange(60)), GENERIC_LONG)
 
     # campaign 1: copy-paste, patterned names, created within 4 days, fringe link, tight burst + follow-ups
-    c1 = ["baltic_truth_481", "baltic_truth_77", "baltictruth_2290", "baltic_truths_12", "balticc_truth_903",
-          "baltic_truth_5518", "baltic_trut_64", "baltic_truth_3307", "baltic_truths_88", "baltic_truth_1945",
-          "baltc_truth_206", "baltic_truth_733"]
+    c1 = ["civic_truth_481", "civic_truth_77", "civictruth_2290", "civic_truths_12", "civicc_truth_903",
+          "civic_truth_5518", "civic_trut_64", "civic_truth_3307", "civic_truths_88", "civic_truth_1945",
+          "civc_truth_206", "civic_truth_733"]
     c1_text = ("The energy levy is a scam to fund the council's friends and nobody will tell you. "
                "Share before they delete it! https://levy-truth.info/proof #StopTheLevy")
     c1_follow = ["The energy levy is a scam to fund the council's friends and the media stays silent. "
@@ -157,25 +157,25 @@ def main() -> None:
     # campaign 2: slot-word template, unrelated-looking accounts, spread over ~3 hours, pushes @mention + #hashtag
     c2 = names[130:139]
     deals = ["the harbour deal", "the port contract", "the harbour contract"]
-    who = ["Mayor Kask", "the mayor", "city hall"]
+    who = ["Mayor Vance", "the mayor", "city hall"]
     when = ["in secret", "behind closed doors", "without any debate"]
     t2 = START + timedelta(days=2, hours=8)
     for k, a in enumerate(c2):
         text = (f"Why is nobody talking about {deals[k % 3]}? {who[(k // 3) % 3].capitalize() if k % 2 else who[(k // 3) % 3]} "
-                f"signed it {when[k % 3]} and the money went abroad. Ask questions now! @CityWatchEE #HarbourGate")
+                f"signed it {when[k % 3]} and the money went abroad. Ask questions now! @CityHallWatch #HarbourGate")
         add(a, t2 + timedelta(minutes=k * 21 + rng.randrange(0, 9)), text)
 
     # hard negative: headline sharing (mainstream link, within an hour, a few with own comments)
-    headline = "Council approves new wind farm off Saaremaa coast after two-year review"
-    url = "https://www.bbc.com/news/world-europe-council-approves-new-wind-farm-saaremaa"
+    headline = "Council approves new offshore wind farm in North Sea after two-year review"
+    url = "https://www.bbc.com/news/science-environment-council-approves-new-wind-farm-north-sea"
     t3 = START + timedelta(days=1, hours=7, minutes=12)
-    extras = ["", "", "", "", " Good news for the island.", "", " Finally.", "", "", " About time!", "", "", "", ""]
+    extras = ["", "", "", "", " Good news for clean power.", "", " Finally.", "", "", " About time!", "", "", "", ""]
     for k, a in enumerate(organic_authors[20:34]):
         add(a, t3 + timedelta(minutes=rng.randrange(0, 55)), f"{headline}{extras[k]} {url}", url)
 
     # hard negative: event hashtag burst (many accounts, different texts) + a few identical cheers
     t4 = START + timedelta(days=2, hours=19)
-    cheers = ["What a performance from the Estonian entry tonight", "The staging this year is absolutely wild",
+    cheers = ["What an opening performance from the band tonight", "The staging this year is absolutely wild",
               "My whole family is shouting at the TV right now", "That key change gave me goosebumps honestly",
               "Voting lines are open, get your phones out people", "The host jokes are not landing but who cares",
               "Best interval act I have seen in years, no contest", "Our flat party has reached peak volume",

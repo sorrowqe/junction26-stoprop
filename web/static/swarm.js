@@ -790,7 +790,7 @@
 
   $("ex-reddit").addEventListener("click", () => {
     uploadedData = "";
-    $("swarm-input").value = "https://www.reddit.com/r/europe";
+    $("swarm-input").value = "https://www.reddit.com/r/worldnews";
     updateHint();
     submit();
   });
@@ -804,7 +804,7 @@
 
   $("ex-trace").addEventListener("click", () => {
     uploadedData = "";
-    $("swarm-input").value = "Russia GPS jamming Baltic flights";
+    $("swarm-input").value = "Federal Reserve interest rate decision";
     updateHint();
     submit();
   });

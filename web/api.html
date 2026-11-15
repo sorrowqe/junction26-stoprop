@@ -26,20 +26,20 @@
     <p class="muted small">Offsets are Unicode code points (Python string indices). In JavaScript, convert them before slicing
       strings that contain emoji or other characters outside the Basic Multilingual Plane.</p>
     <h2>Analyze a link</h2>
-    <pre><code>curl -s https://stoprop.tech/api/analyze   -H 'Content-Type: application/json'   -d '{"url": "https://news.err.ee/..."}'</code></pre>
+    <pre><code>curl -s https://stoprop.tech/api/analyze   -H 'Content-Type: application/json'   -d '{"url": "https://www.bbc.com/news/..."}'</code></pre>
     <p>Stoprop fetches public web pages only (private, local and cloud-metadata addresses are refused, every redirect is
       re-checked, 8 s / 2 MB limits), extracts the main text, and returns it as <code>text</code> together with
       <code>source</code> (title, final URL, date) and <code>receipts</code> for the domain.</p>
     <h2>Verify claims in a text</h2>
     <pre><code>curl -s -X POST https://stoprop.tech/api/verify \
   -H 'Content-Type: application/json' \
-  -d '{"text": "According to Delfi, emergency grid rationing starts Monday."}'</code></pre>
+  -d '{"text": "According to Reuters, emergency grid rationing starts Monday."}'</code></pre>
     <p>Extracts up to 3 check-worthy factual claims (+ cited source), searches cited domains and independent news/web
       indexes (Brave Search + Oxylabs failover), reads candidate articles SSRF-safely, and returns verbatim-verified
       <code>evidence</code> quotes with stance (<code>corroborated</code> | <code>contradicted</code> |
       <code>cited_source_not_found</code> | <code>no_reports_found</code> | <code>not_checked</code>).</p>
     <h2>Check a source (provenance receipts &amp; live page audit, 0 AI calls)</h2>
-    <pre><code>curl -s https://stoprop.tech/api/receipts   -H 'Content-Type: application/json'   -d '{"url": "https://news.err.ee/"}'</code></pre>
+    <pre><code>curl -s https://stoprop.tech/api/receipts   -H 'Content-Type: application/json'   -d '{"url": "https://www.nytimes.com/"}'</code></pre>
     <p>Returns domain <code>milestones</code> (RDAP / ccTLD port-43 WHOIS registration, Wayback first capture,
       Certificate Transparency via crt.sh + CertSpotter), live HTML <code>page</code> audit (HTTPS, About/Contact/Policy
       transparency links, author byline, brand-impersonation check, and <code>outbound_links</code> domain network),
@@ -50,7 +50,7 @@
 
 # public thread or channel link (Reddit, Telegram t.me, Bluesky, Mastodon, Hacker News, YouTube)
 curl -s -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/json' \
-  -d '{"url": "https://www.reddit.com/r/europe", "tag_clusters": true}'
+  -d '{"url": "https://www.reddit.com/r/worldnews", "tag_clusters": true}'
 
 # cross-channel check: up to 50 public links (e.g. multiple Telegram channels); "stream": true sends NDJSON progress
 curl -s -N -X POST https://stoprop.tech/api/swarm -H 'Content-Type: application/json' \

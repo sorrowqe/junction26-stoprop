@@ -20,16 +20,17 @@
       <h2 id="h-check" class="sr-only">Check a link or domain</h2>
       <div class="samples" role="group" aria-label="Example domains">
         <span class="muted small">Try:</span>
-        <button type="button" data-try="err.ee">err.ee (official broadcaster)</button>
-        <button type="button" data-try="err-news.ee">err-news.ee (look-alike clone)</button>
-        <button type="button" data-try="rt.com">rt.com (state media &amp; watchdogs)</button>
+        <button type="button" data-try="bbc.com">bbc.com (official broadcaster)</button>
+        <button type="button" data-try="nytimes.com">nytimes.com (major daily)</button>
+        <button type="button" data-try="bbc-news.com">bbc-news.com (look-alike clone)</button>
+        <button type="button" data-try="nytimes.ltd">nytimes.ltd (TLD-swap clone)</button>
         <button type="button" data-try="theonion.com">theonion.com (satire)</button>
-        <button type="button" data-try="spiegel.ltd">spiegel.ltd (TLD swap)</button>
+        <button type="button" data-try="rt.com">rt.com (state media &amp; watchdogs)</button>
       </div>
       <form id="source-form" class="source-form" novalidate>
         <label for="target" class="sr-only">Link or domain</label>
         <input id="target" type="text" inputmode="url" autocomplete="off" spellcheck="false"
-               placeholder="Enter a domain (err.ee) or a full article link (https://…)" required>
+               placeholder="Enter a domain (bbc.com, nytimes.com) or a full article link (https://…)" required>
         <button type="submit" id="check">Check source</button>
       </form>
       <p class="muted small" style="margin:.45rem 0 0">Tip: paste a full article link to also check its author/date metadata and search for verbatim copies on other sites.</p>

@@ -46,6 +46,7 @@ def public() -> dict:
             {
                 **{k: t.get(k) for k in keys},
                 "name": t.get("display_name") or t["name"],
+                "example": t.get("public_example") or t.get("example"),
                 "thresholds": t.get("min_confidence"),
             }
             for t in load()["techniques"]

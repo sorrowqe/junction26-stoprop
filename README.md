@@ -64,17 +64,17 @@ curl -s https://stoprop.tech/api/analyze \
 # 2. Check domain & live-page provenance receipts (0 AI credits)
 curl -s https://stoprop.tech/api/receipts \
   -H 'Content-Type: application/json' \
-  -d '{"url": "https://news.err.ee/"}'
+  -d '{"url": "https://www.bbc.com/"}'
 
 # 3. Inspect a public Reddit / Telegram / Bluesky thread or channel for coordinated swarms
 curl -s https://stoprop.tech/api/swarm \
   -H 'Content-Type: application/json' \
-  -d '{"url": "https://www.reddit.com/r/europe", "tag_clusters": true}'
+  -d '{"url": "https://www.reddit.com/r/worldnews", "tag_clusters": true}'
 
 # 4. Trace where a claim or article spread across Open Web, Reddit, Telegram, Bluesky & HN
 curl -s https://stoprop.tech/api/trace \
   -H 'Content-Type: application/json' \
-  -d '{"text": "Russia GPS jamming Baltic flights"}'
+  -d '{"text": "Federal Reserve interest rate decision"}'
 
 # 5. Inspect web-server access logs for credential stuffers, spoofed crawlers & AI scrapers
 curl -s -X POST https://stoprop.tech/api/traffic \
