@@ -237,6 +237,18 @@ Spec: CLAUDE.md **v2** + full 4-track Hostinger suite (`/`, `/source`, `/swarm`,
   white + true ink palette, headings in the interface sans (Instrument Sans, set tight), and one italic serif
   (Instrument Serif Italic) kept only for accent words. Fraunces removed from `web/static/fonts/`. Logo unchanged.
 
+## Benchmark re-check + README rewrite (2026-11-16)
+- Re-ran the offline benchmarks, 0 AI calls: swarm (17/20, 0/20) and traffic (12/12, 0/12) reproduce byte for byte;
+  text dev re-scored from the eval cache gives the same figures (Broad P 58.8 / R 41.4 / F1 48.6). The prompt
+  version in `eval/results/*.json` (`c7db1a7998`) equals the prompt in the repo, so the text results are current.
+- README rewritten from the code and result files. It now states the weak spots too: ~30% recall on SemEval news,
+  no technique meets the "validated" bar (>= 0.70 precision on >= 15 flagged spans; every label is
+  `experimental: true` in `techniques.yaml`), 5 of 11 symmetry pairs differ, swarm/traffic sets are hand-built.
+- Not built from the original brief: `/api/share` + `/r/{id}`, `/api/feedback`, and a visible
+  validated / not-yet-validated marker in the UI (a test currently asserts that wording is absent).
+- The self-consistency baseline (`self_consistency.json`, 0/11 flips) was measured with an older prompt and has
+  not been repeated for the current one.
+
 ## Known boundaries (documented on `/methodology`)
 - Quantitative text accuracy benchmarks are measured on English (`dev` 89 + `test` 49 passages); other languages use the same conservative `Strict` default.
 - Rate limits are per-IP in-memory sliding windows (set `RATE_LIMIT_MULTIPLIER=3` in server `.env` on shared venue Wi-Fi).
