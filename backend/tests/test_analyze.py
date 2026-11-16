@@ -143,7 +143,7 @@ def test_static_files_served():
 
 def test_shared_ui_layer_served_and_linked():
     for asset in ("/static/ui.js", "/static/home.js", "/static/favicon.svg", "/static/logo.svg",
-                  "/static/fonts/fraunces-roman.woff2", "/static/fonts/instrument-sans.woff2"):
+                  "/static/fonts/instrument-serif-italic.woff2", "/static/fonts/instrument-sans.woff2"):
         assert client.get(asset).status_code == 200, asset
     for path in ("/", "/source", "/swarm", "/traffic", "/metrics", "/methodology", "/api"):
         page = client.get(path).text

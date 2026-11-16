@@ -233,6 +233,9 @@ Spec: CLAUDE.md **v2** + full 4-track Hostinger suite (`/`, `/source`, `/swarm`,
   numbered principles, serif numerals for the live benchmark figures.
 - Checked locally in headless Chrome (1440 px and 390 px, light and dark, reduced motion): 0 console errors,
   no horizontal scroll on any page at phone width. Tests: 607 passed.
+- v5 tweak (same day, after feedback that the sage tint and the soft serif felt too "coffee shop"): neutral paper
+  white + true ink palette, headings in the interface sans (Instrument Sans, set tight), and one italic serif
+  (Instrument Serif Italic) kept only for accent words. Fraunces removed from `web/static/fonts/`. Logo unchanged.
 
 ## Known boundaries (documented on `/methodology`)
 - Quantitative text accuracy benchmarks are measured on English (`dev` 89 + `test` 49 passages); other languages use the same conservative `Strict` default.

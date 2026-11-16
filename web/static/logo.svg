@@ -2,6 +2,6 @@
   <title>Stoprop</title>
   <!-- A stop sign that holds a pair of quotation marks: pause, and look at how it is being said. -->
   <path d="M7.86 2h8.28L22 7.86v8.28L16.14 22H7.86L2 16.14V7.86z" fill="#c03a22" stroke="#c03a22" stroke-width="2" stroke-linejoin="round"/>
-  <path d="M11.1 8.3c-2.7.9-4.6 2.9-4.6 5.3a2.4 2.4 0 1 0 2.4-2.4c.4-1.2 1.2-2.1 2.4-2.5z" fill="#f7f8f3"/>
-  <path d="M17.3 8.3c-2.7.9-4.6 2.9-4.6 5.3a2.4 2.4 0 1 0 2.4-2.4c.4-1.2 1.2-2.1 2.4-2.5z" fill="#f7f8f3"/>
+  <path d="M11.1 8.3c-2.7.9-4.6 2.9-4.6 5.3a2.4 2.4 0 1 0 2.4-2.4c.4-1.2 1.2-2.1 2.4-2.5z" fill="#fcfbf9"/>
+  <path d="M17.3 8.3c-2.7.9-4.6 2.9-4.6 5.3a2.4 2.4 0 1 0 2.4-2.4c.4-1.2 1.2-2.1 2.4-2.5z" fill="#fcfbf9"/>
 </svg>
