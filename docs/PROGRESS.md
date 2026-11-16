@@ -223,6 +223,17 @@ Spec: CLAUDE.md **v2** + full 4-track Hostinger suite (`/`, `/source`, `/swarm`,
   no horizontal scroll on mobile, every block visible after scrolling. Tests: 607 passed.
 - To deploy: `bash deploy.sh` (Aleksandr pushes himself).
 
+## UI v4 "editor's desk" (2026-11-16, committed locally on `main`, NOT pushed / NOT deployed)
+- Second pass on the look, replacing the v3 visuals (same pages, same element ids, no backend change):
+  calm sage paper + dark ink palette (light and dark), Fraunces headings + Instrument Sans text self-hosted in
+  `web/static/fonts/`, hairline rules instead of floating cards, paper grain, hand-drawn pencil marks
+  (circle round "spin", underlines, the ring on the chosen Sensitivity option, the tick in checkboxes).
+- New logo: stop-sign octagon holding quotation marks (`web/static/logo.svg`, `favicon.svg`, inline in every nav).
+- Home page: draggable before/after specimen (plain text vs marked-up text), the four tools as a contents list,
+  numbered principles, serif numerals for the live benchmark figures.
+- Checked locally in headless Chrome (1440 px and 390 px, light and dark, reduced motion): 0 console errors,
+  no horizontal scroll on any page at phone width. Tests: 607 passed.
+
 ## Known boundaries (documented on `/methodology`)
 - Quantitative text accuracy benchmarks are measured on English (`dev` 89 + `test` 49 passages); other languages use the same conservative `Strict` default.
 - Rate limits are per-IP in-memory sliding windows (set `RATE_LIMIT_MULTIPLIER=3` in server `.env` on shared venue Wi-Fi).

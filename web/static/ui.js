@@ -65,6 +65,22 @@
     h.classList.add("split");
   }
 
+  // ------------------------------------------------------------------ hand-drawn ring (stroke is animated in style.css)
+  const RING = "M22 46C14 22 62 7 110 7c50 0 82 14 80 35-2 22-48 32-96 31C48 72 10 62 13 38 15 22 46 11 80 9";
+  function ring() {
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "scribble");
+    svg.setAttribute("viewBox", "0 0 200 80");
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("aria-hidden", "true");
+    const path = document.createElementNS(NS, "path");
+    path.setAttribute("d", RING);
+    path.setAttribute("pathLength", "1");
+    svg.append(path);
+    return svg;
+  }
+
   // ------------------------------------------------------------------ <select data-segmented> -> segmented control
   function segmented(select) {
     const opts = [...select.options];
@@ -72,9 +88,7 @@
     seg.className = "seg";
     seg.setAttribute("role", "radiogroup");
     seg.setAttribute("aria-label", select.dataset.segmented || "Options");
-    seg.style.setProperty("--n", opts.length);
     const sync = () => {
-      seg.style.setProperty("--idx", Math.max(0, select.selectedIndex));
       [...seg.children].forEach((b, i) => {
         const on = i === select.selectedIndex;
         b.setAttribute("aria-checked", String(on));
@@ -93,6 +107,7 @@
       b.setAttribute("role", "radio");
       b.textContent = o.dataset.short || o.textContent;
       b.title = o.textContent;
+      b.append(ring());   // the chosen option is circled in pencil
       b.addEventListener("click", () => pick(i, false));
       b.addEventListener("keydown", (e) => {
         const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
@@ -182,12 +197,13 @@
         .observe(btn, { attributes: true, attributeFilter: ["disabled"] });
     });
 
-    // pointer-follow highlight on the tool tiles
-    document.querySelectorAll(".tile").forEach((tile) => {
-      tile.addEventListener("pointermove", (e) => {
-        const r = tile.getBoundingClientRect();
-        tile.style.setProperty("--mx", `${e.clientX - r.left}px`);
-        tile.style.setProperty("--my", `${e.clientY - r.top}px`);
+    // home specimen: drag (or use the arrow keys) to compare the plain text with the marked-up one
+    document.querySelectorAll(".compare").forEach((box) => {
+      const range = box.querySelector(".compare-range");
+      if (!range) return;
+      range.addEventListener("input", () => {
+        box.classList.add("touched");
+        box.style.setProperty("--x", `${range.value}%`);
       });
     });
 
